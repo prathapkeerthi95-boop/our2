@@ -1,12 +1,17 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import AnimatedHeading from './AnimatedHeading';
 
 const CTABanner = () => {
   return (
     <div className="cta-banner" style={{ position: 'relative', zIndex: 10 }}>
       <div className="container">
         <div className="section-label reveal" style={{ justifyContent: 'center' }}>Ready to Dominate?</div>
-        <h2 className="reveal reveal-delay-1">Your Competition Won't<br />Wait. <span className="gradient-text">Neither Should You.</span></h2>
+        <AnimatedHeading 
+          text="Your Competition Won't \n Wait. Neither Should You." 
+          mode="rotate" 
+          style={{ marginBottom: '1.5rem' }} 
+        />
         <p className="reveal reveal-delay-2">
           Book a free strategy session with our team and discover how we can 10x your digital presence.
         </p>

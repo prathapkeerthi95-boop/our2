@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight } from 'lucide-react';
+import AnimatedHeading from './AnimatedHeading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,168 +41,206 @@ const services = [
 ];
 
 const Services = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(0); // Default first item open
   const sectionRef = useRef(null);
-  const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const cardsRef = useRef([]);
 
   useEffect(() => {
-    // Entrance animation for the whole accordion list
-    gsap.fromTo(containerRef.current.children,
-      { y: 50, opacity: 0 },
-      {
-        y: 0, opacity: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          once: true
-        }
+    const section = sectionRef.current;
+    const scrollContainer = scrollContainerRef.current;
+    const cards = cardsRef.current;
+
+    if (!section || !scrollContainer) return;
+
+    // 1. Horizontal Scroll Pinning
+    const totalWidth = scrollContainer.scrollWidth - window.innerWidth;
+    
+    const scrollTween = gsap.to(scrollContainer, {
+      x: -totalWidth,
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        pin: true,
+        scrub: 1, // Smooth scrubbing
+        start: "top top",
+        end: () => `+=${totalWidth}`,
+        invalidateOnRefresh: true
       }
-    );
+    });
+
+    // 2. Velocity-based Skew Effect (Ultra-Premium Physics)
+    let proxy = { skew: 0 };
+    let skewSetter = gsap.quickSetter(cards, "skewX", "deg"); // Fast DOM updater
+    let clamp = gsap.utils.clamp(-20, 20); // Limit maximum skew
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${totalWidth}`,
+      onUpdate: (self) => {
+        // Calculate skew based on scroll velocity
+        // self.getVelocity() returns pixels per second
+        const velocity = self.getVelocity();
+        // Scale down the velocity drastically to get a nice small degree amount
+        const skewAmount = clamp(velocity / -150);
+        
+        // Animate proxy to smooth out the physics
+        gsap.to(proxy, {
+          skew: skewAmount,
+          duration: 0.8,
+          ease: "power3",
+          overwrite: true,
+          onUpdate: () => skewSetter(proxy.skew)
+        });
+      }
+    });
+
+    // Bring skew back to 0 when scrolling stops
+    const makeZero = () => {
+      gsap.to(proxy, {
+        skew: 0,
+        duration: 0.8,
+        ease: "power3",
+        overwrite: true,
+        onUpdate: () => skewSetter(proxy.skew)
+      });
+    };
+
+    ScrollTrigger.addEventListener("scrollEnd", makeZero);
+
+    return () => {
+      ScrollTrigger.removeEventListener("scrollEnd", makeZero);
+      if (scrollTween) scrollTween.kill();
+      ScrollTrigger.getAll().forEach(t => {
+        if(t.vars.trigger === section) t.kill();
+      });
+    };
   }, []);
 
   return (
-    <section id="services" ref={sectionRef} style={{ padding: '8rem 0', backgroundColor: '#FAFAFA' }}>
-      <div className="container" style={{ maxWidth: '1100px' }}>
-
-        <div style={{ marginBottom: '5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '2rem' }}>
-          <div>
-            <div className="section-label reveal">What We Engineer</div>
-            <h2 className="reveal reveal-delay-1" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', color: '#0B0C10', marginBottom: 0, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-              Services Designed for <br/><span className="gradient-text">Market Dominance</span>
-            </h2>
-          </div>
-          <div className="reveal reveal-delay-2" style={{ maxWidth: '350px' }}>
-            <p style={{ color: '#555', fontSize: '1rem', lineHeight: 1.6, margin: 0 }}>
-              We don't just build websites; we engineer digital ecosystems that drive measurable business outcomes.
-            </p>
-          </div>
-        </div>
-
-        {/* Horizontal Expanding Accordion */}
-        <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column' }}>
-          {services.map((service, index) => {
-            const isActive = hoveredIndex === index;
-            
-            return (
-              <div 
-                key={index}
-                className="hover-target"
-                onMouseEnter={() => setHoveredIndex(index)}
-                style={{
-                  borderTop: '1px solid rgba(0,0,0,0.1)',
-                  borderBottom: index === services.length - 1 ? '1px solid rgba(0,0,0,0.1)' : 'none',
-                  padding: isActive ? '3rem 0' : '2rem 0',
-                  cursor: 'none',
-                  transition: 'padding 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
-                {/* Background Accent Fill on Hover */}
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  backgroundColor: service.accent,
-                  opacity: isActive ? 0.03 : 0,
-                  transition: 'opacity 0.5s ease',
-                  zIndex: 0,
-                  pointerEvents: 'none'
-                }} />
-
-                <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: isActive ? 'flex-start' : 'center' }}>
-                  
-                  {/* Title & Number Area */}
-                  <div style={{ flex: '1', minWidth: '300px', display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                    <div style={{ 
-                      fontSize: isActive ? '2rem' : '1.5rem', 
-                      fontFamily: 'var(--font-display)',
-                      fontWeight: 700,
-                      color: isActive ? service.accent : 'rgba(0,0,0,0.2)',
-                      transition: 'all 0.5s ease',
-                      width: '40px'
-                    }}>
-                      {service.num}
-                    </div>
-                    <h3 style={{ 
-                      fontSize: isActive ? '2.5rem' : '1.8rem', 
-                      margin: 0, 
-                      color: '#0B0C10',
-                      letterSpacing: '-0.02em',
-                      transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-                      transform: isActive ? 'translateX(10px)' : 'translateX(0)'
-                    }}>
-                      {service.title}
-                    </h3>
-                  </div>
-
-                  {/* Icon / Arrow (visible when closed) */}
-                  {!isActive && (
-                    <div style={{ opacity: 0.3, transition: 'opacity 0.3s ease' }}>
-                      <ArrowUpRight size={32} />
-                    </div>
-                  )}
-
-                  {/* Expanded Content Area */}
-                  <div style={{
-                    flex: isActive ? '2' : '0',
-                    display: 'grid',
-                    gridTemplateRows: isActive ? '1fr' : '0fr',
-                    opacity: isActive ? 1 : 0,
-                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                    overflow: 'hidden'
-                  }}>
-                    <div style={{ minHeight: 0, display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                      
-                      {/* Text Details */}
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '1.1rem', color: '#444', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                          {service.description}
-                        </p>
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          {service.tags.map((tag, j) => (
-                            <span key={j} style={{
-                              padding: '0.3rem 0.8rem',
-                              border: '1px solid rgba(0,0,0,0.1)',
-                              borderRadius: '50px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              color: '#333'
-                            }}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Expanding Image */}
-                      <div style={{ 
-                        width: '240px', 
-                        height: '160px', 
-                        borderRadius: '16px', 
-                        overflow: 'hidden',
-                        opacity: isActive ? 1 : 0,
-                        transform: isActive ? 'scale(1)' : 'scale(0.95)',
-                        transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s'
-                      }}>
-                        <img 
-                          src={service.image} 
-                          alt={service.title} 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
+    <section 
+      id="services" 
+      ref={sectionRef} 
+      style={{ 
+        height: '100vh', 
+        backgroundColor: '#050505', // Dark premium background
+        color: '#FFFFFF',
+        overflow: 'hidden',
+        position: 'relative'
+      }}
+    >
+      
+      {/* Background massive ambient typography */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '5%',
+        transform: 'translateY(-50%)',
+        fontSize: 'clamp(8rem, 20vw, 25rem)',
+        fontFamily: 'var(--font-display)',
+        fontWeight: 900,
+        color: 'rgba(255,255,255,0.02)',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        zIndex: 0
+      }}>
+        SERVICES
       </div>
+
+      <div style={{ position: 'absolute', top: '5rem', left: '5rem', zIndex: 10 }}>
+        <div className="section-label reveal" style={{ color: '#FFF', borderColor: 'rgba(255,255,255,0.2)' }}>
+          <span className="pulse-dot" style={{ background: '#00E5FF' }}></span> Core Capabilities
+        </div>
+        <AnimatedHeading 
+          text="Engineered for \n Market Dominance" 
+          mode="mask" 
+          style={{ color: '#FFFFFF', fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.05, fontWeight: 900, letterSpacing: '-0.02em', marginTop: '1rem' }} 
+        />
+      </div>
+
+      {/* Horizontal Scroll Container */}
+      <div 
+        ref={scrollContainerRef}
+        style={{
+          display: 'flex',
+          gap: '5rem',
+          height: '100%',
+          alignItems: 'center',
+          paddingLeft: '50vw', // Start half-screen offset
+          paddingRight: '20vw',
+          width: 'max-content',
+          willChange: 'transform',
+          zIndex: 2,
+          position: 'relative'
+        }}
+      >
+        {services.map((service, index) => (
+          <div 
+            key={index}
+            ref={el => cardsRef.current[index] = el}
+            style={{
+              width: '600px',
+              height: '70vh',
+              backgroundColor: 'rgba(255,255,255,0.03)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              borderRadius: '24px',
+              padding: '3rem',
+              display: 'flex',
+              flexDirection: 'column',
+              transformOrigin: 'bottom center', // Important for skewing naturally
+              willChange: 'transform'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+              <span style={{ fontSize: '1.2rem', fontFamily: 'var(--font-display)', fontWeight: 700, color: service.accent }}>
+                {service.num}
+              </span>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="19" x2="19" y2="5"></line>
+                  <polyline points="10 5 19 5 19 14"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <h3 style={{ fontSize: '3rem', lineHeight: 1.1, marginBottom: '2rem', fontWeight: 800 }}>
+              {service.title}
+            </h3>
+
+            <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, marginBottom: 'auto' }}>
+              {service.description}
+            </p>
+
+            {/* Tags */}
+            <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', marginTop: '3rem' }}>
+              {service.tags.map((tag, j) => (
+                <span key={j} style={{
+                  padding: '0.4rem 1rem',
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '50px',
+                  fontSize: '0.85rem',
+                  color: 'rgba(255,255,255,0.8)'
+                }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            
+            {/* Hover Image Overlay via pseudo-element is cool, but a simple embedded image works beautifully for performance */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1,
+              opacity: 0.1, borderRadius: '24px', overflow: 'hidden'
+            }}>
+              <img src={service.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+
+          </div>
+        ))}
+      </div>
+
     </section>
   );
 };

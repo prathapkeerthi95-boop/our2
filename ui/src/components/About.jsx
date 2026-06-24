@@ -1,5 +1,6 @@
 import React from 'react';
 import { Shield, Zap, Users, Award } from 'lucide-react';
+import AnimatedHeading from './AnimatedHeading';
 
 const features = [
   { icon: <Zap size={22} />, title: 'Obsessive Speed', desc: 'Sub-second load times. We treat performance as a feature, not an afterthought.' },
@@ -30,7 +31,10 @@ const About = () => {
           {/* Right: Copy */}
           <div>
             <div className="section-label reveal reveal-delay-1">Who We Are</div>
-            <h2 className="reveal reveal-delay-2">A Tiny Team with <span className="gradient-text">Outsized Ambition</span></h2>
+            <AnimatedHeading 
+              text="A Tiny Team with \n Outsized Ambition" 
+              mode="blur" 
+            />
             <p className="reveal reveal-delay-3" style={{ marginTop: '1.5rem' }}>
               NUVAROX is a boutique digital studio born in Chennai. We're not a 200-person agency churning out templates. We're a focused, obsessive crew that treats every project like it's our own product launch.
             </p>

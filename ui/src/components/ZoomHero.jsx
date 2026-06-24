@@ -1,215 +1,407 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import AnimatedHeading from './AnimatedHeading';
+import MagneticElement from './MagneticElement';
+import GridBackground from './GridBackground';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const ZoomHero = () => {
   const containerRef = useRef(null);
-  const textRefs = useRef([]);
-  const bgRefs = useRef([]);
-  const pRef = useRef(null);
-
-  const paragraphText = "Bespoke digital ecosystems engineered to command attention, dominate markets, and instantly convert visitors into high-value clients. No templates. No compromises.";
+  const contentRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const line3Ref = useRef(null);
+  const subtitleRef = useRef(null);
+  const ctaRef = useRef(null);
+  const scrollRef = useRef(null);
+  const glowRef = useRef(null);
+  const carouselRef = useRef(null);
+  const tagLeftRef = useRef(null);
+  const tagRightRef = useRef(null);
+  const dividerRef = useRef(null);
 
   useEffect(() => {
-    // 1. Living Mesh Background — continuous breathing & rotation
-    bgRefs.current.forEach((bg, i) => {
-      if (!bg) return;
-      gsap.to(bg, {
-        scale: 1.3 + (i * 0.15),
-        rotation: (i % 2 === 0 ? 1 : -1) * 360,
-        x: `+=${(i % 2 === 0 ? 30 : -30)}`,
-        y: `+=${(i % 2 === 0 ? -20 : 20)}`,
-        duration: 15 + (i * 4),
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-    });
+    const ctx = gsap.context(() => {
 
-    // Mouse parallax for background orbs
-    const onMouseMove = (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 60;
-      const y = (e.clientY / window.innerHeight - 0.5) * 60;
-      bgRefs.current.forEach((bg, i) => {
-        if (!bg) return;
-        gsap.to(bg, {
-          x: x * (1 + i * 0.3),
-          y: y * (1 + i * 0.3),
-          duration: 1.5,
-          ease: "power2.out",
-          overwrite: "auto"
-        });
-      });
-    };
-    window.addEventListener('mousemove', onMouseMove);
+      // Master entrance timeline
+      const tl = gsap.timeline({ delay: 3.6 });
 
-    // 2. Cinematic Blur-Reveal Header (no overflow:hidden clipping)
-    textRefs.current.forEach((el, i) => {
-      if (!el) return;
-      gsap.fromTo(el,
-        { y: 50, opacity: 0, filter: 'blur(15px)', scale: 1.04 },
-        { y: 0, opacity: 1, filter: 'blur(0px)', scale: 1, duration: 1.2, delay: 0.15 + i * 0.12, ease: "power4.out" }
+      // Ambient glow pulse in
+      tl.fromTo(glowRef.current,
+        { scale: 0.3, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 2, ease: "power2.out" }
       );
-    });
 
-    // 3. Scroll Scrubber — word-by-word highlight on scroll
-    if (pRef.current) {
-      const words = pRef.current.querySelectorAll('.hero-word');
-      if (words.length > 0) {
-        gsap.fromTo(words,
-          { color: 'rgba(0,0,0,0.12)' },
-          {
-            color: '#0B0C10',
-            stagger: 0.05,
-            scrollTrigger: {
-              trigger: pRef.current,
-              start: "top 85%",
-              end: "top 40%",
-              scrub: 1
-            }
-          }
-        );
+      // Line 1 chars stagger
+      const chars1 = line1Ref.current.querySelectorAll('.hero-char');
+      tl.fromTo(chars1,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
+        "-=1.5"
+      );
+
+      // Line 2 chars stagger (slight delay)
+      const chars2 = line2Ref.current.querySelectorAll('.hero-char');
+      tl.fromTo(chars2,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
+        "-=0.7"
+      );
+
+      // Line 3 chars stagger
+      const chars3 = line3Ref.current.querySelectorAll('.hero-char');
+      tl.fromTo(chars3,
+        { yPercent: 110, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
+        "-=0.7"
+      );
+
+      // Divider line grows
+      tl.fromTo(dividerRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.8, ease: "power3.inOut" },
+        "-=0.5"
+      );
+
+      // Tags slide in from sides
+      tl.fromTo(tagLeftRef.current,
+        { x: -30, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+        "-=0.5"
+      );
+      tl.fromTo(tagRightRef.current,
+        { x: 30, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+        "-=0.6"
+      );
+
+      // Subtitle + CTA
+      tl.fromTo(subtitleRef.current,
+        { y: 25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+        "-=0.4"
+      );
+      tl.fromTo(ctaRef.current,
+        { y: 25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+        "-=0.5"
+      );
+
+      // Scroll indicator
+      tl.fromTo(scrollRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 0.4, y: 0, duration: 0.6, ease: "power2.out" },
+        "-=0.3"
+      );
+
+      // Carousel rotation
+      if (carouselRef.current) {
+        const items = carouselRef.current.querySelectorAll('.carousel-word');
+        let currentIndex = 0;
+        
+        const rotateCarousel = () => {
+          const current = items[currentIndex];
+          const nextIndex = (currentIndex + 1) % items.length;
+          const next = items[nextIndex];
+
+          gsap.to(current, { yPercent: -110, opacity: 0, duration: 0.5, ease: "power2.in" });
+          gsap.fromTo(next,
+            { yPercent: 110, opacity: 0, display: 'block' },
+            { yPercent: 0, opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.15 }
+          );
+          currentIndex = nextIndex;
+        };
+
+        setInterval(rotateCarousel, 2800);
       }
-    }
 
-    return () => window.removeEventListener('mousemove', onMouseMove);
+      // Parallax on scroll
+      gsap.to(contentRef.current, {
+        y: 200,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "80% top",
+          scrub: 1.5
+        }
+      });
+
+      // Glow parallax
+      gsap.to(glowRef.current, {
+        y: 100,
+        scale: 1.3,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
+
+  // Character split helper
+  const splitChars = (text, className = '') => {
+    return text.split('').map((char, i) => (
+      <span
+        key={i}
+        className={`hero-char ${className}`}
+        style={{
+          display: 'inline-block',
+          willChange: 'transform',
+          ...(char === ' ' ? { width: '0.25em' } : {})
+        }}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  };
 
   return (
     <section
       ref={containerRef}
       style={{
-        position: 'relative',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FAFAFA',
-        paddingTop: '10rem',
-        paddingBottom: '6rem', // Tight padding — no blank space
-        overflow: 'visible', // Allow blur to render
+        position: 'relative', width: '100%', height: '100vh',
+        overflow: 'hidden', display: 'flex', alignItems: 'center',
+        background: '#FAFAFA'
       }}
     >
+      {/* AMBIENT GLOW */}
+      <div
+        ref={glowRef}
+        style={{
+          position: 'absolute',
+          top: '15%', left: '55%',
+          width: '600px', height: '600px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(112,0,255,0.08) 0%, rgba(255,42,84,0.04) 50%, transparent 70%)',
+          filter: 'blur(80px)',
+          zIndex: 1,
+          opacity: 0,
+          pointerEvents: 'none'
+        }}
+      />
+      
+      {/* INTERACTIVE GRID BACKGROUND */}
+      <GridBackground />
 
-      {/* LIVING MESH BACKGROUND — Strong, visible orbs */}
-      <div style={{ position: 'absolute', inset: '-20%', overflow: 'visible', zIndex: 0, pointerEvents: 'none' }}>
-        {/* Purple Orb — much stronger opacity */}
-        <div
-          ref={el => bgRefs.current[0] = el}
-          style={{
-            position: 'absolute', top: '-5%', right: '5%',
-            width: '45vw', height: '45vw',
-            background: 'radial-gradient(circle, rgba(112,0,255,0.15) 0%, rgba(112,0,255,0.05) 40%, transparent 70%)',
-            borderRadius: '50%', filter: 'blur(60px)'
-          }}
-        />
-        {/* Cyan Orb */}
-        <div
-          ref={el => bgRefs.current[1] = el}
-          style={{
-            position: 'absolute', bottom: '-10%', left: '0%',
-            width: '50vw', height: '50vw',
-            background: 'radial-gradient(circle, rgba(0,229,255,0.12) 0%, rgba(0,229,255,0.04) 40%, transparent 70%)',
-            borderRadius: '50%', filter: 'blur(60px)'
-          }}
-        />
-        {/* Pink/Red Orb */}
-        <div
-          ref={el => bgRefs.current[2] = el}
-          style={{
-            position: 'absolute', top: '40%', left: '50%',
-            width: '35vw', height: '35vw',
-            background: 'radial-gradient(circle, rgba(255,42,84,0.10) 0%, rgba(255,42,84,0.03) 40%, transparent 70%)',
-            borderRadius: '50%', filter: 'blur(60px)'
-          }}
-        />
-      </div>
+      {/* MAIN CONTENT */}
+      <div
+        ref={contentRef}
+        className="container"
+        style={{
+          position: 'relative', zIndex: 10,
+          width: '100%', maxWidth: '1300px',
+          padding: '0 2rem'
+        }}
+      >
+        {/* TOP TAG BAR */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginBottom: '2.5rem'
+        }}>
+          <div ref={tagLeftRef} style={{
+            display: 'flex', alignItems: 'center', gap: '0.6rem',
+            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
+            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
+          }}>
+            <span style={{
+              width: '8px', height: '8px', borderRadius: '50%',
+              background: 'var(--accent-crimson)',
+              animation: 'pulse 2s ease-in-out infinite'
+            }}></span>
+            Available for Projects
+          </div>
 
-      {/* FOREGROUND CONTENT */}
-      <div style={{
-        position: 'relative', zIndex: 2,
-        textAlign: 'center', padding: '0 2rem',
-        maxWidth: '950px', width: '100%'
-      }}>
-
-        {/* Label */}
-        <div
-          ref={el => textRefs.current[0] = el}
-          style={{
-            display: 'inline-block', color: 'var(--accent-violet)',
-            fontSize: '0.85rem', fontWeight: '700', letterSpacing: '0.2em', textTransform: 'uppercase',
-            marginBottom: '2rem', opacity: 0
-          }}
-        >
-          Premium Design Agency
+          <div ref={tagRightRef} style={{
+            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
+            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
+          }}>
+            Scroll to Explore ↓
+          </div>
         </div>
 
-        {/* BLUR-REVEAL HEADER */}
-        {["Digital", "Architecture", "for Leaders."].map((text, i) => (
-          <div key={i}>
-            <h1
-              ref={el => textRefs.current[i + 1] = el}
-              style={{
-                fontSize: 'clamp(2.8rem, 6.5vw, 5rem)',
-                lineHeight: '1.08',
-                fontWeight: '900',
-                letterSpacing: '-0.03em',
-                color: text === "for Leaders." ? 'var(--accent-violet)' : '#0B0C10',
-                fontFamily: 'var(--font-display)',
-                marginBottom: '0.15rem',
-                opacity: 0
-              }}
-            >
-              {text}
+        {/* HEADLINE — EDITORIAL SPLIT */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          {/* Line 1 */}
+          <div ref={line1Ref} style={{ overflow: 'hidden' }}>
+            <h1 style={{
+              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontWeight: '800',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.04em',
+              color: '#0B0C10',
+              margin: 0
+            }}>
+              {splitChars('We Craft')}
             </h1>
           </div>
-        ))}
 
-        {/* SCROLL SCRUBBER CONTENT */}
-        <div style={{ marginTop: '2.5rem', maxWidth: '750px', marginLeft: 'auto', marginRight: 'auto' }}>
-          <p
-            ref={pRef}
-            style={{
-              fontSize: '1.15rem',
-              lineHeight: '1.75',
-              fontWeight: '400',
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: '0.28em'
-            }}
-          >
-            {paragraphText.split(' ').map((word, index) => (
-              <span
-                key={index}
-                className="hero-word"
-                style={{ color: 'rgba(0,0,0,0.12)', transition: 'color 0.1s ease' }}
-              >
-                {word}
+          {/* Line 2 — with accent word */}
+          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
+            <h1 style={{
+              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontWeight: '800',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.04em',
+              margin: 0,
+              background: 'var(--gradient-primary)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              <span className="hero-char" style={{ display: 'inline-block', willChange: 'transform' }}>
+                Digital
               </span>
-            ))}
-          </p>
+            </h1>
+            <h1 style={{
+              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontWeight: '800',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.04em',
+              color: '#0B0C10',
+              margin: 0
+            }}>
+              {splitChars('Ecosystems')}
+            </h1>
+          </div>
+
+          {/* Line 3 — with rotating word */}
+          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
+            <h1 style={{
+              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontWeight: '800',
+              fontFamily: 'var(--font-display)',
+              lineHeight: 0.95,
+              letterSpacing: '-0.04em',
+              color: '#0B0C10',
+              margin: 0
+            }}>
+              {splitChars('That')}
+            </h1>
+
+            {/* ROTATING CAROUSEL WORD */}
+            <div
+              ref={carouselRef}
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                height: 'clamp(3.5rem, 9vw, 8rem)',
+                minWidth: 'clamp(200px, 30vw, 450px)',
+                overflow: 'hidden',
+                verticalAlign: 'baseline'
+              }}
+            >
+              {['Convert.', 'Dominate.', 'Inspire.', 'Scale.'].map((word, i) => (
+                <span
+                  key={i}
+                  className="carousel-word"
+                  style={{
+                    position: i === 0 ? 'relative' : 'absolute',
+                    top: 0, left: 0,
+                    display: i === 0 ? 'block' : 'none',
+                    fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+                    fontWeight: '800',
+                    fontFamily: 'var(--font-display)',
+                    lineHeight: 0.95,
+                    letterSpacing: '-0.04em',
+                    fontStyle: 'italic',
+                    color: 'var(--accent-crimson)',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* DIVIDER LINE */}
         <div
-          ref={el => textRefs.current[4] = el}
+          ref={dividerRef}
           style={{
-            display: 'flex', gap: '1.5rem', justifyContent: 'center',
-            marginTop: '3rem', opacity: 0
+            width: '100%', height: '1px',
+            background: 'rgba(11,12,16,0.1)',
+            marginBottom: '1.5rem',
+            transformOrigin: 'left center'
           }}
-        >
-          <a href="#services" className="btn-primary hover-target" style={{ padding: '1rem 2.5rem', fontSize: '1.05rem' }}>
-            Explore Work
-          </a>
-          <a href="#contact" className="btn-outline hover-target" style={{ padding: '1rem 2.5rem', fontSize: '1.05rem' }}>
-            Let's Talk
-          </a>
+        />
+
+        {/* BOTTOM ROW — Subtitle + CTA */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          flexWrap: 'wrap', gap: '2rem'
+        }}>
+          <p
+            ref={subtitleRef}
+            style={{
+              fontSize: '1.05rem', lineHeight: '1.7', fontWeight: '400',
+              color: 'rgba(11,12,16,0.5)', maxWidth: '420px', margin: 0,
+              opacity: 0
+            }}
+          >
+            We architect high-performance websites and digital platforms 
+            engineered to captivate your audience and deliver measurable growth.
+          </p>
+
+          <div ref={ctaRef} style={{ display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0 }}>
+            <MagneticElement>
+              <a href="#portfolio" className="btn-premium">
+                <span>See Our Work</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginLeft: '0.5rem' }}>
+                  <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+            </MagneticElement>
+            <MagneticElement>
+              <a href="#contact" className="btn-outline" style={{ padding: '1.2rem 2.5rem' }}>
+                <span>Let's Talk</span>
+              </a>
+            </MagneticElement>
+          </div>
         </div>
       </div>
 
+      {/* SCROLL INDICATOR */}
+      <div
+        ref={scrollRef}
+        style={{
+          position: 'absolute', bottom: '2rem', left: '50%',
+          transform: 'translateX(-50%)', zIndex: 10,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem',
+          opacity: 0
+        }}
+      >
+        <div style={{
+          width: '1px', height: '40px',
+          background: 'linear-gradient(to bottom, rgba(11,12,16,0.2), transparent)',
+          animation: 'scrollPulse 2s ease-in-out infinite'
+        }}/>
+      </div>
+
+      {/* CSS ANIMATIONS */}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.8); }
+        }
+        @keyframes scrollPulse {
+          0% { transform: scaleY(0); transform-origin: top; }
+          50% { transform: scaleY(1); transform-origin: top; }
+          51% { transform-origin: bottom; }
+          100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+      `}</style>
     </section>
   );
 };
