@@ -11,7 +11,8 @@ const steps = [
     subtitle: 'RESEARCH & ANALYSIS',
     description: 'We dive deep into your brand DNA, analyzing the market, competitors, and audience to uncover undeniable truths.',
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-    accent: '#7000FF'
+    accent: '#7000FF',
+    tags: ['Research', 'Analysis', 'Insights', 'Data']
   },
   {
     number: '02',
@@ -19,7 +20,8 @@ const steps = [
     subtitle: 'BLUEPRINT & ARCHITECTURE',
     description: 'Data drives every decision. We architect a flawless blueprint designed strictly for maximum market dominance.',
     image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80',
-    accent: '#00E5FF'
+    accent: '#00E5FF',
+    tags: ['Planning', 'Wireframing', 'Logic', 'Roadmap']
   },
   {
     number: '03',
@@ -27,7 +29,8 @@ const steps = [
     subtitle: 'BUILD & ENGINEER',
     description: 'Our elite engineering and design teams build pixel-perfect, highly scalable platforms that refuse to be ignored.',
     image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-    accent: '#FF2A54'
+    accent: '#FF2A54',
+    tags: ['Code', 'Design', 'Systems', 'QA']
   },
   {
     number: '04',
@@ -35,7 +38,8 @@ const steps = [
     subtitle: 'LAUNCH & DOMINATE',
     description: 'We do not just launch. We continuously monitor, iterate, and aggressively scale your digital ecosystem.',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-    accent: '#FF8800'
+    accent: '#FF8800',
+    tags: ['Growth', 'Metrics', 'Optimization', 'ROI']
   }
 ];
 
@@ -51,72 +55,74 @@ const Process = () => {
   const imageFrameRef = useRef(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "+=300%",
-        pin: true,
-        scrub: 1,
-        onUpdate: (self) => {
-          // Animate the progress bar fill
-          if (progressFillRef.current) {
-            gsap.set(progressFillRef.current, { scaleY: self.progress });
-          }
-          // Animate the step dots
-          const currentStep = Math.min(Math.floor(self.progress * steps.length), steps.length - 1);
-          stepDotsRef.current.forEach((dot, i) => {
-            if (dot) {
-              dot.style.background = i <= currentStep ? steps[currentStep].accent : 'rgba(255,255,255,0.15)';
-              dot.style.transform = i === currentStep ? 'scale(1.8)' : 'scale(1)';
-              dot.style.boxShadow = i === currentStep ? `0 0 20px ${steps[currentStep].accent}` : 'none';
+    const ctx = gsap.context(() => {
+      const container = containerRef.current;
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "+=300%",
+          pin: true,
+          scrub: 1,
+          onUpdate: (self) => {
+            // Animate the progress bar fill
+            if (progressFillRef.current) {
+              gsap.set(progressFillRef.current, { scaleY: self.progress });
             }
-          });
-          // Animate glow color
-          if (glowRef.current) {
-            glowRef.current.style.background = `radial-gradient(circle, ${steps[currentStep].accent}33 0%, transparent 70%)`;
+            // Animate the step dots based on strict progress boundaries
+            const progressPerStep = 1 / (steps.length - 1);
+            const currentStep = Math.min(
+              Math.max(Math.floor((self.progress + (progressPerStep / 2)) / progressPerStep), 0),
+              steps.length - 1
+            );
+            
+            stepDotsRef.current.forEach((dot, i) => {
+              if (dot) {
+                dot.style.background = i <= currentStep ? steps[currentStep].accent : 'rgba(255,255,255,0.15)';
+                dot.style.transform = i === currentStep ? 'scale(1.8)' : 'scale(1)';
+                dot.style.boxShadow = i === currentStep ? `0 0 20px ${steps[currentStep].accent}` : 'none';
+              }
+            });
+            // Animate glow color
+            if (glowRef.current) {
+              glowRef.current.style.background = `radial-gradient(circle, ${steps[currentStep].accent}33 0%, transparent 70%)`;
+            }
           }
         }
-      }
-    });
-
-    // Initial State
-    gsap.set(imagesRef.current[0], { clipPath: 'inset(0% 0 0 0)', scale: 1 });
-    gsap.set(numbersRef.current[0], { yPercent: 0, opacity: 1 });
-    gsap.set(textsRef.current[0], { y: 0, opacity: 1 });
-
-    for (let i = 1; i < steps.length; i++) {
-      gsap.set(imagesRef.current[i], { clipPath: 'inset(100% 0 0 0)' });
-      gsap.set(numbersRef.current[i], { yPercent: 100, opacity: 0 });
-      gsap.set(textsRef.current[i], { y: 60, opacity: 0 });
-
-      // Transition bundle
-      tl.to(imagesRef.current[i], { clipPath: 'inset(0% 0 0 0)', duration: 1, ease: "none" }, `step${i}`)
-        .to(imagesRef.current[i-1], { scale: 1.15, opacity: 0, duration: 1, ease: "none" }, `step${i}`)
-        .to(numbersRef.current[i], { yPercent: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
-        .to(numbersRef.current[i-1], { yPercent: -120, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
-        .to(textsRef.current[i], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
-        .to(textsRef.current[i-1], { y: -60, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
-        // Animate image frame border glow
-        .to(imageFrameRef.current, { 
-          borderColor: steps[i].accent + '40',
-          boxShadow: `0 0 80px ${steps[i].accent}15, inset 0 0 80px ${steps[i].accent}08`,
-          duration: 1 
-        }, `step${i}`);
-        
-      if (i < steps.length - 1) {
-        tl.to({}, { duration: 0.3 });
-      }
-    }
-
-    return () => {
-      if (tl) tl.kill();
-      ScrollTrigger.getAll().forEach(t => {
-        if(t.vars.trigger === container) t.kill();
       });
-    };
+
+      // Initial State Setup
+      gsap.set(imagesRef.current[0], { clipPath: 'inset(0% 0 0 0)', scale: 1, opacity: 1 });
+      gsap.set(numbersRef.current[0], { yPercent: 0, opacity: 1 });
+      gsap.set(textsRef.current[0], { y: 0, opacity: 1 });
+
+      for (let i = 1; i < steps.length; i++) {
+        gsap.set(imagesRef.current[i], { clipPath: 'inset(100% 0 0 0)', scale: 1, opacity: 1 });
+        gsap.set(numbersRef.current[i], { yPercent: 100, opacity: 0 });
+        gsap.set(textsRef.current[i], { y: 60, opacity: 0 });
+
+        // Transition bundle
+        tl.to(imagesRef.current[i], { clipPath: 'inset(0% 0 0 0)', duration: 1, ease: "none" }, `step${i}`)
+          .to(imagesRef.current[i-1], { scale: 1.15, opacity: 0, duration: 1, ease: "none" }, `step${i}`)
+          .to(numbersRef.current[i], { yPercent: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
+          .to(numbersRef.current[i-1], { yPercent: -120, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
+          .to(textsRef.current[i], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
+          .to(textsRef.current[i-1], { y: -60, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
+          // Animate image frame border glow
+          .to(imageFrameRef.current, { 
+            borderColor: steps[i].accent + '40',
+            boxShadow: `0 0 80px ${steps[i].accent}15, inset 0 0 80px ${steps[i].accent}08`,
+            duration: 1 
+          }, `step${i}`);
+          
+        if (i < steps.length - 1) {
+          tl.to({}, { duration: 0.3 });
+        }
+      }
+    }, containerRef); // Scope to container
+
+    return () => ctx.revert(); // Proper cleanup for React StrictMode
   }, []);
 
   return (
@@ -284,7 +290,7 @@ const Process = () => {
 
               {/* Decorative Tags */}
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
-                {['Research', 'Analysis', 'Insights', 'Data'].map((tag, j) => (
+                {step.tags.map((tag, j) => (
                   <span key={j} style={{
                     padding: '0.3rem 0.8rem',
                     border: `1px solid ${step.accent}30`,

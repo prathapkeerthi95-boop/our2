@@ -7,8 +7,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Navbar = () => {
   const navRef = useRef(null);
+  const linksRef = useRef([]);
+  const indicatorRef = useRef(null);
+
+  // Springs parameters for capsule
+  const K = 0.08;
+  const D = 0.72;
 
   useEffect(() => {
+    // Scroll reveal/hide logic for Navbar
     const showAnim = gsap.from(navRef.current, { 
       yPercent: -100,
       paused: true,
@@ -20,62 +27,182 @@ const Navbar = () => {
       start: "top top",
       end: "max",
       onUpdate: (self) => {
-        // Hide on scroll down, show on scroll up. Always show at very top.
         if (self.direction === 1 && self.scrollY > 100) {
           showAnim.reverse();
         } else {
           showAnim.play();
         }
+      }
+    });
+  }, []);
 
-        // Add glassmorphism background only when scrolled down a bit
-        if (self.scrollY > 60) {
-          navRef.current.classList.add('scrolled');
-          navRef.current.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-          navRef.current.style.backdropFilter = 'blur(16px)';
-          navRef.current.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
-          // Text stays black since background is white
-          navRef.current.style.color = '#0B0C10';
-        } else {
-          navRef.current.classList.remove('scrolled');
-          navRef.current.style.backgroundColor = 'transparent';
-          navRef.current.style.backdropFilter = 'none';
-          navRef.current.style.borderBottom = 'none';
-          // At the top, over the bright hero, text should be black
-          navRef.current.style.color = '#0B0C10';
+  // Spring animation loop for capsule indicator on hover only
+  useEffect(() => {
+    const indicator = indicatorRef.current;
+    if (!indicator) return;
+
+    // Set initial opacity to 0 (hidden) and transitions
+    indicator.style.opacity = '0';
+    indicator.style.transition = 'opacity 0.25s ease, visibility 0.25s ease';
+    indicator.style.visibility = 'hidden';
+
+    let targetLeft = 0;
+    let targetWidth = 0;
+    let currentLeft = 0;
+    let currentWidth = 0;
+    let leftVel = 0;
+    let widthVel = 0;
+
+    let hoverIdx = null;
+
+    const updateTarget = (idx) => {
+      const el = linksRef.current[idx];
+      if (el) {
+        targetLeft = el.offsetLeft;
+        targetWidth = el.offsetWidth;
+      }
+    };
+
+    let rafId;
+    const animate = () => {
+      if (hoverIdx !== null) {
+        updateTarget(hoverIdx);
+        indicator.style.opacity = '1';
+        indicator.style.visibility = 'visible';
+      } else {
+        indicator.style.opacity = '0';
+      }
+
+      // Spring calculations
+      const forceL = (targetLeft - currentLeft) * K;
+      leftVel = (leftVel + forceL) * D;
+      currentLeft += leftVel;
+
+      const forceW = (targetWidth - currentWidth) * K;
+      widthVel = (widthVel + forceW) * D;
+      currentWidth += widthVel;
+
+      // Capsule gel-like stretch along velocity vector
+      const stretch = 1 + Math.abs(leftVel) * 0.06;
+      const transformOrigin = leftVel >= 0 ? 'left center' : 'right center';
+
+      indicator.style.left = `${currentLeft}px`;
+      indicator.style.width = `${currentWidth}px`;
+      indicator.style.transform = `scaleX(${stretch})`;
+      indicator.style.transformOrigin = transformOrigin;
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+
+    // Mouse listeners for all links
+    const handleMouseEnter = (idx) => {
+      hoverIdx = idx;
+    };
+    const handleMouseLeave = () => {
+      hoverIdx = null;
+    };
+
+    const links = linksRef.current;
+    links.forEach((link, idx) => {
+      if (link) {
+        link.addEventListener('mouseenter', () => handleMouseEnter(idx));
+        link.addEventListener('mouseleave', handleMouseLeave);
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      links.forEach((link, idx) => {
+        if (link) {
+          link.removeEventListener('mouseenter', () => handleMouseEnter(idx));
+          link.removeEventListener('mouseleave', handleMouseLeave);
         }
-      }
-    });
-
-    // Make sure initial state over bright hero is black
-    navRef.current.style.color = '#0B0C10';
-    const links = navRef.current.querySelectorAll('a');
-    links.forEach(link => {
-      if (!link.classList.contains('btn-primary')) {
-        link.style.color = '#0B0C10';
-      }
-    });
-
+      });
+    };
   }, []);
 
   return (
-    <nav ref={navRef} className="navbar" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, transition: 'background-color 0.3s, backdrop-filter 0.3s' }}>
+    <nav ref={navRef} className="navbar" style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000 }}>
       <div className="container">
         <MagneticElement>
-          <a href="#" className="navbar-logo" style={{ color: '#0B0C10', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.png" alt="Logo" onError={(e) => e.target.style.display = 'none'} style={{ marginRight: '8px' }} />
-            NUVAROX
+          <a href="#" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.png" alt="NUVAROX" style={{ height: '36px', width: 'auto', display: 'block' }} />
           </a>
         </MagneticElement>
 
-        <ul className="navbar-links">
-          <li><a href="#services" style={{ color: '#0B0C10' }}>Services</a></li>
-          <li><a href="#about" style={{ color: '#0B0C10' }}>About</a></li>
-          <li><a href="#portfolio" style={{ color: '#0B0C10' }}>Portfolio</a></li>
-          <li><a href="#process" style={{ color: '#0B0C10' }}>Process</a></li>
-          <li><a href="#testimonials" style={{ color: '#0B0C10' }}>Clients</a></li>
+        <ul className="navbar-links" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          {/* Spring Capsule Active Pill Indicator */}
+          <div 
+            ref={indicatorRef} 
+            className="nav-indicator" 
+            style={{ 
+              position: 'absolute', 
+              top: '50%',
+              height: '32px', 
+              marginTop: '-16px',
+              backgroundColor: 'rgba(0, 56, 103, 0.06)', 
+              border: '1px solid rgba(0, 56, 103, 0.12)',
+              borderRadius: '50px', 
+              zIndex: 0, 
+              pointerEvents: 'none'
+            }} 
+          />
+
+          <li>
+            <a 
+              ref={el => linksRef.current[0] = el}
+              href="#services" 
+              className="nav-item-link"
+              style={{ padding: '0.4rem 1.1rem', display: 'inline-block', position: 'relative', zIndex: 1 }}
+            >
+              Services
+            </a>
+          </li>
+          <li>
+            <a 
+              ref={el => linksRef.current[1] = el}
+              href="#about" 
+              className="nav-item-link"
+              style={{ padding: '0.4rem 1.1rem', display: 'inline-block', position: 'relative', zIndex: 1 }}
+            >
+              About
+            </a>
+          </li>
+          <li>
+            <a 
+              ref={el => linksRef.current[2] = el}
+              href="#portfolio" 
+              className="nav-item-link"
+              style={{ padding: '0.4rem 1.1rem', display: 'inline-block', position: 'relative', zIndex: 1 }}
+            >
+              Portfolio
+            </a>
+          </li>
+          <li>
+            <a 
+              ref={el => linksRef.current[3] = el}
+              href="#process" 
+              className="nav-item-link"
+              style={{ padding: '0.4rem 1.1rem', display: 'inline-block', position: 'relative', zIndex: 1 }}
+            >
+              Process
+            </a>
+          </li>
+          <li>
+            <a 
+              ref={el => linksRef.current[4] = el}
+              href="#testimonials" 
+              className="nav-item-link"
+              style={{ padding: '0.4rem 1.1rem', display: 'inline-block', position: 'relative', zIndex: 1 }}
+            >
+              Clients
+            </a>
+          </li>
           <li>
             <MagneticElement>
-              <a href="#contact" className="btn-outline" style={{ padding: '0.5rem 1.4rem', fontSize: '0.82rem', borderColor: 'rgba(0,0,0,0.15)', fontWeight: '600' }}>
+              <a href="#contact" className="btn-outline glass-btn nav-cta-btn" style={{ padding: '0.5rem 1.4rem', fontSize: '0.82rem', borderColor: 'rgba(0,0,0,0.15)', fontWeight: '600', position: 'relative', zIndex: 1 }}>
                 <span>Start a Project</span>
               </a>
             </MagneticElement>

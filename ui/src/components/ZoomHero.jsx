@@ -18,7 +18,6 @@ const ZoomHero = () => {
   const scrollRef = useRef(null);
   const glowRef = useRef(null);
   const carouselRef = useRef(null);
-  const tagLeftRef = useRef(null);
   const tagRightRef = useRef(null);
   const dividerRef = useRef(null);
 
@@ -65,16 +64,11 @@ const ZoomHero = () => {
         "-=0.5"
       );
 
-      // Tags slide in from sides
-      tl.fromTo(tagLeftRef.current,
-        { x: -30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        "-=0.5"
-      );
+      // Tag slides in from side right above buttons
       tl.fromTo(tagRightRef.current,
         { x: 30, opacity: 0 },
         { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        "-=0.6"
+        "-=0.5"
       );
 
       // Subtitle + CTA
@@ -169,7 +163,8 @@ const ZoomHero = () => {
       style={{
         position: 'relative', width: '100%', height: '100vh',
         overflow: 'hidden', display: 'flex', alignItems: 'center',
-        background: '#FAFAFA'
+        background: '#FAFAFA',
+        paddingBottom: '80px' // Shift content up slightly to avoid overlapping the bottom drip divider
       }}
     >
       {/* AMBIENT GLOW */}
@@ -201,31 +196,7 @@ const ZoomHero = () => {
           padding: '0 2rem'
         }}
       >
-        {/* TOP TAG BAR */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          marginBottom: '2.5rem'
-        }}>
-          <div ref={tagLeftRef} style={{
-            display: 'flex', alignItems: 'center', gap: '0.6rem',
-            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
-          }}>
-            <span style={{
-              width: '8px', height: '8px', borderRadius: '50%',
-              background: 'var(--accent-crimson)',
-              animation: 'pulse 2s ease-in-out infinite'
-            }}></span>
-            Available for Projects
-          </div>
-
-          <div ref={tagRightRef} style={{
-            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
-          }}>
-            Scroll to Explore ↓
-          </div>
-        </div>
+        {/* We removed the legacy top tag bar to clear up space and prevent text clashes */}
 
         {/* HEADLINE — EDITORIAL SPLIT */}
         <div style={{ marginBottom: '1.5rem' }}>
@@ -339,7 +310,7 @@ const ZoomHero = () => {
 
         {/* BOTTOM ROW — Subtitle + CTA */}
         <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
           flexWrap: 'wrap', gap: '2rem'
         }}>
           <p
@@ -354,20 +325,30 @@ const ZoomHero = () => {
             engineered to captivate your audience and deliver measurable growth.
           </p>
 
-          <div ref={ctaRef} style={{ display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0 }}>
-            <MagneticElement>
-              <a href="#portfolio" className="btn-premium">
-                <span>See Our Work</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginLeft: '0.5rem' }}>
-                  <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-            </MagneticElement>
-            <MagneticElement>
-              <a href="#contact" className="btn-outline" style={{ padding: '1.2rem 2.5rem' }}>
-                <span>Let's Talk</span>
-              </a>
-            </MagneticElement>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', alignItems: 'flex-start' }}>
+            {/* Scroll indicator label repositioned directly above buttons */}
+            <div ref={tagRightRef} style={{
+              fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
+              textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
+            }}>
+              Scroll to Explore ↓
+            </div>
+
+            <div ref={ctaRef} style={{ display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0 }}>
+              <MagneticElement>
+                <a href="#portfolio" className="btn-premium">
+                  <span>See Our Work</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginLeft: '0.5rem' }}>
+                    <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+              </MagneticElement>
+              <MagneticElement>
+                <a href="#contact" className="btn-outline" style={{ padding: '1.2rem 2.5rem' }}>
+                  <span>Let's Talk</span>
+                </a>
+              </MagneticElement>
+            </div>
           </div>
         </div>
       </div>
