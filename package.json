@@ -1,0 +1,13 @@
+{
+  "name": "our-project-root",
+  "version": "1.0.0",
+  "description": "Root orchestrator for API and UI services",
+  "scripts": {
+    "dev:ui": "npm run dev --prefix ui",
+    "dev:api": "npm run dev --prefix api",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:ui\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

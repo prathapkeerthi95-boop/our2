@@ -374,23 +374,6 @@ p {
 }
 
 
-/* ─────────────────────────────────────────
-   iOS LIQUID GLASS NAVBAR
-───────────────────────────────────────── */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 0.75rem 0;
-  z-index: 1000;
-}
-
-.navbar.scrolled {
-  padding: 0.4rem 0;
-}
-
-
 .navbar .container {
   display: flex;
   justify-content: space-between;
@@ -538,15 +521,21 @@ p {
 /* ① Hero — pure white + floating glass */
 .section-hero {
   position: relative;
-  background: var(--bg-white);
+  background: #FAFAFA !important;
   overflow: hidden;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+.section-about {
+  margin-top: 0 !important;
+  border-top: none !important;
 }
 
 /* ② Services — frosted white glass panels on cream */
 .section-services {
-  padding: 8rem 0;
+  padding: 0;
   position: relative;
-  background: linear-gradient(160deg, #F8F8FC 0%, #F1EFF9 100%);
+  background: transparent;
   overflow: hidden;
 }
 
@@ -560,14 +549,12 @@ p {
   pointer-events: none;
 }
 
-/* ③ About — warm cream, left-enter slide */
+/* ③ ABOUT — warm cream, left-enter slide */
 .section-about {
-  padding: 8rem 0;
+  padding: 0;
   position: relative;
   background: linear-gradient(140deg, var(--bg-cream) 0%, #EDE9E1 100%);
-  clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%);
-  margin: -3rem 0;
-  overflow: hidden;
+  margin: 0;
 }
 
 /* ④ Stats — deep dark glass */
@@ -595,13 +582,12 @@ p {
   pointer-events: none;
 }
 
-/* ⑥ Process — frosted white, angled top/bottom */
+/* ⑥ Process — transparent wrapper without white lines */
 .section-process-wrapper {
-  background: var(--bg-white);
+  background: transparent;
   position: relative;
-  padding: 4px 0;
-  clip-path: polygon(0 3%, 100% 0, 100% 97%, 0 100%);
-  margin: -2rem 0;
+  padding: 0;
+  margin: 0;
 }
 
 /* ⑦ Testimonials — glassmorphic mid-dark */
@@ -620,6 +606,20 @@ p {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%);
   pointer-events: none;
+}
+
+/* Testimonial neon outline flicker effect */
+@keyframes testimonial-flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+    -webkit-text-stroke: 1.5px #00E5FF;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.35);
+    opacity: 1;
+  }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+    -webkit-text-stroke: 1px rgba(0, 229, 255, 0.15);
+    text-shadow: none;
+    opacity: 0.35;
+  }
 }
 
 /* ⑧ CTA / Contact — vivid gradient dark */
@@ -809,7 +809,19 @@ p {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 5rem;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.about-feature {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: none;
+  padding: 1.5rem;
+}
+
+.about-feature:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border-color: rgba(255,255,255,0.9);
 }
 
 .about-video-wrapper {
@@ -1194,7 +1206,7 @@ body {
   background-color: var(--bg-white);
   color: var(--text-black);
   font-family: var(--font-body);
-  overflow-x: hidden;
+  overflow-x: clip;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   cursor: none;
@@ -1438,15 +1450,46 @@ p {
   width: 100%;
   padding: 0.75rem 0;
   z-index: 1000;
-  transition: all 0.4s ease;
+  
+  /* Completely transparent as requested */
+  background: transparent;
+  
+  /* No background blur */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  
+  /* Bottom border only since it is full-width */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  
+  /* Soft shadow only, no extra glow or white overlay */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  
+  transition: 
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 200px at var(--nav-mx) var(--nav-my), rgba(255, 255, 255, 0.12) 0%, transparent 80%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.8;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+  display: none !important; /* disabled glow */
 }
 
 .navbar.scrolled {
-  padding: 0.4rem 0;
-  background: transparent;
-  backdrop-filter: none;
-  border-bottom: none;
-  box-shadow: none;
+  padding: 0.45rem 0;
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
 }
 
 .navbar .container {
@@ -1487,10 +1530,17 @@ p {
   letter-spacing: 0.05em;
   color: rgba(0, 56, 103, 0.65);
   text-decoration: none;
-  transition: color 0.3s, opacity 0.3s;
+  transition: padding 0.4s ease, color 0.3s, opacity 0.3s;
   position: relative;
   padding: 0.4rem 1.1rem;
   display: inline-block;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.navbar-links a:hover {
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
 }
 
 .navbar-links a::after {
@@ -1513,6 +1563,52 @@ p {
 .navbar-links a:hover,
 .navbar-links a.active {
   color: #003867;
+}
+
+/* ── Adaptive Light-Background Navbar Mode ── */
+.navbar--light-bg .navbar-links a {
+  color: rgba(8, 9, 14, 0.6);
+}
+
+.navbar--light-bg .navbar-links a:hover,
+.navbar--light-bg .navbar-links a.active {
+  color: #08090E;
+}
+
+.navbar--light-bg .navbar-links a::after {
+  background: #08090E;
+}
+
+.navbar--light-bg .nav-cta-btn {
+  border-color: rgba(0, 0, 0, 0.25) !important;
+  color: #08090E !important;
+}
+
+.navbar--light-bg {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Adaptive Dark-Background Navbar Mode (default) ── */
+.navbar:not(.navbar--light-bg) .navbar-links a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar:not(.navbar--light-bg) .navbar-links a:hover,
+.navbar:not(.navbar--light-bg) .navbar-links a.active {
+  color: #FFFFFF;
+}
+
+.navbar:not(.navbar--light-bg) .navbar-links a::after {
+  background: #FFFFFF;
+}
+
+.navbar:not(.navbar--light-bg) .nav-cta-btn {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+}
+
+.navbar:not(.navbar--light-bg) {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 /* ============================================

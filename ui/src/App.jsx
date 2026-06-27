@@ -75,20 +75,25 @@ function App() {
 
     // ── Lenis Smooth Scrolling ────────────────────────────
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      mouseMultiplier: 1,
+      mouseMultiplier: 1.0,
       smoothTouch: false,
-      touchMultiplier: 2,
+      touchMultiplier: 2.0,
       infinite: false,
     });
 
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
+    
+    let rafId;
+    const raf = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
 
     // ── Scroll Reveal ─────────────────────────────────────
     const reveals = document.querySelectorAll('.reveal');
@@ -169,8 +174,54 @@ function App() {
       );
     });
 
+    // ── Smooth entry transitions for post-NeuralGlobe sections ──
+    // Process section wrapper pinning calculations require it to be static, no entry shift.
+
+    // Testimonials section: smooth entry
+    const testimonialsSection = document.querySelector('.section-testimonials');
+    if (testimonialsSection) {
+      gsap.fromTo(testimonialsSection,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0,
+          duration: 1.0,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: testimonialsSection, start: 'top 92%', once: true }
+        }
+      );
+    }
+
+    // CTA + Contact section: smooth entry
+    const ctaSection = document.querySelector('.section-cta-contact');
+    if (ctaSection) {
+      gsap.fromTo(ctaSection,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0,
+          duration: 1.0,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: ctaSection, start: 'top 92%', once: true }
+        }
+      );
+    }
+
+    // Footer: subtle slide up
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      gsap.fromTo(footer,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: footer, start: 'top 95%', once: true }
+        }
+      );
+    }
+
     return () => {
       lenis.destroy();
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -247,24 +298,21 @@ function App() {
 
       <Navbar />
 
-      <main style={{ position: 'relative', zIndex: 10, overflowX: 'hidden' }}>
+      <main style={{ position: 'relative', zIndex: 10 }}>
 
         {/* ① HERO */}
         <section className="section-hero">
           <ZoomHero />
-          <InteractiveDripDivider color="#FFFFFF" />
         </section>
 
-        {/* ② SERVICES — frosted violet tint */}
-        <section className="section-services">
-          <Services />
-          <InteractiveDripDivider color="#050505" />
-        </section>
-
-        {/* ③ ABOUT — warm cream, clipped polygon */}
+        {/* ② ABOUT — warm cream, clipped polygon */}
         <section className="section-about">
           <About />
-          <InteractiveDripDivider color="#F2F0EC" />
+        </section>
+
+        {/* ③ SERVICES — frosted violet tint */}
+        <section className="section-services">
+          <Services />
         </section>
 
         {/* ④ STATS — dark glass */}
@@ -272,7 +320,6 @@ function App() {
           <div style={{ backgroundColor: '#0A0A0F', color: '#FFF' }}>
             <Stats />
           </div>
-          <InteractiveDripDivider color="#0A0A0F" />
         </div>
 
         {/* ⑤ PORTFOLIO — dark grid */}
@@ -283,21 +330,18 @@ function App() {
         {/* ⑥ NEURAL GLOBE — antigravity engine */}
         <div style={{ position: 'relative' }}>
           <NeuralGlobe />
-          <InteractiveDripDivider color="#050505" />
         </div>
 
         {/* ⑦ PROCESS — frosted white, angled */}
         <div className="section-process-wrapper" style={{ position: 'relative' }}>
-          <div style={{ backgroundColor: '#F8F8FC' }}>
+          <div style={{ backgroundColor: '#050505' }}>
             <Process />
           </div>
-          <InteractiveDripDivider color="#F8F8FC" />
         </div>
 
         {/* ⑧ TESTIMONIALS — glassmorphic mid-dark */}
         <section className="section-testimonials" style={{ position: 'relative' }}>
           <Testimonials />
-          <InteractiveDripDivider color="#07070F" />
         </section>
 
         {/* ⑨ CTA + CONTACT — vivid dark */}

@@ -1,34 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Shield, Zap, Users, Award } from 'lucide-react';
 import AnimatedHeading from './AnimatedHeading';
 
 const features = [
-  { icon: <Zap size={22} />, title: 'Obsessive Speed', desc: 'Sub-second load times. We treat performance as a feature, not an afterthought.' },
-  { icon: <Shield size={22} />, title: 'Rock-Solid Security', desc: 'Enterprise-grade protocols on every deployment. Your data stays fortified.' },
-  { icon: <Users size={22} />, title: 'Dedicated Crew', desc: 'A tight-knit squad of senior engineers and designers assigned to your vision.' },
-  { icon: <Award size={22} />, title: 'Revenue-First Design', desc: 'Every pixel we place is engineered to convert visitors into paying customers.' }
+  { 
+    icon: <Zap size={22} />, 
+    title: 'Obsessive Speed', 
+    desc: 'Sub-second load times. We treat performance as a feature, not an afterthought.',
+    image: '/images/about_speed_1782497825481.png',
+    heading: 'Engineered for Speed',
+    subheading: 'Milliseconds matter'
+  },
+  { 
+    icon: <Shield size={22} />, 
+    title: 'Rock-Solid Security', 
+    desc: 'Enterprise-grade protocols on every deployment. Your data stays fortified.',
+    image: '/images/about_security_1782497841427.png',
+    heading: 'Uncompromised Security',
+    subheading: 'Fortified by design'
+  },
+  { 
+    icon: <Users size={22} />, 
+    title: 'Dedicated Crew', 
+    desc: 'A tight-knit squad of senior engineers and designers assigned to your vision.',
+    image: '/images/about_crew_1782497859117.png',
+    heading: 'Your Senior Squad',
+    subheading: 'No juniors, no handoffs'
+  },
+  { 
+    icon: <Award size={22} />, 
+    title: 'Revenue-First Design', 
+    desc: 'Every pixel we place is engineered to convert visitors into paying customers.',
+    image: '/images/about_revenue_1782497874756.png',
+    heading: 'Designed to Convert',
+    subheading: 'Design that pays for itself'
+  }
 ];
 
 const About = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const defaultFeature = {
+    heading: 'Our Creative Process',
+    subheading: 'From concept to launch',
+    image: '/images/about_creative_process.png'
+  };
+
+  const activeFeature = activeIndex !== null ? features[activeIndex] : defaultFeature;
+
   return (
     <section id="about" className="about-section">
       <div className="container">
         <div className="about-grid">
           
-          {/* Left: Video with overlay */}
-          <div className="reveal hover-target">
+          {/* Left: Sticky Image container */}
+          <div className="hover-target" style={{ position: 'sticky', top: '25vh' }}>
             <div className="about-video-wrapper" style={{ position: 'relative', width: '100%', maxWidth: '1000px', margin: '0 auto', borderRadius: '30px', overflow: 'hidden', boxShadow: '0 40px 80px rgba(0,0,0,0.15)', aspectRatio: '16/9' }}>
-              <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}>
-                <source src="/illustration-explainer-purple-ai-business-company-presentation.mp4" type="video/mp4" />
-              </video>
-              <div className="about-video-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2.5rem', color: 'white' }}>
-                <h3 style={{ fontSize: '1.8rem', marginBottom: '0.25rem', color: 'white', fontWeight: 700 }}>Our Creative Process</h3>
-                <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', margin: 0 }}>From concept to launch</p>
+              <img 
+                src={activeFeature.image} 
+                alt={activeFeature.heading}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, transition: 'all 0.5s ease-in-out' }} 
+              />
+              <div className="about-video-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2.5rem', color: 'white', transition: 'all 0.3s ease' }}>
+                <h3 style={{ fontSize: '1.8rem', marginBottom: '0.25rem', color: 'white', fontWeight: 700 }}>
+                  {activeFeature.heading}
+                </h3>
+                <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', margin: 0 }}>
+                  {activeFeature.subheading}
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Right: Copy */}
+          {/* Right: Copy & Features */}
           <div>
             <div className="section-label reveal reveal-delay-1">Who We Are</div>
             <AnimatedHeading 
@@ -38,16 +82,31 @@ const About = () => {
             <p className="reveal reveal-delay-3" style={{ marginTop: '1.5rem' }}>
               NUVAROX is a boutique digital studio born in Chennai. We're not a 200-person agency churning out templates. We're a focused, obsessive crew that treats every project like it's our own product launch.
             </p>
-            <p className="reveal reveal-delay-4" style={{ marginTop: '1rem' }}>
+            <p className="reveal reveal-delay-4" style={{ marginTop: '1rem', marginBottom: '3rem' }}>
               We partner with startups and ambitious brands who understand that design isn't decoration — it's strategy. When you work with us, you get our full attention, not a junior team and a project manager.
             </p>
 
-            <div className="about-features" style={{ marginTop: '2.5rem' }}>
+            <div 
+              className="about-features" 
+              style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '2.5rem' }}
+              onMouseLeave={() => setActiveIndex(null)}
+            >
               {features.map((f, i) => (
-                <div key={i} className={`about-feature glass-card reveal reveal-delay-${(i % 4) + 1}`}>
+                <div 
+                  key={i} 
+                  className={`about-feature glass-card reveal reveal-delay-${(i % 4) + 1}`}
+                  onMouseEnter={() => setActiveIndex(i)}
+                  style={{
+                    opacity: activeIndex === null || activeIndex === i ? 1 : 0.6,
+                    transform: activeIndex === i ? 'scale(1.02)' : 'scale(1)',
+                    boxShadow: activeIndex === i ? '0 20px 40px rgba(0,0,0,0.1)' : 'none',
+                    borderColor: activeIndex === i ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+                    cursor: 'none'
+                  }}
+                >
                   <div style={{ color: 'var(--accent-crimson)', marginBottom: '0.75rem' }}>{f.icon}</div>
                   <h4>{f.title}</h4>
-                  <p>{f.desc}</p>
+                  <p style={{ margin: 0 }}>{f.desc}</p>
                 </div>
               ))}
             </div>

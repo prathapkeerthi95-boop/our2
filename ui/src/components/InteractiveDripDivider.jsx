@@ -88,14 +88,19 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
     window.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('mouseleave', handleMouseLeave);
 
+    // Cache bounding rect to avoid per-frame getBoundingClientRect
+    let cachedRect = container.getBoundingClientRect();
+    const updateCachedRect = () => { cachedRect = container.getBoundingClientRect(); };
+    window.addEventListener('resize', updateCachedRect, { passive: true });
+    window.addEventListener('scroll', updateCachedRect, { passive: true });
+
     // Physics update loop
-    let rafId;
+    let rafId = null;
     const updatePhysics = () => {
       const mouse = mouseRef.current;
-      const rect = container.getBoundingClientRect();
       
       // Stop tracking mouse if scrolled completely out of view
-      if (rect.bottom < 0 || rect.top > window.innerHeight) {
+      if (cachedRect.bottom < 0 || cachedRect.top > window.innerHeight) {
         mouse.active = false;
       }
 
@@ -120,7 +125,7 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
 
             // Droplet detachment condition (stretch threshold + random chance + cooloff)
             if (targetHeight > 80 && Math.random() < 0.02 && drip.cooldown <= 0) {
-              spawnDroplet(drip.x, isTop ? (rect.height - targetHeight) : targetHeight, drip.width * 0.45);
+              spawnDroplet(drip.x, isTop ? (cachedRect.height - targetHeight) : targetHeight, drip.width * 0.45);
               drip.cooldown = 45; // prevent immediate spawn spam
             }
           }
@@ -136,7 +141,7 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
         // Apply visual updates directly to SVG elements
         if (drip.el) {
           if (isTop) {
-            drip.el.setAttribute('y', (rect.height - drip.height).toFixed(1));
+            drip.el.setAttribute('y', (cachedRect.height - drip.height).toFixed(1));
           }
           drip.el.setAttribute('height', drip.height.toFixed(1));
         }
@@ -157,7 +162,7 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
 
       // Clear dissolved droplet DOM elements
       droplets.forEach((drop, idx) => {
-        if (drop.opacity <= 0 || (isTop ? drop.y < -50 : drop.y > rect.height + 50)) {
+        if (drop.opacity <= 0 || (isTop ? drop.y < -50 : drop.y > cachedRect.height + 50)) {
           if (drop.el && group) {
             group.removeChild(drop.el);
           }
@@ -169,11 +174,39 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
       rafId = requestAnimationFrame(updatePhysics);
     };
 
-    rafId = requestAnimationFrame(updatePhysics);
+    // Visibility tracking
+    let dividerVisible = false;
+    const startPhysics = () => {
+      if (!rafId) {
+        rafId = requestAnimationFrame(updatePhysics);
+      }
+    };
+    const stopPhysics = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    const dividerObs = new IntersectionObserver(
+      ([entry]) => {
+        dividerVisible = entry.isIntersecting;
+        if (dividerVisible) {
+          startPhysics();
+        } else {
+          stopPhysics();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+    dividerObs.observe(container);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stopPhysics();
+      dividerObs.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', updateCachedRect);
+      window.removeEventListener('scroll', updateCachedRect);
       container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [color, isTop]);
@@ -208,7 +241,7 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
         <defs>
           {/* Gooey matrix filter */}
           <filter id={filterId}>
-            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
             <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8" result="goo" />
             <feComposite in="SourceGraphic" in2="goo" operator="atop" />
           </filter>

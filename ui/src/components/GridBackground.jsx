@@ -15,8 +15,9 @@ const GridBackground = () => {
 
     // Particles array
     let particles = [];
-    const particleCount = 120; // Number of floating particles
+    const particleCount = 60; // Number of floating particles
     const connectionDistance = 150; // How close they must be to connect
+    const connectionDistSq = connectionDistance * connectionDistance;
 
     const resize = () => {
       width = window.innerWidth;
@@ -71,13 +72,15 @@ const GridBackground = () => {
         // Distance from mouse
         const dx = currentMouse.x - p.x;
         const dy = currentMouse.y - p.y;
-        const distToMouse = Math.sqrt(dx * dx + dy * dy);
+        const distToMouseSq = dx * dx + dy * dy;
+        const mouseRadiusSq = mouseRadius * mouseRadius;
 
         let opacity = 0.05; // Base invisible-ish
         let size = p.baseSize;
 
         // Flashlight effect
-        if (distToMouse < mouseRadius) {
+        if (distToMouseSq < mouseRadiusSq) {
+          const distToMouse = Math.sqrt(distToMouseSq);
           const intensity = 1 - (distToMouse / mouseRadius);
           opacity = 0.05 + (intensity * 0.5); // Glow up to 0.55
           size = p.baseSize + (intensity * 2);
@@ -89,20 +92,25 @@ const GridBackground = () => {
         ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
         ctx.fill();
 
+        // Only check connections for particles near the mouse (optimization)
+        if (distToMouseSq > (mouseRadius + connectionDistance) * (mouseRadius + connectionDistance)) return;
+
         // Connect nearby particles
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx2 = p.x - p2.x;
           const dy2 = p.y - p2.y;
-          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+          const dist2Sq = dx2 * dx2 + dy2 * dy2;
 
-          if (dist2 < connectionDistance) {
+          if (dist2Sq < connectionDistSq) {
+            const dist2 = Math.sqrt(dist2Sq);
             // Line opacity depends on distance between particles AND distance to mouse
-            const distToMouse2 = Math.sqrt(Math.pow(currentMouse.x - p2.x, 2) + Math.pow(currentMouse.y - p2.y, 2));
-            const avgDistToMouse = (distToMouse + distToMouse2) / 2;
+            const distToMouse2Sq = (currentMouse.x - p2.x) ** 2 + (currentMouse.y - p2.y) ** 2;
+            const avgDistToMouseSq = (distToMouseSq + distToMouse2Sq) / 2;
             
             let lineOpacity = 0.01; // Barely visible base
-            if (avgDistToMouse < mouseRadius) {
+            if (avgDistToMouseSq < mouseRadiusSq) {
+              const avgDistToMouse = Math.sqrt(avgDistToMouseSq);
               const lineIntensity = 1 - (avgDistToMouse / mouseRadius);
               const connectionIntensity = 1 - (dist2 / connectionDistance);
               lineOpacity = 0.01 + (lineIntensity * connectionIntensity * 0.25);

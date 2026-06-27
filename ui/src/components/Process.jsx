@@ -62,20 +62,23 @@ const Process = () => {
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "+=300%",
+          end: "+=500%",
           pin: true,
-          scrub: 1,
+          scrub: 1.0,
+          anticipatePin: 1.5,
           onUpdate: (self) => {
-            // Animate the progress bar fill
+            // Progress bar
             if (progressFillRef.current) {
-              gsap.set(progressFillRef.current, { scaleY: self.progress });
+              gsap.set(progressFillRef.current, { scaleY: Math.min(self.progress * 1.05, 1) });
             }
-            // Animate the step dots based on strict progress boundaries
-            const progressPerStep = 1 / (steps.length - 1);
-            const currentStep = Math.min(
-              Math.max(Math.floor((self.progress + (progressPerStep / 2)) / progressPerStep), 0),
-              steps.length - 1
-            );
+            
+            // Calculate which step we're on based on scroll progress
+            const progress = self.progress;
+            let currentStep;
+            if (progress < 0.21) currentStep = 0;
+            else if (progress < 0.45) currentStep = 1;
+            else if (progress < 0.70) currentStep = 2;
+            else currentStep = 3;
             
             stepDotsRef.current.forEach((dot, i) => {
               if (dot) {
@@ -84,7 +87,6 @@ const Process = () => {
                 dot.style.boxShadow = i === currentStep ? `0 0 20px ${steps[currentStep].accent}` : 'none';
               }
             });
-            // Animate glow color
             if (glowRef.current) {
               glowRef.current.style.background = `radial-gradient(circle, ${steps[currentStep].accent}33 0%, transparent 70%)`;
             }
@@ -92,37 +94,89 @@ const Process = () => {
         }
       });
 
-      // Initial State Setup
-      gsap.set(imagesRef.current[0], { clipPath: 'inset(0% 0 0 0)', scale: 1, opacity: 1 });
-      gsap.set(numbersRef.current[0], { yPercent: 0, opacity: 1 });
-      gsap.set(textsRef.current[0], { y: 0, opacity: 1 });
-
-      for (let i = 1; i < steps.length; i++) {
-        gsap.set(imagesRef.current[i], { clipPath: 'inset(100% 0 0 0)', scale: 1, opacity: 1 });
-        gsap.set(numbersRef.current[i], { yPercent: 100, opacity: 0 });
-        gsap.set(textsRef.current[i], { y: 60, opacity: 0 });
-
-        // Transition bundle
-        tl.to(imagesRef.current[i], { clipPath: 'inset(0% 0 0 0)', duration: 1, ease: "none" }, `step${i}`)
-          .to(imagesRef.current[i-1], { scale: 1.15, opacity: 0, duration: 1, ease: "none" }, `step${i}`)
-          .to(numbersRef.current[i], { yPercent: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
-          .to(numbersRef.current[i-1], { yPercent: -120, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
-          .to(textsRef.current[i], { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, `step${i}`)
-          .to(textsRef.current[i-1], { y: -60, opacity: 0, duration: 0.8, ease: "power3.in" }, `step${i}`)
-          // Animate image frame border glow
-          .to(imageFrameRef.current, { 
-            borderColor: steps[i].accent + '40',
-            boxShadow: `0 0 80px ${steps[i].accent}15, inset 0 0 80px ${steps[i].accent}08`,
-            duration: 1 
-          }, `step${i}`);
-          
-        if (i < steps.length - 1) {
-          tl.to({}, { duration: 0.3 });
-        }
+      // ── Initialize ALL steps offscreen ──
+      for (let i = 0; i < steps.length; i++) {
+        gsap.set(imagesRef.current[i], { clipPath: 'inset(100% 0 0 0)', scale: 1.1, opacity: 0 });
+        gsap.set(numbersRef.current[i], { yPercent: 80, opacity: 0 });
+        gsap.set(textsRef.current[i], { y: 40, opacity: 0 });
       }
-    }, containerRef); // Scope to container
 
-    return () => ctx.revert(); // Proper cleanup for React StrictMode
+      const TRANSITION = 0.8;
+
+      // ── Step 0 (Discovery) transition IN: 0.0 -> 0.8 ──
+      tl.to(imagesRef.current[0], { clipPath: 'inset(0% 0 0 0)', scale: 1.0, opacity: 1, duration: TRANSITION, ease: "power2.out" }, 0.0)
+        .to(numbersRef.current[0], { yPercent: 0, opacity: 1, duration: TRANSITION - 0.2, ease: "power2.out" }, 0.2)
+        .to(textsRef.current[0], { y: 0, opacity: 1, duration: TRANSITION - 0.2, ease: "power2.out" }, 0.2)
+        .to(imageFrameRef.current, { 
+          borderColor: steps[0].accent + '40',
+          boxShadow: `0 0 80px ${steps[0].accent}15, inset 0 0 80px ${steps[0].accent}08`,
+          duration: TRANSITION - 0.2 
+        }, 0.2);
+      
+      // Hold step 0 visible: 0.8 -> 2.8
+
+      // ── Step 1 (Strategy) transition: starts at 2.8 ──
+      // Step 0 OUT: 2.8 -> 3.4
+      tl.to(numbersRef.current[0], { yPercent: -80, opacity: 0, duration: 0.6, ease: "power2.in" }, 2.8)
+        .to(textsRef.current[0], { y: -40, opacity: 0, duration: 0.6, ease: "power2.in" }, 2.8)
+        .to(imagesRef.current[0], { scale: 1.15, opacity: 0, duration: 0.6, ease: "power2.in" }, 2.8);
+
+      // Step 1 IN: 3.3 -> 4.1
+      tl.to(imagesRef.current[1], { clipPath: 'inset(0% 0 0 0)', scale: 1.0, opacity: 1, duration: TRANSITION, ease: "power2.out" }, 3.3)
+        .to(numbersRef.current[1], { yPercent: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 3.4)
+        .to(textsRef.current[1], { y: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 3.4)
+        .to(imageFrameRef.current, { 
+          borderColor: steps[1].accent + '40',
+          boxShadow: `0 0 80px ${steps[1].accent}15, inset 0 0 80px ${steps[1].accent}08`,
+          duration: TRANSITION - 0.1 
+        }, 3.4);
+          
+      // Hold step 1 visible: 4.1 -> 6.1
+
+      // ── Step 2 (Execution) transition: starts at 6.1 ──
+      // Step 1 OUT: 6.1 -> 6.7
+      tl.to(numbersRef.current[1], { yPercent: -80, opacity: 0, duration: 0.6, ease: "power2.in" }, 6.1)
+        .to(textsRef.current[1], { y: -40, opacity: 0, duration: 0.6, ease: "power2.in" }, 6.1)
+        .to(imagesRef.current[1], { scale: 1.15, opacity: 0, duration: 0.6, ease: "power2.in" }, 6.1);
+
+      // Step 2 IN: 6.6 -> 7.4
+      tl.to(imagesRef.current[2], { clipPath: 'inset(0% 0 0 0)', scale: 1.0, opacity: 1, duration: TRANSITION, ease: "power2.out" }, 6.6)
+        .to(numbersRef.current[2], { yPercent: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 6.7)
+        .to(textsRef.current[2], { y: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 6.7)
+        .to(imageFrameRef.current, { 
+          borderColor: steps[2].accent + '40',
+          boxShadow: `0 0 80px ${steps[2].accent}15, inset 0 0 80px ${steps[2].accent}08`,
+          duration: TRANSITION - 0.1 
+        }, 6.7);
+
+      // Hold step 2 visible: 7.4 -> 9.4
+
+      // ── Step 3 (Scale) transition: starts at 9.4 ──
+      // Step 2 OUT: 9.4 -> 10.0
+      tl.to(numbersRef.current[2], { yPercent: -80, opacity: 0, duration: 0.6, ease: "power2.in" }, 9.4)
+        .to(textsRef.current[2], { y: -40, opacity: 0, duration: 0.6, ease: "power2.in" }, 9.4)
+        .to(imagesRef.current[2], { scale: 1.15, opacity: 0, duration: 0.6, ease: "power2.in" }, 9.4);
+
+      // Step 3 IN: 9.9 -> 10.7
+      tl.to(imagesRef.current[3], { clipPath: 'inset(0% 0 0 0)', scale: 1.0, opacity: 1, duration: TRANSITION, ease: "power2.out" }, 9.9)
+        .to(numbersRef.current[3], { yPercent: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 10.0)
+        .to(textsRef.current[3], { y: 0, opacity: 1, duration: TRANSITION - 0.1, ease: "power2.out" }, 10.0)
+        .to(imageFrameRef.current, { 
+          borderColor: steps[3].accent + '40',
+          boxShadow: `0 0 80px ${steps[3].accent}15, inset 0 0 80px ${steps[3].accent}08`,
+          duration: TRANSITION - 0.1 
+        }, 10.0);
+
+      // Hold step 3 visible: 10.7 -> 12.7
+
+      // ── Step 3 OUT (final exit): 12.7 -> 13.5 ──
+      tl.to(numbersRef.current[3], { yPercent: -80, opacity: 0, duration: 0.6, ease: "power2.in" }, 12.7)
+        .to(textsRef.current[3], { y: -40, opacity: 0, duration: 0.6, ease: "power2.in" }, 12.7)
+        .to(imagesRef.current[3], { scale: 1.15, opacity: 0, duration: 0.7, ease: "power2.in" }, 12.7);
+
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -153,10 +207,17 @@ const Process = () => {
         }} 
       />
 
-      {/* NOISE TEXTURE */}
+      {/* FUTURISTIC TECH GRID BACKGROUND */}
       <div style={{
-        position: 'absolute', inset: 0, zIndex: 0, opacity: 0.3, pointerEvents: 'none',
-        background: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
+        position: 'absolute',
+        inset: 0,
+        zIndex: 0,
+        opacity: 0.15,
+        pointerEvents: 'none',
+        backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+        backgroundSize: '60px 60px',
+        maskImage: 'radial-gradient(circle at 50% 50%, black 40%, transparent 85%)',
+        WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 40%, transparent 85%)'
       }} />
 
       {/* VERTICAL PROGRESS BAR — LEFT EDGE */}
@@ -227,7 +288,7 @@ const Process = () => {
         </div>
 
         {/* MASSIVE NUMBERS */}
-        <div style={{ position: 'relative', height: '25vh', overflow: 'hidden', marginBottom: '1rem' }}>
+        <div style={{ position: 'relative', height: '30vh', overflow: 'hidden', marginBottom: '1rem' }}>
           {steps.map((step, i) => (
             <div 
               key={i}
@@ -236,14 +297,14 @@ const Process = () => {
                 position: 'absolute',
                 top: 0, left: 0, width: '100%', height: '100%',
                 display: 'flex', alignItems: 'center',
-                fontSize: 'clamp(8rem, 18vw, 18rem)',
+                fontSize: 'clamp(8rem, 15vw, 15rem)',
                 fontFamily: 'var(--font-display)',
                 fontWeight: 900,
                 background: `linear-gradient(135deg, ${step.accent}, ${step.accent}66)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
-                lineHeight: 0.85,
+                lineHeight: 1.0,
                 letterSpacing: '-0.06em',
                 opacity: 0
               }}
@@ -355,6 +416,7 @@ const Process = () => {
               <img 
                 src={step.image} 
                 alt={step.title} 
+                loading="lazy"
                 style={{ 
                   width: '100%', 
                   height: '100%', 

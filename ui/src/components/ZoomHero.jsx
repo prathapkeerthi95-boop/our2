@@ -164,7 +164,8 @@ const ZoomHero = () => {
         position: 'relative', width: '100%', height: '100vh',
         overflow: 'hidden', display: 'flex', alignItems: 'center',
         background: '#FAFAFA',
-        paddingBottom: '80px' // Shift content up slightly to avoid overlapping the bottom drip divider
+        paddingTop: '80px', // Push content down to avoid overlapping the navbar
+        paddingBottom: '40px' // Shift content up slightly to avoid overlapping the bottom drip divider
       }}
     >
       {/* AMBIENT GLOW */}
@@ -201,7 +202,7 @@ const ZoomHero = () => {
         {/* HEADLINE — EDITORIAL SPLIT */}
         <div style={{ marginBottom: '1.5rem' }}>
           {/* Line 1 */}
-          <div ref={line1Ref} style={{ overflow: 'hidden' }}>
+          <div ref={line1Ref} style={{ overflow: 'hidden', paddingBottom: '0.2em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
@@ -216,20 +217,23 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 2 — with accent word */}
-          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
+          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.2em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
               lineHeight: 0.95,
               letterSpacing: '-0.04em',
-              margin: 0,
-              background: 'var(--gradient-primary)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              margin: 0
             }}>
-              <span className="hero-char" style={{ display: 'inline-block', willChange: 'transform' }}>
+              <span className="hero-char" style={{ 
+                display: 'inline-block', 
+                willChange: 'transform',
+                background: 'var(--gradient-primary)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
                 Digital
               </span>
             </h1>
@@ -247,7 +251,7 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 3 — with rotating word */}
-          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
+          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.2em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',

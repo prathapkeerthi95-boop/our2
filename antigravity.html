@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antigravity - Definitive Liquid Glass</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* === Identity & Non-negotiable Rules === */
+html, body, * {
+    cursor: none !important; /* Hide OS cursor everywhere */
+}
+html {
+    background-color: #e8e8f0; /* Soft lavender-grey, strictly light mode */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #44445a; /* Body text */
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Constraints */
+h1, h2, h3, h4 { color: #0a0a14; font-weight: 700; margin: 0; }
+p { color: #666680; margin: 0; }
+.muted { color: #888899; }
+
+/* === Canvas Cursor === */
+#cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* === Glass Surfaces === */
+.glass-card {
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    border-radius: 22px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.06), 0 8px 32px rgba(0, 0, 0, 0.07);
+    will-change: transform;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* === Hyper-Reactive Buttons === */
+.glass-btn {
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.06), 0 8px 32px rgba(0, 0, 0, 0.07);
+    color: #0a0a14;
+    font-weight: 600;
+    border-radius: 9999px;
+    position: relative;
+    will-change: transform;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.glass-btn.primary {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(160, 120, 255, 0.3), 0 8px 32px rgba(140, 100, 255, 0.15);
+}
+
+/* Dynamic Sheen Overlay (Inner Specular) */
+.sheen {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+    mix-blend-mode: overlay;
+}
+/* Ensure content sits above sheen and lens layers */
+.glass-btn > span, .glass-card > div, .glass-card > ul {
+    position: relative;
+    z-index: 10;
+}
+
+/* Layout Utilities */
+.section-padding { padding: 80px 48px; }
+.card-padding { padding: 26px; }
+.min-card-h { min-height: 160px; }
+.min-hero-h { min-height: 100vh; padding-top: 120px; }
+
+/* Filter Target Utilities */
+.text-layer {
+    display: inline-block;
+    will-change: filter;
+}
+
+/* Background Soft Orbs */
+.bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Layering Classes */
+.glass-blur-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+    border-radius: inherit;
+}
+.lens-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    border-radius: inherit;
+}
+</style>
+</head>
+<body>
+
+<!-- SVG Filters for Glass Lensing and Text Magnification -->
+<svg style="position: absolute; top: -999px; left: -999px; width: 0; height: 0; pointer-events: none;">
+    <defs id="lens-filters-defs">
+        <radialGradient id="cardLensGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="70%" stop-color="#cfcfcf" />
+            <stop offset="100%" stop-color="#808080" />
+        </radialGradient>
+        <rect id="lensMapRect" width="100%" height="100%" fill="url(#cardLensGrad)" />
+    </defs>
+    <filter id="dropLens" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence id="ft" type="fractalNoise" baseFrequency="0 0" numOctaves="1" seed="3" result="noise" />
+        <feDisplacementMap id="fd" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+</svg>
+
+<canvas id="cursor-canvas"></canvas>
+
+<!-- Background Orbs for Hero Depth -->
+<div class="bg-circle" style="width: 450px; height: 450px; top: 5%; left: 15%; background-color: #c4b5fd;"></div>
+<div class="bg-circle" style="width: 550px; height: 550px; top: 35%; right: 5%; background-color: #bfdbfe;"></div>
+
+<!-- Fixed Nav -->
+<nav class="fixed top-[20px] left-1/2 -translate-x-1/2 h-[48px] glass-card flex items-center z-50 rounded-full px-6 min-w-[500px] max-w-[90vw]">
+    <div id="nav-indicator" class="absolute h-[32px] bg-white/50 border border-white/70 shadow-sm rounded-full pointer-events-none z-0" style="left: 0; width: 0; display: none;"></div>
+    <div class="sheen"></div>
+    <div class="absolute left-6 font-bold text-[#0a0a14] text-[17px] tracking-tight">Antigravity</div>
+    <ul class="flex mx-auto space-x-6 text-[#0a0a14] font-medium text-[14px]">
+        <li class="nav-item text-layer px-3 py-1 relative z-10 transition-colors duration-300">Home</li>
+        <li class="nav-item text-layer px-3 py-1 relative z-10 transition-colors duration-300">Features</li>
+        <li class="nav-item text-layer px-3 py-1 relative z-10 transition-colors duration-300">Pricing</li>
+        <li class="nav-item text-layer px-3 py-1 relative z-10 transition-colors duration-300">About</li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="min-hero-h pb-24 flex flex-col items-center justify-center text-center px-6 relative z-10">
+    <div class="inline-flex items-center space-x-2 bg-white/40 border border-white/60 rounded-full px-4 py-1.5 mb-[32px] glass-card" style="min-height: 0; box-shadow: none;">
+        <span class="text-[12px] font-semibold tracking-wider text-[#44445a] uppercase label text-layer">Apple iOS 26 Design</span>
+    </div>
+    
+    <h1 class="text-[clamp(48px,6vw,80px)] leading-[1.05] tracking-tight mb-[24px] max-w-[800px] text-layer">
+        Liquid Glass <br> Aesthetics
+    </h1>
+    
+    <p class="text-[18px] text-[#666680] max-w-[520px] mb-[48px] leading-relaxed text-layer">
+        Experience crystal-clear magnification, water droplet spring physics, and perfect typography on elite SaaS platforms.
+    </p>
+    
+    <div class="flex flex-wrap gap-[12px] justify-center">
+        <button class="glass-btn primary px-8 py-[14px]">
+            <div class="sheen"></div>
+            <span class="text-layer text-[15px]">View Documentation</span>
+        </button>
+        <button class="glass-btn px-8 py-[14px]">
+            <div class="sheen"></div>
+            <span class="text-layer text-[15px]">Explore Features</span>
+        </button>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="w-full glass-card !rounded-none !border-l-0 !border-r-0 h-[100px] relative z-10 flex items-center !box-shadow-none" style="box-shadow: inset 0 1px 0 #fff;">
+    <div class="sheen"></div>
+    <div class="container mx-auto flex items-center justify-between px-6 md:px-12 w-full relative z-10">
+        <div class="flex flex-col items-center flex-1">
+            <div class="text-[36px] font-bold text-[#0a0a14] leading-none stat-num text-layer">60fps</div>
+            <div class="text-[13px] text-[#888899] font-medium uppercase tracking-widest mt-[6px] label text-layer">Fluid Motion</div>
+        </div>
+        <div class="w-px h-12 bg-black/5"></div>
+        <div class="flex flex-col items-center flex-1">
+            <div class="text-[36px] font-bold text-[#0a0a14] leading-none stat-num text-layer">0px</div>
+            <div class="text-[13px] text-[#888899] font-medium uppercase tracking-widest mt-[6px] label text-layer">Overlap Target</div>
+        </div>
+        <div class="w-px h-12 bg-black/5"></div>
+        <div class="flex flex-col items-center flex-1">
+            <div class="text-[36px] font-bold text-[#0a0a14] leading-none stat-num text-layer">100%</div>
+            <div class="text-[13px] text-[#888899] font-medium uppercase tracking-widest mt-[6px] label text-layer">Light Mode</div>
+        </div>
+    </div>
+</section>
+
+<!-- Bento Grid -->
+<section class="section-padding max-w-6xl mx-auto relative z-10">
+    <h2 class="text-[32px] text-center mb-[40px] text-layer w-full">Core Principles</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-[16px]">
+        
+        <div class="glass-card card-padding min-card-h interactive-card flex flex-col">
+            <div class="sheen"></div>
+            <div class="relative z-10">
+                <div class="w-[44px] h-[44px] rounded-full bg-white/50 border border-white/80 flex items-center justify-center mb-[20px]">
+                    <svg class="w-5 h-5 text-[#0a0a14]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <h3 class="text-[15px] mb-[8px] card-title text-layer">Convex Lens Refraction</h3>
+                <p class="text-[12.5px] text-layer">Our water droplet cursor physically magnifies typography via SVG displacement mapping as it glides over text.</p>
+            </div>
+        </div>
+        
+        <div class="glass-card card-padding min-card-h interactive-card flex flex-col md:col-span-2">
+            <div class="sheen"></div>
+            <div class="relative z-10">
+                <div class="w-[44px] h-[44px] rounded-full bg-white/50 border border-white/80 flex items-center justify-center mb-[20px]">
+                    <svg class="w-5 h-5 text-[#0a0a14]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                </div>
+                <h3 class="text-[15px] mb-[8px] card-title text-layer">Liquid Viscosity Spring</h3>
+                <p class="text-[12.5px] text-layer">A precise physics model with 0.11 stiffness and 0.78 damping ensures the droplet carries realistic weight, stretching natively along its velocity vector.</p>
+            </div>
+        </div>
+        
+        <div class="glass-card card-padding min-card-h interactive-card flex flex-col md:col-span-2">
+            <div class="sheen"></div>
+            <div class="relative z-10">
+                <div class="w-[44px] h-[44px] rounded-full bg-white/50 border border-white/80 flex items-center justify-center mb-[20px]">
+                    <svg class="w-5 h-5 text-[#0a0a14]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                </div>
+                <h3 class="text-[15px] mb-[8px] card-title text-layer">Uncompromised Layout</h3>
+                <p class="text-[12.5px] text-layer">Zero text overlaps. Zero clipping. Meticulously calculated paddings separate content safely across all screen dimensions.</p>
+            </div>
+        </div>
+        
+        <div class="glass-card card-padding min-card-h interactive-card flex flex-col">
+            <div class="sheen"></div>
+            <div class="relative z-10">
+                <div class="w-[44px] h-[44px] rounded-full bg-white/50 border border-white/80 flex items-center justify-center mb-[20px]">
+                    <svg class="w-5 h-5 text-[#0a0a14]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                </div>
+                <h3 class="text-[15px] mb-[8px] card-title text-layer">Specular Lighting</h3>
+                <p class="text-[12.5px] text-layer">Inner glass surfaces trace the cursor dynamically, shifting a white radial gradient sheen across cards and buttons.</p>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full glass-card !rounded-none !border-l-0 !border-r-0 !border-b-0 p-[48px] mt-12 relative z-10">
+    <div class="sheen"></div>
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-[#888899] text-sm relative z-10">
+        <div class="font-bold text-[#0a0a14] text-[17px] tracking-tight mb-4 md:mb-0">Antigravity</div>
+        <div class="flex space-x-8 mb-4 md:mb-0">
+            <a href="#" class="nav-item text-layer transition-colors hover:text-[#0a0a14]">Privacy</a>
+            <a href="#" class="nav-item text-layer transition-colors hover:text-[#0a0a14]">Terms</a>
+        </div>
+        <p class="text-layer text-[12.5px]">iOS 26 Liquid Glass Project</p>
+    </div>
+</footer>
+
+<script>
+/**
+ * --- WWDC25 LIQUID GLASS MATERIAL BUILDER & PHYSICS ENGINE ---
+ */
+
+// ── Generate mathematically perfect convex normal-map lens texture ──
+const LENS_R = 80; // 80px radius (160px diameter) for text magnification
+const mapSize = LENS_R * 2;
+const mapCanvas = document.createElement('canvas');
+mapCanvas.width = mapSize;
+mapCanvas.height = mapSize;
+const mapCtx = mapCanvas.getContext('2d');
+const imgData = mapCtx.createImageData(mapSize, mapSize);
+const data = imgData.data;
+
+for (let y = 0; y < mapSize; y++) {
+  for (let x = 0; x < mapSize; x++) {
+    const dx = (x - LENS_R) / LENS_R;
+    const dy = (y - LENS_R) / LENS_R;
+    const dist = Math.hypot(dx, dy);
+
+    let r = 128;
+    let g = 128;
+    let b = 128;
+    let a = 255;
+
+    if (dist < 1) {
+      // Convex lens profile: C1 continuous at the edge (reaches 0 slope at edge)
+      const factor = (1 - dist * dist) * (1 - dist * dist);
+      const displacementX = -dx * factor * 0.45; // cap distortion scale inside map
+      const displacementY = -dy * factor * 0.45;
+
+      r = Math.round(128 + 127 * displacementX);
+      g = Math.round(128 + 127 * displacementY);
+    }
+
+    const idx = (y * mapSize + x) * 4;
+    data[idx] = r;
+    data[idx + 1] = g;
+    data[idx + 2] = b;
+    data[idx + 3] = a;
+  }
+}
+mapCtx.putImageData(imgData, 0, 0);
+const lensMapDataUrl = mapCanvas.toDataURL();
+
+// ── SVG Filter Setup ──
+const glassDefs = document.getElementById('lens-filters-defs');
+const dropLens = document.getElementById('dropLens');
+if (dropLens) {
+  dropLens.setAttribute('x', '0');
+  dropLens.setAttribute('y', '0');
+  dropLens.setAttribute('width', '100%');
+  dropLens.setAttribute('height', '100%');
+  dropLens.setAttribute('filterUnits', 'userSpaceOnUse');
+  dropLens.innerHTML = `
+    <feImage id="textFeImage" x="0" y="0" width="100%" height="100%" result="map" />
+    <feDisplacementMap id="textFeDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G" />
+  `;
+}
+const textFeImage = document.getElementById('textFeImage');
+const textFeDisp = document.getElementById('textFeDisp');
+if (textFeImage) {
+  textFeImage.setAttribute('href', lensMapDataUrl);
+}
+
+// ── Physics States ──
+let mx = window.innerWidth / 2;
+let my = window.innerHeight / 2;
+let bx = mx;
+let by = my;
+let vx = 0;
+let vy = 0;
+
+const K = 0.11; // Stiffness
+const D = 0.78; // Damping
+const R_BASE = 40; // Exact 40px radius
+
+let isClicked = false;
+let clickScaleX = 1.0;
+let clickScaleY = 1.0;
+let clickScaleXVel = 0;
+let clickScaleYVel = 0;
+
+let lensStrength = 0;
+let lensTarget = 0;
+
+// Nav capsule indicator spring states
+const navIndicator = document.getElementById('nav-indicator');
+const navItems = document.querySelectorAll('.nav-item');
+let activeNavItem = navItems[0]; // defaults to first element (Home)
+let navTargetLeft = 0;
+let navTargetWidth = 0;
+let navCurrentLeft = 0;
+let navCurrentWidth = 0;
+let navLeftVel = 0;
+let navWidthVel = 0;
+
+const K_NAV = 0.08; // Nav stiffness
+const D_NAV = 0.72; // Nav damping (gives soft gel overshoot)
+
+// DOM Elements
+const canvas = document.getElementById('cursor-canvas');
+const ctx = canvas.getContext('2d');
+
+// Mouse Listeners
+window.addEventListener('mousemove', (e) => {
+  mx = e.clientX;
+  my = e.clientY;
+});
+window.addEventListener('mousedown', () => { isClicked = true; });
+window.addEventListener('mouseup', () => { isClicked = false; });
+
+// ── Dynamic Glass Injection ──
+let glassIndex = 0;
+let trackedGlassElements = [];
+
+const injectGlassLayers = (el, index) => {
+  if (el.dataset.glassInjected) return;
+  el.dataset.glassInjected = 'true';
+
+  const filterId = `glass-filter-${index}-${Math.random().toString(36).substr(2, 9)}`;
+  el.dataset.filterId = filterId;
+
+  // 1. Create a unique SVG filter
+  const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+  filter.setAttribute('id', filterId);
+  filter.setAttribute('x', '0');
+  filter.setAttribute('y', '0');
+  filter.setAttribute('width', '100%');
+  filter.setAttribute('height', '100%');
+  filter.setAttribute('filterUnits', 'objectBoundingBox');
+
+  const feImage = document.createElementNS('http://www.w3.org/2000/svg', 'feImage');
+  feImage.setAttribute('href', lensMapDataUrl);
+  feImage.setAttribute('x', '0');
+  feImage.setAttribute('y', '0');
+  feImage.setAttribute('width', '100%');
+  feImage.setAttribute('height', '100%');
+  feImage.setAttribute('result', 'map');
+
+  const feDisplacementMap = document.createElementNS('http://www.w3.org/2000/svg', 'feDisplacementMap');
+  feDisplacementMap.setAttribute('in', 'SourceGraphic');
+  feDisplacementMap.setAttribute('in2', 'map');
+  feDisplacementMap.setAttribute('scale', '0');
+  feDisplacementMap.setAttribute('xChannelSelector', 'R');
+  feDisplacementMap.setAttribute('yChannelSelector', 'G');
+  feDisplacementMap.setAttribute('id', `disp-map-${filterId}`);
+
+  filter.appendChild(feImage);
+  filter.appendChild(feDisplacementMap);
+  if (glassDefs) {
+    glassDefs.appendChild(filter);
+  }
+
+  // 2. Prepend visual layers
+  const blurLayer = document.createElement('div');
+  blurLayer.className = 'glass-blur-layer';
+  blurLayer.style.cssText = 'position:absolute; inset:0; pointer-events:none; z-index:-2; border-radius:inherit; backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%); background:rgba(255,255,255,0.45);';
+  el.prepend(blurLayer);
+
+  const lensLayer = document.createElement('div');
+  lensLayer.className = 'lens-layer';
+  lensLayer.style.cssText = `position:absolute; inset:0; pointer-events:none; z-index:-1; border-radius:inherit; backdrop-filter:url(#${filterId}); -webkit-backdrop-filter:url(#${filterId});`;
+  el.prepend(lensLayer);
+
+  const sheenLayer = document.createElement('div');
+  sheenLayer.className = 'sheen-layer';
+  sheenLayer.style.cssText = 'position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0; mix-blend-mode:overlay; opacity:0; transition:opacity 0.3s ease;';
+  el.prepend(sheenLayer);
+  
+  // Set contents relative/z-index
+  Array.from(el.children).forEach(child => {
+    if (child !== blurLayer && child !== lensLayer && child !== sheenLayer) {
+      child.style.position = 'relative';
+      child.style.zIndex = '10';
+    }
+  });
+};
+
+const updateGlassElements = () => {
+  const elements = document.querySelectorAll('.glass-card, .glass-btn, nav');
+  elements.forEach(el => {
+    // Disable any CSS transitions
+    el.style.transition = 'none';
+    
+    if (!el.dataset.glassInjected) {
+      injectGlassLayers(el, glassIndex++);
+      
+      let baseScale = 12;
+      if (el.classList.contains('glass-btn')) {
+        baseScale = 8;
+      } else if (el.tagName.toLowerCase() === 'nav') {
+        baseScale = 10;
+      }
+
+      trackedGlassElements.push({
+        el,
+        filterId: el.dataset.filterId,
+        dispMap: document.getElementById(`disp-map-${el.dataset.filterId}`),
+        sheen: el.querySelector('.sheen-layer'),
+        
+        // Physics States
+        baseScale,
+        targetScale: baseScale,
+        currentScale: 0,
+        scaleVel: 0,
+        
+        rotX: 0, rotXVel: 0, targetRotX: 0,
+        rotY: 0, rotYVel: 0, targetRotY: 0,
+        transZ: 0, transZVel: 0, targetTransZ: 0,
+        
+        sheenOpacity: 0, sheenOpacityVel: 0, targetSheenOpacity: 0,
+        
+        scaleX: 1, scaleXVel: 0, targetScaleX: 1,
+        scaleY: 1, scaleYVel: 0, targetScaleY: 1,
+      });
+    }
+  });
+};
+
+// ── Zero-Reflow Coordinate Caching ──
+let cachedTextBounds = [];
+let cachedGlassBounds = [];
+
+const cacheBounds = () => {
+  const textElements = document.querySelectorAll('h1, h2, h3, p, .nav-item, .card-title, .stat-num, .badge, .label');
+  cachedTextBounds = Array.from(textElements).map(el => {
+    const rect = el.getBoundingClientRect();
+    return {
+      el,
+      cx: rect.left + rect.width / 2 + window.scrollX,
+      cy: rect.top + rect.height / 2 + window.scrollY,
+      width: rect.width,
+      height: rect.height
+    };
+  });
+
+  cachedGlassBounds = trackedGlassElements.map(item => {
+    const rect = item.el.getBoundingClientRect();
+    return {
+      item,
+      left: rect.left + window.scrollX,
+      top: rect.top + window.scrollY,
+      width: rect.width,
+      height: rect.height
+    };
+  });
+
+  // Sync Nav Target
+  if (activeNavItem) {
+    const nav = document.querySelector('nav');
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = activeNavItem.getBoundingClientRect();
+    navTargetLeft = itemRect.left - navRect.left;
+    navTargetWidth = itemRect.width;
+  }
+};
+
+const resize = () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  cacheBounds();
+  
+  if (activeNavItem) {
+    navCurrentLeft = navTargetLeft;
+    navCurrentWidth = navTargetWidth;
+  }
+};
+
+window.addEventListener('resize', resize);
+window.addEventListener('scroll', () => {
+  cacheBounds();
+  
+  // Navbar scroll shadow
+  const nav = document.querySelector('nav');
+  if (nav) {
+    const scrollY = window.scrollY;
+    if (scrollY > 10) {
+      const alpha = Math.min(0.18, 0.06 + scrollY * 0.0004);
+      const yOffset = Math.min(22, 6 + scrollY * 0.05);
+      const blur = Math.min(52, 28 + scrollY * 0.08);
+      nav.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 rgba(0,0,0,0.06), 0 ${yOffset}px ${blur}px rgba(100, 60, 220, ${alpha})`;
+    } else {
+      nav.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(0, 0, 0, 0.06), 0 8px 32px rgba(0, 0, 0, 0.07)';
+    }
+  }
+}, { passive: true });
+
+// Setup Nav active indicators
+navItems.forEach(item => {
+  item.style.transition = 'none';
+  item.addEventListener('mouseenter', () => {
+    const nav = document.querySelector('nav');
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    navTargetLeft = itemRect.left - navRect.left;
+    navTargetWidth = itemRect.width;
+  });
+  item.addEventListener('mouseleave', () => {
+    if (activeNavItem) {
+      const nav = document.querySelector('nav');
+      const navRect = nav.getBoundingClientRect();
+      const itemRect = activeNavItem.getBoundingClientRect();
+      navTargetLeft = itemRect.left - navRect.left;
+      navTargetWidth = itemRect.width;
+    }
+  });
+  item.addEventListener('click', () => {
+    activeNavItem = item;
+    const nav = document.querySelector('nav');
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    navTargetLeft = itemRect.left - navRect.left;
+    navTargetWidth = itemRect.width;
+  });
+});
+
+// Run Initial setup
+updateGlassElements();
+setTimeout(() => {
+  resize();
+}, 200);
+
+// ── Main Animation Loop ──
+function render() {
+  requestAnimationFrame(render);
+
+  // 1. Spring physics update for cursor coordinates
+  const ax = (mx - bx) * K;
+  const ay = (my - by) * K;
+  vx = (vx + ax) * D;
+  vy = (vy + ay) * D;
+  bx += vx;
+  by += vy;
+
+  const speed = Math.hypot(vx, vy);
+  const angle = Math.atan2(vy, vx);
+
+  // Speed cap at 22
+  const cappedSpeed = Math.min(speed, 22);
+
+  // Smooth click scale squish springs
+  const targetClickX = isClicked ? 1.15 : 1.0;
+  const targetClickY = isClicked ? 0.85 : 1.0;
+  
+  const forceCX = (targetClickX - clickScaleX) * 0.15;
+  clickScaleXVel = (clickScaleXVel + forceCX) * 0.72;
+  clickScaleX += clickScaleXVel;
+
+  const forceCY = (targetClickY - clickScaleY) * 0.15;
+  clickScaleYVel = (clickScaleYVel + forceCY) * 0.72;
+  clickScaleY += clickScaleYVel;
+
+  // 2. Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 3. Draw Water Droplet
+  ctx.save();
+  ctx.translate(bx, by);
+
+  // Idle recovery: perfect circle at speed < 0.2
+  if (speed > 0.2) {
+    ctx.rotate(angle);
+    // Stretch along velocity vector
+    ctx.scale((1 + cappedSpeed * 0.02) * clickScaleX, (1 - cappedSpeed * 0.01) * clickScaleY);
+  } else {
+    ctx.scale(clickScaleX, clickScaleY);
+  }
+
+  // Layer 1: Outer Rim Bevel Bead
+  ctx.shadowColor = 'rgba(160, 140, 220, 0.2)';
+  ctx.shadowBlur = 8;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.shadowBlur = 0; // reset shadow
+
+  // Layer 2: Subtle Body Fill Concentrating Light
+  const bodyGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, R_BASE);
+  bodyGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+  bodyGrad.addColorStop(0.6, 'rgba(235, 230, 255, 0.08)');
+  bodyGrad.addColorStop(1, 'rgba(215, 210, 245, 0.16)');
+  ctx.fillStyle = bodyGrad;
+  ctx.fill();
+
+  // Layer 4: Inner Rim Depth Bevel
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
+  ctx.clip();
+  const depthGrad = ctx.createRadialGradient(0, 0, R_BASE * 0.72, 0, 0, R_BASE);
+  depthGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  depthGrad.addColorStop(1, 'rgba(0, 0, 0, 0.06)');
+  ctx.fillStyle = depthGrad;
+  ctx.fillRect(-R_BASE, -R_BASE, R_BASE * 2, R_BASE * 2);
+  ctx.restore();
+
+  ctx.restore(); // Restore to viewport space for fixed specular highlight orientation
+
+  // Layer 3: Specular Highlight Ellipse (Top-left 30% position, fixed orientation)
+  ctx.save();
+  ctx.translate(bx, by);
+  ctx.beginPath();
+  ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
+  ctx.clip(); // clip within droplet edge
+
+  // Ellipse coords (Top-left fixed)
+  const hx = -R_BASE * 0.32;
+  const hy = -R_BASE * 0.32;
+  const hRadiusX = R_BASE * 0.45;
+  const hRadiusY = R_BASE * 0.3;
+
+  const highlightGrad = ctx.createRadialGradient(hx, hy, 0, hx, hy, R_BASE * 0.45);
+  highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+  highlightGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.35)');
+  highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = highlightGrad;
+
+  ctx.beginPath();
+  ctx.ellipse(hx, hy, hRadiusX, hRadiusY, Math.PI / 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Layer 5: Target Center Dot
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(mx, my, 2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(80, 60, 160, 0.55)';
+  ctx.fill();
+  ctx.restore();
+
+  // 4. Update SVG Filter Text Magnification
+  let closestDist = Infinity;
+  let closestElement = null;
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
+
+  for (let i = 0; i < cachedTextBounds.length; i++) {
+    const item = cachedTextBounds[i];
+    const scx = item.cx - scrollX;
+    const scy = item.cy - scrollY;
+
+    const dist = Math.hypot(mx - scx, my - scy);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestElement = item.el;
+    }
+  }
+
+  if (closestDist < 80) {
+    // Smoothly fade target displacement based on proximity
+    lensTarget = (1 - closestDist / 80) * 32;
+  } else {
+    lensTarget = 0;
+  }
+
+  // Spring filter scale interpolation
+  const lensForce = (lensTarget - lensStrength) * 0.12;
+  lensStrength += lensForce;
+
+  if (textFeDisp && textFeImage) {
+    if (Math.abs(lensStrength) > 0.05) {
+      textFeDisp.setAttribute('scale', lensStrength.toFixed(2));
+      textFeImage.setAttribute('x', (bx - LENS_R).toFixed(1));
+      textFeImage.setAttribute('y', (by - LENS_R).toFixed(1));
+
+      if (closestElement) {
+        closestElement.style.filter = 'url(#dropLens)';
+      }
+    } else {
+      textFeDisp.setAttribute('scale', '0');
+    }
+  }
+
+  // Reset filters for other text layers
+  for (let i = 0; i < cachedTextBounds.length; i++) {
+    const item = cachedTextBounds[i];
+    if (item.el !== closestElement || Math.abs(lensStrength) <= 0.05) {
+      item.el.style.filter = '';
+    }
+  }
+
+  // 5. Update Specular Sheen, 3D Tilt, & Dynamic Lensing for Glass Elements
+  cachedGlassBounds.forEach(bound => {
+    const { item, left, top, width, height } = bound;
+    const screenLeft = left - scrollX;
+    const screenTop = top - scrollY;
+
+    const isHovering = mx >= screenLeft && mx <= screenLeft + width &&
+                       my >= screenTop && my <= screenTop + height;
+
+    if (isHovering) {
+      item.targetScale = item.baseScale * 1.3;
+      item.targetSheenOpacity = 1.0;
+
+      // Specular highlight tracks cursor location
+      const lx = ((mx - screenLeft) / width) * 100;
+      const ly = ((my - screenTop) / height) * 100;
+      if (item.sheen) {
+        item.sheen.style.background = `radial-gradient(circle at ${lx}% ${ly}%, rgba(255,255,255,0.85) 0%, transparent 60%)`;
+      }
+
+      // Tilt on hover for cards
+      if (item.el.classList.contains('glass-card')) {
+        const rx = (mx - screenLeft) / width - 0.5;
+        const ry = (my - screenTop) / height - 0.5;
+        item.targetRotX = -ry * 12;
+        item.targetRotY = rx * 12;
+        item.targetTransZ = 8;
+      }
+
+      // Squash/stretch buttons
+      if (item.el.classList.contains('glass-btn')) {
+        item.targetScaleX = 1.03;
+        item.targetScaleY = 1.03;
+      }
+    } else {
+      item.targetScale = item.baseScale;
+      item.targetSheenOpacity = 0.0;
+      item.targetRotX = 0;
+      item.targetRotY = 0;
+      item.targetTransZ = 0;
+      item.targetScaleX = 1.0;
+      item.targetScaleY = 1.0;
+    }
+
+    // Apply click squash/stretch on active hover elements
+    if (isHovering && isClicked) {
+      if (item.el.classList.contains('glass-btn')) {
+        item.targetScaleX = 1.08;
+        item.targetScaleY = 0.90; // squished vertical
+      }
+    }
+
+    // Spring solvers for glass elements
+    // Scale spring
+    const scaleForce = (item.targetScale - item.currentScale) * 0.12;
+    item.scaleVel = (item.scaleVel + scaleForce) * 0.78;
+    item.currentScale += item.scaleVel;
+    if (item.dispMap) {
+      item.dispMap.setAttribute('scale', item.currentScale.toFixed(2));
+    }
+
+    // Sheen opacity spring
+    const sheenForce = (item.targetSheenOpacity - item.sheenOpacity) * 0.12;
+    item.sheenOpacityVel = (item.sheenOpacityVel + sheenForce) * 0.78;
+    item.sheenOpacity += item.sheenOpacityVel;
+    if (item.sheen) {
+      item.sheen.style.opacity = item.sheenOpacity.toFixed(3);
+    }
+
+    // Rotations & transZ springs
+    const rotXForce = (item.targetRotX - item.rotX) * 0.08;
+    item.rotXVel = (item.rotXVel + rotXForce) * 0.72;
+    item.rotX += item.rotXVel;
+
+    const rotYForce = (item.targetRotY - item.rotY) * 0.08;
+    item.rotYVel = (item.rotYVel + rotYForce) * 0.72;
+    item.rotY += item.rotYVel;
+
+    const transZForce = (item.targetTransZ - item.transZ) * 0.08;
+    item.transZVel = (item.transZVel + transZForce) * 0.72;
+    item.transZ += item.transZVel;
+
+    // Button scale springs
+    const scaleXForce = (item.targetScaleX - item.scaleX) * 0.12;
+    item.scaleXVel = (item.scaleXVel + scaleXForce) * 0.75;
+    item.scaleX += item.scaleXVel;
+
+    const scaleYForce = (item.targetScaleY - item.scaleY) * 0.12;
+    item.scaleYVel = (item.scaleYVel + scaleYForce) * 0.75;
+    item.scaleY += item.scaleYVel;
+
+    // Render card tilt / button squash scale
+    if (item.el.classList.contains('glass-card')) {
+      item.el.style.transform = `perspective(700px) rotateX(${item.rotX.toFixed(2)}deg) rotateY(${item.rotY.toFixed(2)}deg) translateZ(${item.transZ.toFixed(2)}px)`;
+    } else if (item.el.classList.contains('glass-btn')) {
+      item.el.style.transform = `scaleX(${item.scaleX.toFixed(3)}) scaleY(${item.scaleY.toFixed(3)})`;
+    }
+  });
+
+  // 6. Spring-Interpolate Nav Indicator Active Tab Indicator Capsule
+  if (navIndicator && activeNavItem) {
+    navIndicator.style.display = 'block';
+    
+    // Spring physics for capsule left edge position
+    const leftForce = (navTargetLeft - navCurrentLeft) * K_NAV;
+    navLeftVel = (navLeftVel + leftForce) * D_NAV;
+    navCurrentLeft += navLeftVel;
+    
+    // Spring physics for capsule width
+    const widthForce = (navTargetWidth - navCurrentWidth) * K_NAV;
+    navWidthVel = (navWidthVel + widthForce) * D_NAV;
+    navCurrentWidth += navWidthVel;
+    
+    // Stretch dynamically along left/right velocity vector
+    const capsuleStretch = 1 + Math.abs(navLeftVel) * 0.05;
+    const origin = navLeftVel >= 0 ? 'left center' : 'right center';
+    
+    navIndicator.style.left = `${navCurrentLeft}px`;
+    navIndicator.style.width = `${navCurrentWidth}px`;
+    navIndicator.style.transform = `scaleX(${capsuleStretch})`;
+    navIndicator.style.transformOrigin = origin;
+  }
+}
+</script>
+</body>
+</html>
