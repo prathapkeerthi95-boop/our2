@@ -19,15 +19,15 @@ const services = [
     title: 'Mobile App Engineering',
     description: 'Cross-platform mobile applications engineered for scale. From fintech dashboards to e-commerce ecosystems, we ship production-grade apps.',
     tags: ['React Native', 'iOS', 'Android', 'Flutter'],
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=80',
     accent: '#00E5FF'
   },
   {
     num: '03',
     title: 'Brand & Visual Identity',
     description: 'Complete brand ecosystems — from strategic logo design to typography systems, color theory, and comprehensive brand guidelines.',
-    tags: ['Logo Design', 'UI/UX', 'Figma', 'Design Systems'],
-    image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Logo Design', 'UI/UX', 'Figma', 'Brand'],
+    image: 'https://plus.unsplash.com/premium_photo-1661337217434-af061b4a7eb9?auto=format&fit=crop&w=1200&q=80',
     accent: '#FF2A54'
   },
   {
@@ -35,643 +35,593 @@ const services = [
     title: 'Performance Marketing',
     description: 'Data-obsessed growth strategies. We combine creative with analytics to engineer campaigns that convert browsers into loyal customers.',
     tags: ['SEO', 'Google Ads', 'Meta Ads', 'Analytics'],
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://plus.unsplash.com/premium_photo-1664300117056-60d0d684107d?auto=format&fit=crop&w=1200&q=80',
     accent: '#FF8800'
   }
 ];
 
 const Services = () => {
-  const wrapperRef = useRef(null);
   const sectionRef = useRef(null);
-  const leftColRef = useRef(null);
-  const rightColRef = useRef(null);
-  const scrollContainerRef = useRef(null);
+  const headerBoxRef = useRef(null);
+  const gridWrapperRef = useRef(null);
   const cardsRef = useRef([]);
-  const shadowRefs = useRef([]);
+  const [activeGlow, setActiveGlow] = useState(0);
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Screen size tracking
+  // Glow interval every 1.5s
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const timer = setInterval(() => {
+      setActiveGlow((prev) => (prev + 1) % 4);
+    }, 1500);
+    return () => clearInterval(timer);
   }, []);
 
+  // GSAP horizontal chain slide animation
   useEffect(() => {
-    // --- Mobile Layout Setup ---
-    if (isMobile) {
-      const ctx = gsap.context(() => {
-        const cards = gsap.utils.toArray('.service-card-mobile');
-        cards.forEach((card) => {
-          gsap.fromTo(card,
-            { y: 40, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse'
-              }
-            }
-          );
-        });
-      });
-      return () => ctx.revert();
-    }
-
-    // --- Desktop 3D Cylinder Animation ---
-    const section = sectionRef.current;
-    const rightCol = rightColRef.current;
-    const scrollContainer = scrollContainerRef.current;
     const cards = cardsRef.current;
+    const headerBox = headerBoxRef.current;
+    const gridWrapper = gridWrapperRef.current;
 
-    if (!section || !rightCol || !scrollContainer) return;
+    if (!cards || cards.length < 4 || !headerBox || !gridWrapper || !sectionRef.current) return;
 
-    // 3D Cylinder configuration properties
-    const getRadius = () => Math.min(550, window.innerWidth * 0.35);
-    let radius = getRadius();
-    const angleStep = 55; // 55 degree separation between cards
-    const maxIndex = services.length - 1;
-    const totalRotationY = maxIndex * angleStep; // 165 degrees total span
-
-    // Drives vertical scrolling space for the timeline
-    const scrollLength = maxIndex * 600;
-
-    const updateCardTransforms = (baseAngle) => {
-      cards.forEach((card, idx) => {
-        if (card) {
-          const theta = baseAngle + idx * angleStep;
-          let normalizedTheta = theta % 360;
-          if (normalizedTheta > 180) normalizedTheta -= 360;
-          if (normalizedTheta < -180) normalizedTheta += 360;
-          
-          const absTheta = Math.abs(normalizedTheta);
-          const cardOpacity = gsap.utils.clamp(0.08, 1, 1 - absTheta / 120);
-          
-          card.style.transform = `translate3d(-50%, -50%, 0) rotateY(${idx * angleStep}deg) translateZ(${radius}px)`;
-          card.style.opacity = cardOpacity.toFixed(3);
-          card.style.boxShadow = 'none';
-
-          // Floor shadow element — lives in 3D space with the card
-          const shadow = shadowRefs.current[idx];
-          if (shadow) {
-            // Shadow shifts left/right as card rotates
-            const shiftX = normalizedTheta * 1.8;
-            // Shadow shrinks/grows with proximity
-            const shadowScale = gsap.utils.clamp(0.4, 1, 1 - absTheta / 180);
-            // Shadow darkens for front card
-            const shadowOpacity = gsap.utils.clamp(0, 0.55, 0.55 - absTheta / 200);
-            shadow.style.transform = `translateX(calc(-50% + ${shiftX}px)) scaleX(${shadowScale.toFixed(3)})`;
-            shadow.style.opacity = shadowOpacity.toFixed(3);
-          }
-          
-          // Prevent interactions with out-of-focus background cards
-          if (absTheta > 45) {
-            card.style.pointerEvents = 'none';
-          } else {
-            card.style.pointerEvents = 'auto';
-          }
-        }
-      });
-    };
-
-    let scrollTriggerInstance = null;
-    const rotationObj = { y: 0 };
+    // Reset initial styles immediately to prevent flashes
+    gsap.set(headerBox, { opacity: 0, y: -50, filter: 'blur(10px)' });
+    gsap.set(gridWrapper, { opacity: 0 });
+    gsap.set(cards[0], { x: -600, opacity: 0 });
+    gsap.set(cards[1], { x: '-108%', opacity: 0 });
+    gsap.set(cards[2], { x: '-108%', opacity: 0 });
+    gsap.set(cards[3], { x: '-108%', opacity: 0 });
 
     const ctx = gsap.context(() => {
-      // Set static starting layout on the cards and scroll container immediately on load
-      scrollContainer.style.transform = `translate3d(-50%, -50%, ${-radius}px) rotateY(0deg)`;
-      updateCardTransforms(0);
-
-      // 1. GSAP ScrollTrigger to rotate the 3D track
-      const scrollTween = gsap.to(rotationObj, {
-        y: -totalRotationY,
-        ease: "none",
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
-          pin: true,
-          scrub: 0.5,
-          start: "top top",
-          end: () => `+=${scrollLength}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const baseAngle = rotationObj.y;
-            scrollContainer.style.transform = `translate3d(-50%, -50%, ${-radius}px) rotateY(${baseAngle}deg)`;
-            updateCardTransforms(baseAngle);
-          }
+          trigger: sectionRef.current,
+          start: 'top 70%',
+          end: 'bottom 20%',
+          toggleActions: 'restart reverse restart reverse',
         }
       });
 
-      scrollTriggerInstance = scrollTween.scrollTrigger;
-
-      // Animate Left Column (Fade and Slide) with replay on scroll up/down
-      const leftCol = leftColRef.current;
-      if (leftCol) {
-        gsap.fromTo(leftCol,
-          { opacity: 0, x: -40 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 1.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 75%',
-              end: () => `+=${scrollLength + 500}`,
-              toggleActions: 'play reverse play reverse'
-            }
-          }
-        );
-      }
+      tl.fromTo(headerBox,
+        { opacity: 0, y: -50, filter: 'blur(10px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }
+      )
+      .fromTo(gridWrapper,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power3.out' },
+        '-=0.4'
+      )
+      .fromTo(cards[0],
+        { x: -600, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
+        '-=0.2'
+      )
+      .fromTo(cards[1],
+        { x: '-108%', opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
+        '-=0.6'
+      )
+      .fromTo(cards[2],
+        { x: '-108%', opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
+        '-=0.6'
+      )
+      .fromTo(cards[3],
+        { x: '-108%', opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, ease: 'power3.out' },
+        '-=0.6'
+      );
     }, sectionRef);
 
-    // Refresh ScrollTrigger to calculate offsets correctly on load
-    ScrollTrigger.refresh();
+    return () => ctx.revert();
+  }, []);
 
-    // Dynamic resize handler
-    const handleResize = () => {
-      radius = getRadius();
-      scrollContainer.style.transform = `translate3d(-50%, -50%, ${-radius}px) rotateY(${rotationObj.y}deg)`;
-      updateCardTransforms(rotationObj.y);
-      ScrollTrigger.refresh();
-    };
-    window.addEventListener('resize', handleResize, { passive: true });
+  const cardRectsRef = useRef({});
+  const [bgLoaded, setBgLoaded] = useState(false);
 
-    // 2. Horizontal Drag and Snapping Interaction mapped to page scroll
-    let isDragging = false;
-    let startMouseX = 0;
-    let startScrollY = 0;
-
-    const getRatio = () => {
-      if (!scrollTriggerInstance) return 1.5;
-      const scrollRange = scrollTriggerInstance.end - scrollTriggerInstance.start;
-      return totalRotationY / scrollRange;
-    };
-
-    const handleMouseDown = (e) => {
-      if (e.target.closest('a') || e.target.closest('button')) return;
-      isDragging = true;
-      startMouseX = e.clientX;
-      startScrollY = window.scrollY;
-      gsap.killTweensOf(window);
-    };
-
-    const handleMouseMove = (e) => {
-      if (!isDragging || !scrollTriggerInstance) return;
-      const deltaX = e.clientX - startMouseX;
-      const ratio = getRatio();
-      const scrollDelta = -deltaX / ratio;
-      const targetScrollY = Math.max(
-        scrollTriggerInstance.start,
-        Math.min(scrollTriggerInstance.end, startScrollY + scrollDelta)
-      );
-      window.scrollTo(0, targetScrollY);
-    };
-
-    const handleMouseUpOrLeave = () => {
-      if (!isDragging || !scrollTriggerInstance) return;
-      isDragging = false;
-
-      const scrollRange = scrollTriggerInstance.end - scrollTriggerInstance.start;
-      const currentScroll = window.scrollY - scrollTriggerInstance.start;
-      const progress = currentScroll / scrollRange;
-      const nearestIndex = Math.round(progress * maxIndex);
-      const clampedIndex = Math.max(0, Math.min(nearestIndex, maxIndex));
-
-      const snapScrollY = scrollTriggerInstance.start + (clampedIndex / maxIndex) * scrollRange;
-
-      const scrollObj = { y: window.scrollY };
-      gsap.to(scrollObj, {
-        y: snapScrollY,
-        duration: 0.5,
-        ease: "power2.out",
-        onUpdate: () => {
-          window.scrollTo(0, scrollObj.y);
-        }
-      });
-    };
-
-    const handleWheel = (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && scrollTriggerInstance) {
-        e.preventDefault();
-        window.scrollBy(0, e.deltaX * 1.5);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setBgLoaded(true);
+        observer.disconnect();
       }
-    };
+    }, { rootMargin: '300px' });
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
 
-    rightCol.addEventListener('mousedown', handleMouseDown, { passive: true });
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mouseup', handleMouseUpOrLeave, { passive: true });
-    rightCol.addEventListener('wheel', handleWheel, { passive: false });
+  // Mouse 3D tilt handlers for floating parallax effect
+  const handleMouseMove = (e, index) => {
+    const card = e.currentTarget;
+    if (!card) return;
+    
+    let rect = cardRectsRef.current[index];
+    if (!rect) {
+      rect = card.getBoundingClientRect();
+      cardRectsRef.current[index] = rect;
+    }
+    
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((centerY - y) / centerY) * 12; // max tilt 12 degrees
+    const rotateY = ((x - centerX) / centerX) * 12; // max tilt 12 degrees
+    
+    card.style.transform = `scale(1.06) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) translateZ(15px)`;
+    
+    // Parallax shift on image
+    const img = card.querySelector('.card-img-new');
+    if (img) {
+      const shiftX = ((x - centerX) / centerX) * -8;
+      const shiftY = ((y - centerY) / centerY) * -8;
+      img.style.transform = `scale(1.15) translate(${shiftX}px, ${shiftY}px)`;
+    }
+  };
 
-    return () => {
-      ctx.revert();
-      window.removeEventListener('resize', handleResize);
-      rightCol.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUpOrLeave);
-      rightCol.removeEventListener('wheel', handleWheel);
-    };
-  }, [isMobile]);
-
-  const paperTexture = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.12'/%3E%3C/svg%3E")`;
-
-  if (isMobile) {
-    return (
-      <div 
-        ref={wrapperRef}
-        className="services-wrapper" 
-        style={{ 
-          width: '100%', 
-          backgroundColor: '#C8C8C8',
-          position: 'relative',
-          padding: '6rem 1.5rem',
-          scrollMarginTop: '80px'
-        }}
-      >
-        {/* Live Animated Paper Overlay */}
-        <div 
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: paperTexture,
-            backgroundSize: '250px 250px',
-            opacity: 0.8,
-            pointerEvents: 'none'
-          }}
-        />
-
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: '600px', margin: '0 auto' }}>
-          {/* Header */}
-          <div className="section-label" style={{ color: '#111', borderColor: 'rgba(0,0,0,0.2)', marginBottom: '1.5rem', display: 'inline-block', width: 'fit-content', padding: '0.5rem 1rem', borderRadius: '50px', border: '1px solid', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>
-            <span className="pulse-dot" style={{ background: '#FF2A54', display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', marginRight: '10px' }}></span> Core Capabilities
-          </div>
-          
-          <h2 style={{ 
-            color: '#111111', 
-            fontSize: 'clamp(2.2rem, 8vw, 3.2rem)', 
-            lineHeight: 1.15, 
-            fontWeight: 900, 
-            letterSpacing: '-0.02em', 
-            marginBottom: '3rem'
-          }}>
-            Engineered for <br/> Market Dominance
-          </h2>
-
-          {/* Cards Stack */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            {services.map((service, index) => (
-              <div 
-                key={index}
-                className="service-card-mobile"
-                style={{
-                  width: '100%',
-                  padding: '1.75rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  backgroundColor: 'rgba(255, 255, 255, 0.78)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.9)',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.05)',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-              >
-                {/* Accent line indicator at the top */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: service.accent
-                }} />
-
-                {/* Card Image */}
-                <div style={{
-                  width: '100%',
-                  height: '200px',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  marginBottom: '1.25rem',
-                  position: 'relative'
-                }}>
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover' 
-                    }} 
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    left: '1rem',
-                    backgroundColor: 'rgba(5, 5, 10, 0.75)',
-                    backdropFilter: 'blur(8px)',
-                    padding: '0.4rem 0.8rem',
-                    borderRadius: '30px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    fontSize: '0.85rem',
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 700,
-                    color: service.accent
-                  }}>
-                    {service.num}
-                  </div>
-                </div>
-
-                {/* Card Info */}
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <h3 style={{ fontSize: '1.5rem', lineHeight: 1.2, fontWeight: 800, color: '#111111', margin: 0 }}>
-                      {service.title}
-                    </h3>
-                  </div>
-
-                  <p style={{ fontSize: '0.92rem', color: 'rgba(0,0,0,0.65)', lineHeight: 1.5, margin: 0 }}>
-                    {service.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
-                    {service.tags.map((tag, j) => (
-                      <span key={j} style={{
-                        padding: '0.3rem 0.8rem',
-                        backgroundColor: 'rgba(0,0,0,0.04)',
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        borderRadius: '50px',
-                        fontSize: '0.72rem',
-                        color: 'rgba(0,0,0,0.7)'
-                      }}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleMouseLeave = (e, index) => {
+    const card = e.currentTarget;
+    if (!card) return;
+    card.style.transform = '';
+    
+    if (cardRectsRef.current[index]) {
+      delete cardRectsRef.current[index];
+    }
+    
+    const img = card.querySelector('.card-img-new');
+    if (img) {
+      img.style.transform = '';
+    }
+  };
 
   return (
-    <div 
-      ref={wrapperRef}
-      className="services-wrapper" 
-      style={{ 
-        width: '100%', 
-        background: '#C8C8C8',
-        position: 'relative'
+    <div
+      ref={sectionRef}
+      id="services"
+      className="services-section-new"
+      style={{
+        backgroundImage: bgLoaded ? "url('/images/page 3 background.png')" : 'none',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center center'
       }}
     >
-      {/* Live Animated Paper Overlay */}
-      <div 
-        style={{
-          position: 'absolute',
-          inset: '-200%',
-          backgroundImage: paperTexture,
-          backgroundSize: '250px 250px',
-          opacity: 0.8,
-          pointerEvents: 'none',
-          animation: 'paperDrift 40s linear infinite'
-        }}
-      />
+      {/* CSS Stylesheet for Page Viewport constraints, dynamic floating parallax & border glow */}
       <style>{`
-        @keyframes paperDrift {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(50%, 50%); }
+        .services-section-new {
+          width: 100%;
+          min-height: 100vh;
+          background-size: cover;
+          background-attachment: scroll;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 6rem 2rem 1.25rem 2rem;
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
         }
+
+
+
+        .services-header-wrapper {
+          width: 100%;
+          max-width: 1100px;
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 0px;
+          z-index: 2 !important;
+        }
+
+        .services-header-glass {
+          max-width: 640px !important; /* Larger width container */
+          width: 100%;
+          padding: 1.75rem 2.5rem !important; /* Increased padding */
+          border-radius: 16px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)) !important;
+          backdrop-filter: blur(24px) !important;
+          -webkit-backdrop-filter: blur(24px) !important;
+          border: 1px solid rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4) !important;
+          position: relative !important;
+          overflow: hidden !important;
+          background-image: linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.02) 40%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.02) 60%,
+            rgba(255, 255, 255, 0.05)
+          );
+          background-size: 200% 200% !important;
+          animation: liquidFlowEffect 8s ease infinite;
+
+        }
+
+        @keyframes liquidFlowEffect {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .header-label-new {
+          color: rgba(255, 255, 255, 0.7);
+          border-color: rgba(255, 255, 255, 0.3);
+          margin-bottom: 0.5rem;
+          display: inline-block;
+          width: fit-content;
+          padding: 0.25rem 0.65rem;
+          border-radius: 50px;
+          border: 1px solid;
+          text-transform: uppercase;
+          font-size: 0.85rem !important; /* Larger label font */
+          letter-spacing: 0.1em;
+        }
+
+        .header-title-new {
+          color: #ffffff;
+          font-size: 2.8rem !important; /* Larger heading title font */
+          line-height: 1.15;
+          font-weight: 900;
+          letter-spacing: -0.02em;
+          margin: 0;
+        }
+
+        .services-grid-wrapper {
+          width: 100%;
+          max-width: 1100px;
+          display: grid;
+          /* 1x4 horizontal layout for desktop */
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.25rem;
+          box-sizing: border-box;
+          z-index: 12 !important;
+          margin-top: auto !important; /* Dynamically push cards to the bottom of the page */
+        }
+        
+        .card-outer-wrapper {
+          width: 100%;
+        }
+
+        .card-float-wrapper {
+          perspective: 1000px;
+          will-change: transform;
+        }
+
+        .card-float-delay-0 { animation: cardFloatEffect 5s ease-in-out infinite; }
+        .card-float-delay-1 { animation: cardFloatEffect 5s ease-in-out infinite 1.25s; }
+        .card-float-delay-2 { animation: cardFloatEffect 5s ease-in-out infinite 2.5s; }
+        .card-float-delay-3 { animation: cardFloatEffect 5s ease-in-out infinite 3.75s; }
+
+        @keyframes cardFloatEffect {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+          100% { transform: translateY(0px); }
+        }
+
+        .services-section-new .service-card-new {
+          padding: 1.35rem !important; /* Equal padding on all sides */
+          display: flex !important;
+          flex-direction: column !important;
+          border-radius: 20px !important;
+          /* Frosted grey glass background */
+          background: rgba(30, 32, 38, 0.75) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          color: #ffffff !important;
+          position: relative !important;
+          overflow: hidden !important;
+          height: 52vh !important; /* Proportionate height to ensure laptop viewport fitting */
+          min-height: 410px !important;
+          max-height: 465px !important;
+          box-sizing: border-box !important;
+          box-shadow: 0 20px 50px -10px rgba(0, 229, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease, border-color 0.5s ease !important;
+          transform: scale(1) translateZ(0);
+          transform-style: preserve-3d !important;
+          perspective: 1000px !important;
+        }
+
+        /* Disable specular highlight pseudo-elements from index.css to remove top-left white bleaching */
+        .services-section-new .service-card-new::before,
+        .services-section-new .service-card-new::after {
+          display: none !important;
+          content: none !important;
+        }
+
+        /* Hover Expansion and Cyan Border Glow */
+
+        .services-section-new .service-card-new:hover {
+          border-color: #00e5ff !important;
+          /* Pure cyan shadow glows - no black shadow */
+          box-shadow: 0 35px 70px rgba(0, 229, 255, 0.35), 0 0 35px rgba(0, 229, 255, 0.9), inset 0 0 15px rgba(0, 229, 255, 0.4) !important;
+          z-index: 10 !important;
+          transition: transform 0.08s ease-out, box-shadow 0.5s ease, border-color 0.5s ease !important;
+        }
+
+        /* Active Glowing state on carousel cycle */
+        .services-section-new .service-card-new.active-glow-new {
+          border-color: #00e5ff !important;
+          box-shadow: 0 35px 70px rgba(0, 229, 255, 0.35), 0 0 35px rgba(0, 229, 255, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.3) !important;
+          transform: scale(1.02) !important;
+        }
+
+        /* Precise 40% Image container height layout with hardware-accelerated clipping fix */
+        .services-section-new .card-img-container-new {
+          width: 100% !important;
+          height: 40% !important;
+          border-radius: 12px !important;
+          overflow: hidden !important;
+          margin: 0 !important;
+          margin-bottom: 0.75rem !important;
+          position: relative !important;
+          transform: translateZ(25px) !important;
+          /* Advanced WebKit clip paths to prevent image borders glitching/flashing sharp corners during tilt transformations */
+          -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
+          mask-image: radial-gradient(white, black) !important;
+          will-change: transform !important;
+        }
+
+        .services-section-new .card-img-new {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          /* Vibrant, bright images (contrasted and saturated, not bleached) */
+          filter: contrast(1.15) saturate(1.35) brightness(1.05) !important;
+          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease !important;
+          opacity: 1 !important;
+          will-change: transform !important;
+        }
+
+        .services-section-new .service-card-new:hover .card-img-new {
+          filter: contrast(1.2) saturate(1.45) brightness(1.1) !important;
+          transition: transform 0.08s ease-out, filter 0.4s ease !important;
+        }
+
+        /* Precise 60% Body height layout container */
+        .services-section-new .card-body-new {
+          display: flex !important;
+          flex-direction: column !important;
+          height: 60% !important;
+          justify-content: space-between !important;
+          overflow: hidden !important;
+          transform: translateZ(20px) !important;
+          margin: 0 !important;
+        }
+
+        /* Precise 15% Heading segment container height */
+        .services-section-new .card-title-container {
+          height: 25% !important; /* 25% of 60% body height = 15% of total card height */
+          display: flex !important;
+          align-items: center !important;
+          margin: 0 !important;
+          width: 100% !important;
+        }
+
+        .services-section-new .card-title-new {
+          font-size: 1.7rem !important; /* Increased font-size */
+          line-height: 1.2 !important;
+          font-weight: 900 !important;
+          color: #00e5ff !important;
+          margin: 0 !important;
+          width: 100% !important;
+          display: -webkit-box !important;
+          -webkit-line-clamp: 2 !important;
+          -webkit-box-orient: vertical !important;
+          overflow: hidden !important;
+          text-shadow: none !important;
+          -webkit-text-stroke: none !important;
+        }  /* Precise 35% Paragraph segment container height */
+        .services-section-new .card-desc-container {
+          height: 58% !important; /* 58% of 60% body height = 35% of total card height */
+          display: flex !important;
+          align-items: flex-start !important;
+          margin: 0 !important;
+          overflow: hidden !important;
+        }
+
+        .services-section-new .card-desc-new {
+          font-size: 1.05rem !important; /* Increased font-size */
+          color: rgba(255, 255, 255, 0.7) !important;
+          line-height: 1.45 !important;
+          margin: 0 !important;
+        }  /* Precise 10% Tags segment container height */
+        .services-section-new .card-tags-new {
+          height: 17% !important; /* 17% of 60% body height = 10% of total card height */
+          display: flex !important;
+          gap: 0.35rem !important;
+          flex-wrap: wrap !important;
+          align-items: center !important;
+          margin: 0 !important;
+        }
+
+        .services-section-new .card-tag-new {
+          padding: 0.15rem 0.45rem !important;
+          background-color: rgba(255, 255, 255, 0.05) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          border-radius: 50px !important;
+          font-size: 0.65rem !important;
+          color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991px) {
+          .services-section-new {
+            height: auto;
+            min-height: 100vh;
+            padding: 5rem 1.5rem 3rem 1.5rem;
+            overflow-y: auto;
+          }
+          .services-header-wrapper {
+            margin-bottom: 1.5rem;
+            justify-content: center;
+          }
+          .services-header-glass {
+            max-width: 100%;
+            padding: 1rem 1.5rem;
+          }
+          .header-title-new {
+            font-size: 1.8rem;
+          }
+          .services-grid-wrapper {
+            grid-template-columns: repeat(2, 1fr); /* 2x2 on tablets */
+            gap: 1.25rem;
+            margin-top: 2rem !important;
+          }
+          .service-card-new {
+            height: 320px;
+            max-height: none;
+            padding: 1rem;
+          }
+          .card-title-new {
+            font-size: 1.1rem;
+          }
+          .card-desc-new {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .card-img-container-new {
+            height: 40%;
+            margin-bottom: 0.5rem;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .services-grid-wrapper {
+            grid-template-columns: 1fr; /* 1x4 vertical on mobile */
+            gap: 1rem;
+          }
+          .service-card-new {
+            height: auto;
+            min-height: 200px;
+            padding: 1rem;
+          }
+          .card-desc-new {
+            display: block;
+            -webkit-line-clamp: none;
+          }
+          .card-img-container-new {
+            height: 140px;
+          }
+        }
+
+        /* Optimize for short viewports/laptops so that cards, titles, descriptions, and tags fit inside a single viewport height with NO cropping */
+        @media (max-height: 720px) {
+          .services-section-new {
+            padding: 5.5rem 2rem 1rem 2rem !important;
+            justify-content: flex-start !important;
+          }
+          .services-header-wrapper {
+            margin-bottom: 1.25rem !important; /* Spacing margin inside media query */
+          }
+          .services-header-glass {
+            max-width: 600px !important;
+            padding: 1.25rem 2rem !important;
+          }
+          .header-title-new {
+            font-size: 2.4rem !important;
+          }
+          .services-grid-wrapper {
+            transform: translateY(0px) !important; /* Reset vertical offset for small screen heights to prevent bottom cropping */
+          }
+          .services-section-new .service-card-new {
+            height: 52vh !important;
+            min-height: 330px !important;
+            max-height: 370px !important;
+            padding: 0.85rem 0.75rem !important;
+          }
+          .services-section-new .card-title-new {
+            font-size: 1.25rem !important;
+            margin-bottom: 0.2rem !important;
+          }
+          .services-section-new .card-desc-new {
+            font-size: 0.88rem !important;
+            line-height: 1.25 !important;
+          }
+          .services-section-new .card-tag-new {
+            padding: 0.1rem 0.35rem !important;
+            font-size: 0.60rem !important;
+          }
+        }
+
       `}</style>
- 
-      <section 
-        id="services" 
-        ref={sectionRef} 
-        style={{ 
-          height: '100vh', 
-          color: '#111111',
-          overflow: 'hidden',
-          position: 'relative',
-          display: 'flex',
-          width: '100%',
-          scrollMarginTop: '80px'
-        }}
-      >
-        {/* LEFT COLUMN (STATIC — NEVER MOVES) */}
-        <div 
-          ref={leftColRef}
-          style={{ 
-            width: '42%', 
-            height: '100%', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            justifyContent: 'center', 
-            paddingLeft: 'clamp(2rem, 6vw, 5rem)', 
-            paddingTop: '5rem',
-            paddingBottom: '0',
-            zIndex: 20, 
-            position: 'relative',
-            backgroundColor: 'transparent',
-            overflow: 'visible',
-            opacity: 1
-          }}
-        >
-          <div className="section-label" style={{ color: '#111', borderColor: 'rgba(0,0,0,0.2)', marginBottom: '1.5rem', display: 'inline-block', width: 'fit-content', padding: '0.5rem 1rem', borderRadius: '50px', border: '1px solid', textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>
-            <span className="pulse-dot" style={{ background: '#FF2A54', display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', marginRight: '10px' }}></span> Core Capabilities
+      
+      {/* Header wrapper */}
+      <div className="services-header-wrapper">
+        <div ref={headerBoxRef} className="services-header-glass">
+          <div className="header-label-new">
+            <span style={{ 
+              background: '#FF2A54', 
+              display: 'inline-block', 
+              width: '8px', 
+              height: '8px', 
+              borderRadius: '50%', 
+              marginRight: '8px' 
+            }} />
+            Core Capabilities
           </div>
-          
-          <AnimatedHeading 
-            text="Engineered for \n Market \n Dominance" 
-            mode="mask" 
-            style={{ 
-              color: '#111111', 
-              fontSize: 'clamp(2.5rem, 4.5vw, 3.8rem)', 
-              lineHeight: 1.1, 
-              fontWeight: 900, 
-              letterSpacing: '-0.02em', 
-              margin: 0 
-            }} 
-          />
+          <h2 className="header-title-new">
+            Engineered for <br/> Market Dominance
+          </h2>
         </div>
-
-        {/* RIGHT COLUMN (3D Viewport) */}
-        <div 
-          ref={rightColRef}
-          style={{ 
-            width: '58%', 
-            height: '100%', 
-            position: 'relative', 
-            overflow: 'hidden', 
-            zIndex: 5,
-            display: 'flex',
-            alignItems: 'center',
-            perspective: '2000px',
-            perspectiveOrigin: '50% 58%',
-            paddingTop: '5rem'
-          }}
-        >
-          {/* 3D Rotating Cylinder Track */}
-          <div 
-            ref={scrollContainerRef}
-            style={{
-              position: 'absolute',
-              left: '46%',
-              top: 'calc(50% + 40px)',
-              transform: 'translate3d(-50%, -50%, -550px) rotateY(0deg)',
-              transformStyle: 'preserve-3d',
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              willChange: 'transform',
-              pointerEvents: 'none'
-            }}
-          >
-            {services.map((service, index) => (
-              <div 
-                key={index}
-                ref={el => cardsRef.current[index] = el}
-                className="glass-card"
-                style={{
-                  width: 'min(440px, 80vw)',
-                  height: '62vh',
-                  padding: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate3d(-50%, -50%, 0) rotateY(${index * 55}deg) translateZ(550px)`,
-                  transformOrigin: '50% 50%',
-                  willChange: 'transform',
-                  userSelect: 'none',
-                  backfaceVisibility: 'hidden',
-                  pointerEvents: 'auto',
-                  backgroundColor: 'rgba(255, 255, 255, 0.72)',
-                  backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.8)',
-                  boxShadow: 'none'
-                }}
-              >
-                {/* Floor shadow — sits below the card in 3D space */}
+      </div>
+      {/* Grid container */}
+      <div ref={gridWrapperRef} className="services-grid-wrapper">
+        {services.map((service, index) => {
+          const isGlowing = activeGlow === index;
+          return (
+            <div
+              key={index}
+              ref={(el) => (cardsRef.current[index] = el)}
+              className="card-outer-wrapper"
+            >
+              <div className={`card-float-wrapper card-float-delay-${index}`}>
                 <div
-                  ref={el => shadowRefs.current[index] = el}
-                  style={{
-                    position: 'absolute',
-                    bottom: '-60px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: '80%',
-                    height: '50px',
-                    background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 75%)',
-                    borderRadius: '50%',
-                    pointerEvents: 'none',
-                    zIndex: -1,
-                    opacity: 0.5,
-                    filter: 'blur(4px)',
-                    transformOrigin: 'center center'
-                  }}
-                />
-                {/* Card Image element (Fully visible at the top) */}
-                <div style={{
-                  width: '100%',
-                  height: '42%',
-                  borderRadius: '14px',
-                  overflow: 'hidden',
-                  marginBottom: '1.25rem',
-                  position: 'relative'
-                }}>
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover' 
-                    }} 
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    left: '1rem',
-                    backgroundColor: 'rgba(5, 5, 10, 0.65)',
-                    backdropFilter: 'blur(8px)',
-                    padding: '0.4rem 0.8rem',
-                    borderRadius: '30px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    fontSize: '0.9rem',
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 700,
-                    color: service.accent
-                  }}>
-                    {service.num}
+                  className={`service-card-new ${isGlowing ? 'active-glow-new' : ''}`}
+                  onMouseMove={(e) => handleMouseMove(e, index)}
+                  onMouseLeave={(e) => handleMouseLeave(e, index)}
+                >
+                  {/* Image */}
+                  <div className="card-img-container-new">
+                    <img 
+                      src={service.image} 
+                      alt={service.title} 
+                      className="card-img-new"
+                    />
                   </div>
-                </div>
-
-                {/* Card Text details below the image */}
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <h3 style={{ fontSize: '1.65rem', lineHeight: 1.2, fontWeight: 800, color: '#111111', margin: 0 }}>
-                      {service.title}
-                    </h3>
-                    <div style={{ 
-                      width: '36px', 
-                      height: '36px', 
-                      borderRadius: '50%', 
-                      border: '1px solid rgba(0,0,0,0.1)', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      marginLeft: '1rem'
-                    }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="19" x2="19" y2="5"></line>
-                        <polyline points="10 5 19 5 19 14"></polyline>
-                      </svg>
+                  <div className="card-body-new">
+                    <div className="card-title-container">
+                      <h3 className="card-title-new">
+                        {service.title}
+                      </h3>
+                    </div>
+                    <div className="card-desc-container">
+                      <p className="card-desc-new">
+                        {service.description}
+                      </p>
+                    </div>
+                    <div className="card-tags-new">
+                      {service.tags.map((tag, j) => (
+                        <span 
+                          key={j} 
+                          className="card-tag-new"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
-
-                  <p style={{ fontSize: '0.95rem', color: 'rgba(0,0,0,0.65)', lineHeight: 1.5, marginBottom: 'auto' }}>
-                    {service.description}
-                  </p>
-
-                  {/* Tags list */}
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.25rem' }}>
-                    {service.tags.map((tag, j) => (
-                      <span key={j} style={{
-                        padding: '0.3rem 0.8rem',
-                        backgroundColor: 'rgba(0,0,0,0.04)',
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        borderRadius: '50px',
-                        fontSize: '0.75rem',
-                        color: 'rgba(0,0,0,0.7)'
-                      }}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
-
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

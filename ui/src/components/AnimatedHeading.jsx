@@ -30,7 +30,7 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
         scrollTrigger: {
           trigger: el,
           start: "top 85%",
-          once: true
+          toggleActions: "play reset play reset"
         },
         delay: delay
       });
@@ -101,7 +101,12 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
                   key={charIndex} 
                   className="anim-char" 
                   data-char={char}
-                  style={{ display: 'inline-block', opacity: mode === 'scramble' || mode === 'rotate' ? 0 : 1 }}
+                  style={{ 
+                    display: 'inline-block', 
+                    opacity: mode === 'scramble' || mode === 'rotate' ? 0 : 1,
+                    minWidth: mode === 'scramble' ? '1.05ch' : 'auto',
+                    textAlign: 'center'
+                  }}
                 >
                   {char}
                 </span>

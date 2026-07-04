@@ -72,9 +72,16 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
       });
     };
 
+    // Cache bounding rect to avoid per-frame getBoundingClientRect
+    let cachedRect = container.getBoundingClientRect();
+    const updateCachedRect = () => { cachedRect = container.getBoundingClientRect(); };
+    window.addEventListener('resize', updateCachedRect, { passive: true });
+    window.addEventListener('scroll', updateCachedRect, { passive: true });
+    setTimeout(updateCachedRect, 100);
+
     // Track mouse move coordinates relative to the divider
     const handleMouseMove = (e) => {
-      const rect = container.getBoundingClientRect();
+      const rect = cachedRect;
       const mouseX = e.clientX - rect.left;
       const mouseY = isTop ? (rect.bottom - e.clientY) : (e.clientY - rect.top);
       
@@ -87,12 +94,6 @@ const InteractiveDripDivider = ({ color = '#050505', isTop = false }) => {
 
     window.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('mouseleave', handleMouseLeave);
-
-    // Cache bounding rect to avoid per-frame getBoundingClientRect
-    let cachedRect = container.getBoundingClientRect();
-    const updateCachedRect = () => { cachedRect = container.getBoundingClientRect(); };
-    window.addEventListener('resize', updateCachedRect, { passive: true });
-    window.addEventListener('scroll', updateCachedRect, { passive: true });
 
     // Physics update loop
     let rafId = null;

@@ -7,11 +7,10 @@ import Navbar from './components/Navbar';
 import ZoomHero from './components/ZoomHero';
 import Services from './components/Services';
 import About from './components/About';
-import Stats from './components/Stats';
+import StatsTestimonials from './components/StatsTestimonials';
 import Portfolio from './components/Portfolio';
 import NeuralGlobe from './components/NeuralGlobe';
 import Process from './components/Process';
-import Testimonials from './components/Testimonials';
 import CTABanner from './components/CTABanner';
 import ContactForm from './components/OrderForm';
 import Footer from './components/Footer';
@@ -121,19 +120,7 @@ function App() {
       );
     });
 
-    // ── Section entry effects ─────────────────────────────
-    // Services cards: stagger float-in
-    gsap.utils.toArray('.service-card-new').forEach((card, i) => {
-      gsap.fromTo(card,
-        { y: 60, opacity: 0, scale: 0.96 },
-        {
-          y: 0, opacity: 1, scale: 1,
-          duration: 0.9, delay: i * 0.1,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: card, start: 'top 90%', once: true }
-        }
-      );
-    });
+
 
     // Process steps: sequential stagger
     gsap.utils.toArray('.process-step').forEach((step, i) => {
@@ -301,9 +288,7 @@ function App() {
       <main style={{ position: 'relative', zIndex: 10 }}>
 
         {/* ① HERO */}
-        <section className="section-hero">
-          <ZoomHero />
-        </section>
+        <ZoomHero />
 
         {/* ② ABOUT — warm cream, clipped polygon */}
         <section className="section-about">
@@ -315,17 +300,13 @@ function App() {
           <Services />
         </section>
 
-        {/* ④ STATS — dark glass */}
-        <div className="section-stats-wrapper" style={{ position: 'relative' }}>
-          <div style={{ backgroundColor: '#0A0A0F', color: '#FFF' }}>
-            <Stats />
-          </div>
-        </div>
-
         {/* ⑤ PORTFOLIO — dark grid */}
         <section className="section-portfolio">
           <Portfolio />
         </section>
+
+        {/* ④ COMBINED STATS & TESTIMONIALS */}
+        <StatsTestimonials />
 
         {/* ⑥ NEURAL GLOBE — antigravity engine */}
         <div style={{ position: 'relative' }}>
@@ -339,10 +320,7 @@ function App() {
           </div>
         </div>
 
-        {/* ⑧ TESTIMONIALS — glassmorphic mid-dark */}
-        <section className="section-testimonials" style={{ position: 'relative' }}>
-          <Testimonials />
-        </section>
+        {/* Testimonials have been integrated into StatsTestimonials above */}
 
         {/* ⑨ CTA + CONTACT — vivid dark */}
         <div className="section-cta-contact">

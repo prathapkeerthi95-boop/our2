@@ -24,8 +24,8 @@ const LiquidCursor = () => {
     let vx = 0;
     let vy = 0;
 
-    const K = 0.11;  // Stiffness
-    const D = 0.78;  // Damping
+    const K = 0.32;  // Stiffness (higher = snappier, instant tracking)
+    const D = 0.58;  // Damping (lower = less lag, faster response)
     const R_BASE = 24; // 24px radius
 
     let isClicked = false;
@@ -35,6 +35,62 @@ const LiquidCursor = () => {
     let clickScaleYVel = 0;
 
     let isRunning = false;
+
+    // ── Offscreen Cache for Water Droplet shape (10x faster rendering) ──
+    const offscreen = document.createElement('canvas');
+    const cacheSize = (R_BASE + 10) * 2;
+    offscreen.width = cacheSize;
+    offscreen.height = cacheSize;
+    const oCtx = offscreen.getContext('2d');
+    const cxCenter = cacheSize / 2;
+    const cyCenter = cacheSize / 2;
+
+    oCtx.save();
+    oCtx.translate(cxCenter, cyCenter);
+
+    // Layer 1: Outer Rim
+    oCtx.shadowColor = 'rgba(160, 140, 220, 0.2)';
+    oCtx.shadowBlur = 4;
+    oCtx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+    oCtx.lineWidth = 1.6;
+    oCtx.beginPath();
+    oCtx.arc(0, 0, R_BASE, 0, Math.PI * 2);
+    oCtx.stroke();
+    oCtx.shadowBlur = 0;
+
+    // Layer 2: Body Fill
+    const bodyGrad = oCtx.createRadialGradient(0, 0, 0, 0, 0, R_BASE);
+    bodyGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+    bodyGrad.addColorStop(0.6, 'rgba(235, 230, 255, 0.08)');
+    bodyGrad.addColorStop(1, 'rgba(215, 210, 245, 0.16)');
+    oCtx.fillStyle = bodyGrad;
+    oCtx.fill();
+
+    // Layer 3: Inner Depth
+    oCtx.save();
+    oCtx.beginPath();
+    oCtx.arc(0, 0, R_BASE, 0, Math.PI * 2);
+    oCtx.clip();
+    const depthGrad = oCtx.createRadialGradient(0, 0, R_BASE * 0.72, 0, 0, R_BASE);
+    depthGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    depthGrad.addColorStop(1, 'rgba(0, 0, 0, 0.06)');
+    oCtx.fillStyle = depthGrad;
+    oCtx.fillRect(-R_BASE, -R_BASE, R_BASE * 2, R_BASE * 2);
+    oCtx.restore();
+
+    // Layer 4: Specular Highlight
+    const hx = -R_BASE * 0.32;
+    const hy = -R_BASE * 0.32;
+    const highlightGrad = oCtx.createRadialGradient(hx, hy, 0, hx, hy, R_BASE * 0.45);
+    highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+    highlightGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.35)');
+    highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    oCtx.fillStyle = highlightGrad;
+    oCtx.beginPath();
+    oCtx.ellipse(hx, hy, R_BASE * 0.45, R_BASE * 0.3, Math.PI / 4, 0, Math.PI * 2);
+    oCtx.fill();
+
+    oCtx.restore();
 
     // ── Resize Canvas ──
     const resizeCanvas = () => {
@@ -46,45 +102,18 @@ const LiquidCursor = () => {
     // ── Static drawing for sleep mode ──
     const drawCursorStatic = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw static droplet
       ctx.save();
       ctx.translate(mx, my);
-
-      // Layer 1: Outer Rim
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Layer 2: Body Fill
-      const bodyGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, R_BASE);
-      bodyGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
-      bodyGrad.addColorStop(0.6, 'rgba(235, 230, 255, 0.08)');
-      bodyGrad.addColorStop(1, 'rgba(215, 210, 245, 0.16)');
-      ctx.fillStyle = bodyGrad;
-      ctx.fill();
-
-      // Layer 3: Specular Highlight (fixed orientation)
-      const hx = -R_BASE * 0.32;
-      const hy = -R_BASE * 0.32;
-      const highlightGrad = ctx.createRadialGradient(hx, hy, 0, hx, hy, R_BASE * 0.45);
-      highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
-      highlightGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.35)');
-      highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = highlightGrad;
-      ctx.beginPath();
-      ctx.ellipse(hx, hy, R_BASE * 0.45, R_BASE * 0.3, Math.PI / 4, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.drawImage(offscreen, -cxCenter, -cyCenter);
       ctx.restore();
 
-      // Layer 4: Target Center Dot
+      // Layer 5: Target Center Dot
+      ctx.save();
       ctx.beginPath();
       ctx.arc(mx, my, 2, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(80, 60, 160, 0.55)';
       ctx.fill();
+      ctx.restore();
     };
 
     // ── Main Animation Loop ──
@@ -129,57 +158,7 @@ const LiquidCursor = () => {
         ctx.scale(clickScaleX, clickScaleY);
       }
 
-      // Layer 1: Outer Rim
-      ctx.shadowColor = 'rgba(160, 140, 220, 0.2)';
-      ctx.shadowBlur = 4;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Layer 2: Body Fill
-      const bodyGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, R_BASE);
-      bodyGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
-      bodyGrad.addColorStop(0.6, 'rgba(235, 230, 255, 0.08)');
-      bodyGrad.addColorStop(1, 'rgba(215, 210, 245, 0.16)');
-      ctx.fillStyle = bodyGrad;
-      ctx.fill();
-
-      // Layer 3: Inner Depth
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
-      ctx.clip();
-      const depthGrad = ctx.createRadialGradient(0, 0, R_BASE * 0.72, 0, 0, R_BASE);
-      depthGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      depthGrad.addColorStop(1, 'rgba(0, 0, 0, 0.06)');
-      ctx.fillStyle = depthGrad;
-      ctx.fillRect(-R_BASE, -R_BASE, R_BASE * 2, R_BASE * 2);
-      ctx.restore();
-
-      ctx.restore();
-
-      // Layer 4: Specular Highlight (fixed orientation)
-      ctx.save();
-      ctx.translate(bx, by);
-      ctx.beginPath();
-      ctx.arc(0, 0, R_BASE, 0, Math.PI * 2);
-      ctx.clip();
-
-      const hx = -R_BASE * 0.32;
-      const hy = -R_BASE * 0.32;
-
-      const highlightGrad = ctx.createRadialGradient(hx, hy, 0, hx, hy, R_BASE * 0.45);
-      highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
-      highlightGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.35)');
-      highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = highlightGrad;
-
-      ctx.beginPath();
-      ctx.ellipse(hx, hy, R_BASE * 0.45, R_BASE * 0.3, Math.PI / 4, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.drawImage(offscreen, -cxCenter, -cyCenter);
       ctx.restore();
 
       // Layer 5: Target Center Dot
@@ -267,7 +246,7 @@ const LiquidCursor = () => {
   return (
     <>
       <style dangerouslySetInnerHTML={{__html: `
-        html, body, * {
+        html, body, a, button, select, input, textarea, [role="button"], .circuit-card {
           cursor: none !important;
         }
         
@@ -316,6 +295,8 @@ const LiquidCursor = () => {
           height: '100vh',
           pointerEvents: 'none',
           zIndex: 999999,
+          transform: 'translate3d(0,0,0)',
+          willChange: 'transform'
         }}
       />
     </>

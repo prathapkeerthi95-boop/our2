@@ -565,7 +565,7 @@ p {
 
 /* ⑤ Portfolio — pure dark with grid texture */
 .section-portfolio {
-  padding: 8rem 0;
+  padding: 0;
   background: var(--bg-dark-section);
   position: relative;
   overflow: hidden;
@@ -592,7 +592,7 @@ p {
 
 /* ⑦ Testimonials — glassmorphic mid-dark */
 .section-testimonials {
-  padding: 8rem 0;
+  padding: 0;
   background: linear-gradient(150deg, #0D0D1A 0%, #0A0A14 100%);
   position: relative;
   overflow: hidden;
@@ -803,7 +803,25 @@ p {
 /* ─────────────────────────────────────────
    ABOUT — Glassmorphic Feature Cards
 ───────────────────────────────────────── */
-.about-section { padding: 8rem 0; position: relative; }
+.about-section {
+  padding: 8rem 0;
+  position: relative;
+  color: white;
+}
+
+/* Soft fog divider to hide the hard line between sections */
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: -60px; /* Overlaps upward to cover the seam */
+  left: -5%;
+  width: 110%; /* Extra width avoids edge bleed from blur */
+  height: 140px;
+  background: rgba(0, 59, 154, 1);
+  filter: blur(45px); /* Soft fog effect */
+  pointer-events: none;
+  z-index: 2;
+}
 
 .about-grid {
   display: grid;
@@ -1005,30 +1023,18 @@ p {
 .neural-globe-section {
   padding: 8rem 0;
   position: relative;
-  background: linear-gradient(150deg, #07070F 0%, #0D0D1A 60%, #070710 100%);
+  background: #030712;
   overflow: hidden;
 }
 
-.neural-globe-section::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,229,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,229,255,0.015) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-}
-
 .neural-globe-wrapper {
-  height: 520px; width: 100%;
+  height: 660px; width: 100%;
   position: relative; border-radius: 24px; overflow: hidden;
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0,229,255,0.12);
+  background: transparent;
+  border: 1px solid rgba(0,229,255,0.10);
   box-shadow:
-    0 1px 0 rgba(0,229,255,0.08) inset,
-    0 -1px 0 rgba(0,0,0,0.5) inset,
-    0 0 80px rgba(0,229,255,0.04);
+    0 0 120px rgba(0,100,255,0.08),
+    0 0 40px rgba(0,229,255,0.04) inset;
 }
 
 /* ─────────────────────────────────────────
@@ -2454,4 +2460,65 @@ html.lenis, html.lenis body { height: auto; }
   }
 }
 
+/* Unified Premium Gradient Pill Buttons */
+.custom-pill-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.95rem 1.4rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  font-family: var(--font-body) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+  border-radius: 9999px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  z-index: 10 !important;
+  
+  /* Gradient border using background-clip */
+  border: 1px solid transparent !important;
+  background: 
+    linear-gradient(rgba(10, 15, 30, 0.85), rgba(10, 15, 30, 0.85)) padding-box,
+    linear-gradient(135deg, #1b4df1, #00f5d4) border-box !important;
+  
+  /* Subtle glow */
+  box-shadow: 
+    0 2px 12px -3px rgba(27, 77, 241, 0.15),
+    0 2px 12px -3px rgba(0, 245, 212, 0.15) !important;
+}
 
+.custom-pill-btn:hover {
+  background: 
+    linear-gradient(rgba(15, 20, 40, 0.9), rgba(15, 20, 40, 0.9)) padding-box,
+    linear-gradient(135deg, #3766ff, #00f5d4) border-box !important;
+  box-shadow: 
+    0 0 18px rgba(27, 77, 241, 0.35),
+    0 0 18px rgba(0, 245, 212, 0.35) !important;
+  transform: translateY(-1.5px) !important;
+  letter-spacing: 0.18em !important;
+}
+
+/* Micro-animation for the arrow */
+.custom-pill-btn .arrow-icon {
+  display: inline-block !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.custom-pill-btn:hover .arrow-icon {
+  transform: translateX(3px) !important;
+}
+
+/* Button width custom overrides */
+.btn-see-work {
+  padding: 0.95rem 1.9rem !important;
+}
+
+.btn-lets-talk {
+  padding: 0.95rem 1.2rem !important;
+}
