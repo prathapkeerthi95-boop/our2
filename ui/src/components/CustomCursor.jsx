@@ -27,7 +27,7 @@ const CustomCursor = () => {
       gsap.to(cursorRef.current, { scale: 3, backgroundColor: 'rgba(112,0,255,0.8)', duration: 0.3, ease: "back.out(1.5)" });
     };
     const onLeaveLink = () => {
-      gsap.to(cursorRef.current, { scale: 1, backgroundColor: '#0B0C10', duration: 0.3, ease: "power2.out" });
+      gsap.to(cursorRef.current, { scale: 1, backgroundColor: '#FFFFFF', duration: 0.3, ease: "power2.out" });
     };
 
     // Portfolio "VIEW" Hover
@@ -38,7 +38,7 @@ const CustomCursor = () => {
     };
     const onLeavePortfolio = () => {
       gsap.to(textRef.current, { opacity: 0, scale: 0.5, duration: 0.2 });
-      gsap.to(cursorRef.current, { scale: 1, backgroundColor: '#0B0C10', duration: 0.4, ease: "expo.out", onComplete: () => setCursorText("") });
+      gsap.to(cursorRef.current, { scale: 1, backgroundColor: '#FFFFFF', duration: 0.4, ease: "expo.out", onComplete: () => setCursorText("") });
     };
 
     window.addEventListener('mousemove', onMouseMove);
@@ -73,9 +73,10 @@ const CustomCursor = () => {
       ref={cursorRef}
       style={{
         position: 'fixed', top: 0, left: 0, width: '16px', height: '16px',
-        borderRadius: '50%', backgroundColor: '#0B0C10', pointerEvents: 'none',
+        borderRadius: '50%', backgroundColor: '#FFFFFF', pointerEvents: 'none',
         zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: '0 4px 10px rgba(0,0,0,0.1)', overflow: 'hidden'
+        mixBlendMode: 'difference',
+        overflow: 'hidden'
       }}
     >
       {/* Morphing Text Inside Cursor */}

@@ -60,7 +60,7 @@ const Testimonials = () => {
     <section 
       id="testimonials" 
       style={{ 
-        padding: '10rem 0', 
+        padding: '4rem 0', 
         backgroundColor: '#050505', 
         color: '#FFFFFF',
         overflow: 'hidden',

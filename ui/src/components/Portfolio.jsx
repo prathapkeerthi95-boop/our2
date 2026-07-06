@@ -29,17 +29,17 @@ const Portfolio = () => {
         }
       });
 
-      // Container grows from 0 height
+      // Container fades in and slides up
       tl.fromTo(container,
-        { height: 0 },
-        { height: projects[i].height, duration: 1.5, ease: "expo.inOut" }
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
       );
 
-      // Image shrinks from 1.5 scale inside the growing container
+      // Image shrinks from 1.3 scale
       tl.fromTo(img,
-        { scale: 1.5 },
-        { scale: 1, duration: 1.5, ease: "expo.inOut" },
-        "<" // start at same time
+        { scale: 1.3 },
+        { scale: 1, duration: 1.5, ease: "expo.out" },
+        "-=0.8" // overlap
       );
     });
   }, []);

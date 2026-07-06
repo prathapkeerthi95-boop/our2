@@ -224,7 +224,7 @@ function App() {
           <ZoomHero />
         </section>
 
-        <div style={{ backgroundColor: '#FAFAFA' }}>
+        <div style={{ backgroundColor: '#050508' }} className="section-dark">
           <Services />
         </div>
 
@@ -238,7 +238,7 @@ function App() {
 
         <Portfolio />
 
-        <div style={{ backgroundColor: '#FAFAFA' }}>
+        <div style={{ backgroundColor: '#020202' }} className="section-dark">
           <Process />
           <Testimonials />
         </div>

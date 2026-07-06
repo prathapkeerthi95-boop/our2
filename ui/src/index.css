@@ -686,7 +686,7 @@ p {
    ABOUT / WHY US
    ============================================ */
 .about-section {
-  padding: 8rem 0;
+  padding: 4rem 0;
   position: relative;
 }
 
@@ -929,7 +929,7 @@ p {
    CTA BANNER
    ============================================ */
 .cta-banner {
-  padding: 7rem 0;
+  padding: 4rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;

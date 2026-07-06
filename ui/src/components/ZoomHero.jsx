@@ -124,7 +124,7 @@ const ZoomHero = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "80% top",
+          end: "bottom top",
           scrub: 1.5
         }
       });
