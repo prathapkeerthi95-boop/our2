@@ -35,7 +35,7 @@ const steps = [
     subtitle: 'MARKET DEPLOYMENT',
     desc: 'Flawless CI/CD pipelines and aggressive go-to-market strategies. We launch products that hijack attention.',
     accent: '#FF8800',
-    image: 'https://images.unsplash.com/photo-1558470598-a5f1f1d77a06?auto=format&fit=crop&w=1600&q=80' // Deep intense fiery abstract
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80' // Cinematic space tech / global deployment
   }
 ];
 
@@ -74,7 +74,7 @@ const Process = () => {
         start: 'top top',
         end: `+=${totalPanels * 150}%`,
         pin: true,
-        scrub: 1.5 // Extra smoothing for that Metaskapes heavy inertia feel
+        scrub: 0.5 // Snappier horizontal scroll transition
       }
     });
 
@@ -127,6 +127,9 @@ const Process = () => {
         ease: 'power2.out' 
       }, start + 1.2);
     }
+
+    // Add empty space/hold at the end of the timeline so the final step (DOMINANCE) is held on screen before unpinning
+    masterTL.to({}, { duration: 1.5 });
 
     return () => {
       masterTL.kill();
@@ -185,12 +188,12 @@ const Process = () => {
             <div 
               className="step-num"
               style={{
-                fontSize: 'clamp(12rem, 25vw, 22rem)',
+                fontSize: 'clamp(7rem, 15vh, 12rem)', // Responsive to viewport height to prevent clipping
                 fontWeight: 900,
                 color: 'transparent',
                 WebkitTextStroke: `2px ${step.accent}`,
                 lineHeight: 0.8,
-                marginBottom: '-4rem',
+                marginBottom: '-2.5vh', // Responsive margin
                 opacity: 0,
                 willChange: 'transform, opacity'
               }}
@@ -208,7 +211,7 @@ const Process = () => {
                 WebkitBackdropFilter: 'blur(30px)',
                 border: `1px solid rgba(255,255,255,0.05)`,
                 borderTop: `2px solid ${step.accent}`,
-                padding: '3rem 4rem',
+                padding: 'clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 4vw, 4rem)', // Height-responsive vertical padding
                 borderRadius: '0', // Brutalist square edges
                 boxShadow: `0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(${step.accent === '#00E5FF' ? '0,229,255' : step.accent === '#7000FF' ? '112,0,255' : step.accent === '#FF2A54' ? '255,42,84' : '255,136,0'},0.15)`,
                 willChange: 'transform, opacity',
@@ -220,13 +223,13 @@ const Process = () => {
               <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: `1px solid ${step.accent}`, borderLeft: `1px solid ${step.accent}` }} />
               <div style={{ position: 'absolute', bottom: '10px', right: '10px', width: '10px', height: '10px', borderBottom: `1px solid ${step.accent}`, borderRight: `1px solid ${step.accent}` }} />
 
-              <div style={{ color: step.accent, fontSize: '0.8rem', letterSpacing: '0.4em', marginBottom: '1rem', fontWeight: 600 }}>
+              <div style={{ color: step.accent, fontSize: '0.8rem', letterSpacing: '0.4em', marginBottom: 'clamp(0.6rem, 1.5vh, 1rem)', fontWeight: 600 }}>
                 // {step.subtitle}
               </div>
-              <h2 style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 900, color: '#FFF', margin: '0 0 1.5rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+              <h2 style={{ fontSize: 'clamp(2rem, 4.5vh, 3.5rem)', fontWeight: 900, color: '#FFF', margin: '0 0 clamp(0.8rem, 1.8vh, 1.5rem) 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
                 {step.title}
               </h2>
-              <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.6)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6, fontWeight: 300 }}>
+              <p style={{ fontSize: 'clamp(0.95rem, 1.8vh, 1.1rem)', color: 'rgba(255,255,255,0.6)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6, fontWeight: 300 }}>
                 {step.desc}
               </p>
             </div>

@@ -8,7 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 const Navbar = () => {
   const navContainerRef = useRef(null);
   const navInnerRef = useRef(null);
-  const progressRef = useRef(null);
   const logoTextRef = useRef(null);
   const logoImgRef = useRef(null);
   const linksRef = useRef([]);
@@ -17,7 +16,6 @@ const Navbar = () => {
   useEffect(() => {
     const navContainer = navContainerRef.current;
     const navInner = navInnerRef.current;
-    const progress = progressRef.current;
     const logoText = logoTextRef.current;
     const logoImg = logoImgRef.current;
     const links = linksRef.current;
@@ -45,30 +43,29 @@ const Navbar = () => {
         if (window.scrollY > heroHeight && !isPill) {
           isPill = true;
           
-          // Animate to Pill (Dark Section Mode)
+          // Animate to Pill (Liquid Glass Dark Mode)
           gsap.to(navInner, {
-            backgroundColor: 'rgba(10, 10, 15, 0.85)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            webkitBackdropFilter: 'blur(24px) saturate(180%)', // For Safari
-            border: '1px solid rgba(255,255,255,0.1)',
+            backgroundColor: 'rgba(10, 10, 15, 0.45)', // Translucent glass base
+            backdropFilter: 'blur(32px) saturate(200%)',
+            webkitBackdropFilter: 'blur(32px) saturate(200%)', // For Safari
+            border: '1.5px solid rgba(255, 255, 255, 0.18)', // Refractive glass highlight border
             borderRadius: '50px',
-            margin: '1rem auto 0',
-            maxWidth: '900px',
-            padding: '0 2rem',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(255,255,255,0.05)',
-            duration: 0.5,
+            margin: '1.2rem auto 0',
+            maxWidth: '920px',
+            padding: '0 2.2rem',
+            // Liquid shadow + cyan internal shadow glow reflection
+            boxShadow: '0 30px 60px rgba(0,0,0,0.45), inset 0 0 16px rgba(0, 229, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.25)',
+            duration: 0.55,
             ease: "power3.out"
           });
 
           gsap.to([logoText, ...links], { color: '#FFFFFF', duration: 0.3 });
           gsap.to(logoImg, { filter: 'invert(1) brightness(2)', duration: 0.3 });
           gsap.to(btn, { 
-            borderColor: 'rgba(255,255,255,0.3)', 
+            borderColor: 'rgba(255,255,255,0.35)', 
             color: '#FFFFFF', 
             duration: 0.3 
           });
-          
-          gsap.to(progress.parentElement, { opacity: 1, duration: 0.3 });
           
         } else if (window.scrollY <= heroHeight && isPill) {
           isPill = false;
@@ -84,7 +81,7 @@ const Navbar = () => {
             maxWidth: '1600px',
             padding: '0 3rem',
             boxShadow: 'none',
-            duration: 0.5,
+            duration: 0.55,
             ease: "power3.out"
           });
 
@@ -95,14 +92,6 @@ const Navbar = () => {
             color: '#000000', 
             duration: 0.3 
           });
-          
-          gsap.to(progress.parentElement, { opacity: 0, duration: 0.3 });
-        }
-
-        // Update scroll progress bar
-        const scrollProgress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-        if (progress) {
-          progress.style.transform = `scaleX(${scrollProgress})`;
         }
       }
     });
@@ -121,7 +110,7 @@ const Navbar = () => {
       gsap.to(btn, {
         backgroundColor: 'transparent',
         color: isPill ? '#FFFFFF' : '#000000',
-        borderColor: isPill ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+        borderColor: isPill ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)',
         duration: 0.2
       });
     };
@@ -145,13 +134,13 @@ const Navbar = () => {
         left: 0,
         width: '100%', 
         zIndex: 9999,
-        pointerEvents: 'none' // Let clicks pass through the invisible container
+        pointerEvents: 'none'
       }}
     >
       <nav 
         ref={navInnerRef}
         style={{
-          pointerEvents: 'auto', // Re-enable clicks on the actual nav
+          pointerEvents: 'auto',
           margin: '0 auto',
           maxWidth: '1600px',
           height: '64px',
@@ -162,7 +151,8 @@ const Navbar = () => {
           alignItems: 'center', 
           padding: '0 3rem',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          transition: 'box-shadow 0.4s ease'
         }}
       >
         <MagneticElement>
@@ -173,57 +163,56 @@ const Navbar = () => {
               color: '#000000', 
               display: 'flex', 
               alignItems: 'center', 
-              fontWeight: 900, 
-              letterSpacing: '0.08em', 
-              fontSize: '1rem',
               textDecoration: 'none'
             }}
           >
             <img 
               ref={logoImgRef}
-              src="/logo.png" 
-              alt="Logo" 
+              src="/logo.png?v=2" 
+              alt="NUVAROX Logo" 
               onError={(e) => e.target.style.display = 'none'} 
               style={{ 
-                marginRight: '8px', 
                 height: '24px', 
                 width: 'auto'
               }} 
             />
-            NUVAROX
           </a>
         </MagneticElement>
 
-        <ul style={{ 
-          display: 'flex', 
-          gap: '2rem', 
-          listStyle: 'none', 
-          margin: 0, 
-          padding: 0, 
-          alignItems: 'center' 
-        }}>
-          {['Services', 'About', 'Portfolio', 'Process', 'Clients'].map((item, index) => (
-            <li key={item}>
-              <a 
-                href={`#${item.toLowerCase()}`} 
-                ref={el => linksRef.current[index] = el}
-                style={{ 
-                  color: '#000000', 
-                  textDecoration: 'none', 
-                  fontSize: '0.85rem', 
-                  fontWeight: 600,
-                  opacity: 0.8,
-                  transition: 'opacity 0.2s',
-                  position: 'relative',
-                  letterSpacing: '0.02em'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
+        <ul 
+          className="navbar-links"
+          style={{ 
+            display: 'flex', 
+            gap: '2.5rem', 
+            listStyle: 'none', 
+            margin: 0, 
+            padding: 0, 
+            alignItems: 'center'
+          }}
+        >
+          {['Services', 'About', 'Portfolio', 'Process', 'Clients'].map((item, index) => {
+            const href = item === 'Clients' ? '#testimonials' : `#${item.toLowerCase()}`;
+            return (
+              <li key={item}>
+                <a 
+                  href={href} 
+                  ref={el => linksRef.current[index] = el}
+                  style={{ 
+                    color: '#000000', 
+                    textDecoration: 'none', 
+                    fontSize: '0.85rem', 
+                    fontWeight: 600,
+                    opacity: 0.8,
+                    transition: 'opacity 0.2s, color 0.3s',
+                    position: 'relative',
+                    letterSpacing: '0.02em'
+                  }}
+                >
+                  {item}
+                </a>
+              </li>
+            );
+          })}
           <li>
             <MagneticElement>
               <a 
@@ -237,7 +226,8 @@ const Navbar = () => {
                   borderRadius: '50px',
                   fontWeight: '700',
                   textDecoration: 'none',
-                  display: 'inline-block'
+                  display: 'inline-block',
+                  transition: 'border-color 0.3s, color 0.3s'
                 }}
               >
                 Start a Project
@@ -245,31 +235,6 @@ const Navbar = () => {
             </MagneticElement>
           </li>
         </ul>
-
-        {/* Scroll Progress Indicator - Only visible when in Pill mode */}
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            width: '100%',
-            height: '2px',
-            background: 'rgba(255,255,255,0.05)',
-            opacity: 0
-          }}
-        >
-          <div 
-            ref={progressRef}
-            style={{
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(90deg, #7000FF, #00E5FF, #FF2A54)',
-              transformOrigin: 'left',
-              transform: 'scaleX(0)',
-              transition: 'none'
-            }}
-          />
-        </div>
       </nav>
     </div>
   );

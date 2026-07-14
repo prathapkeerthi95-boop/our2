@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from '@studio-freight/lenis';
@@ -91,12 +91,12 @@ function App() {
 
     // Initialize Lenis Smooth Scrolling
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: 0.95,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
-      mouseMultiplier: 1,
+      mouseMultiplier: 1.15,
       smoothTouch: false,
       touchMultiplier: 2,
       infinite: false,
@@ -104,9 +104,13 @@ function App() {
 
     lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    const handleRefresh = () => lenis.resize();
+    ScrollTrigger.addEventListener("refresh", handleRefresh);
+
+    const updateLenis = (time) => {
       lenis.raf(time * 1000);
-    });
+    };
+    gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     // Bulletproof Scroll Reveal setup
@@ -137,7 +141,8 @@ function App() {
 
     return () => {
       lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
+      gsap.ticker.remove(updateLenis);
+      ScrollTrigger.removeEventListener("refresh", handleRefresh);
     };
   }, []);
 
@@ -171,10 +176,9 @@ function App() {
           }}
         />
 
-        {/* PRELOADER CONTENT (Z-INDEX 2 to sit above panels) */}
+        {/* PRELOADER CONTENT */}
         <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           
-          {/* HUGE PERCENTAGE COUNTER */}
           <div 
             ref={counterRef} 
             style={{ 
@@ -192,7 +196,6 @@ function App() {
             0%
           </div>
 
-          {/* ELEGANT AGENCY TEXT */}
           <div style={{ overflow: 'hidden', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
             <h1 
               ref={titleRef}
@@ -218,36 +221,75 @@ function App() {
 
       <Navbar />
 
-      <main style={{ position: 'relative', zIndex: 10, overflowX: 'hidden' }}>
-        
-        <section className="section-divider">
-          <ZoomHero />
-        </section>
+      {/* ============================================================
+          PAGE SECTIONS — Clean sequential layout, no cube interference
+          ============================================================ */}
 
-        <div style={{ backgroundColor: '#050508' }} className="section-dark">
-          <Services />
-        </div>
+      {/* HERO SECTION */}
+      <section id="hero" style={{ 
+        position: 'relative', 
+        zIndex: 10,
+        background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
+      }}>
+        <ZoomHero />
+      </section>
 
-        <div style={{ backgroundColor: '#F5F3EF' }}>
-          <About />
-        </div>
+      {/* SERVICES SECTION */}
+      <section id="services-wrapper" style={{ 
+        position: 'relative', 
+        zIndex: 10,
+        background: 'linear-gradient(160deg, #F3F6FA, #F7F9FC)'
+      }}>
+        <Services />
+      </section>
 
-        <div style={{ backgroundColor: '#0A0A0F', color: '#FFF' }}>
-          <Stats />
-        </div>
+      {/* ABOUT SECTION */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 10, 
+        backgroundColor: '#F5F3EF' 
+      }}>
+        <About />
+      </div>
 
+      {/* STATS SECTION */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 10, 
+        backgroundColor: '#828282',
+        paddingBottom: '5rem'
+      }}>
+        <Stats />
+      </div>
+
+      {/* PORTFOLIO SECTION */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 10
+      }}>
         <Portfolio />
+      </div>
 
-        <div style={{ backgroundColor: '#020202' }} className="section-dark">
-          <Process />
-          <Testimonials />
-        </div>
+      {/* PROCESS + TESTIMONIALS */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 10, 
+        backgroundColor: '#020202' 
+      }} className="section-dark">
+        <Process />
+        <Testimonials />
+      </div>
 
-        <div style={{ backgroundColor: '#0D0D1A', color: '#FFF' }} className="section-dark">
-          <CTABanner />
-          <ContactForm />
-        </div>
-      </main>
+      {/* CTA + CONTACT */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 10, 
+        backgroundColor: '#0D0D1A', 
+        color: '#FFF' 
+      }} className="section-dark">
+        <CTABanner />
+        <ContactForm />
+      </div>
 
       <Footer />
     </>

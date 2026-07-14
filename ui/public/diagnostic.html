@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head><title>Section Diagnostic</title></head>
+<body>
+<script>
+  // Open this alongside the main site in browser
+  // Paste this in the browser console on localhost:3001
+  const check = () => {
+    const ids = ['hero','services','about','stats','portfolio','process','testimonials','contact'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const cs = window.getComputedStyle(el);
+        console.log(id + ': top=' + el.offsetTop + 'px, height=' + el.offsetHeight + 'px, display=' + cs.display + ', visibility=' + cs.visibility + ', opacity=' + cs.opacity + ', parentBg=' + window.getComputedStyle(el.parentElement).backgroundColor);
+      } else {
+        console.log(id + ': NOT FOUND');
+      }
+    });
+    
+    // Check all ScrollTrigger instances
+    const ST = window.gsap && window.gsap.plugins && window.gsap.plugins.scrollTrigger;
+    if (window.ScrollTrigger) {
+      const triggers = window.ScrollTrigger.getAll();
+      console.log('\nTotal ScrollTriggers:', triggers.length);
+      triggers.forEach((t, i) => {
+        console.log('ST[' + i + ']: id=' + t.id + ', start=' + t.start + ', end=' + t.end + ', pin=' + (t.pin ? t.pin.id || 'yes' : 'no'));
+      });
+    }
+    
+    // Total page height
+    console.log('\nTotal scroll height:', document.documentElement.scrollHeight);
+    console.log('Current scrollY:', window.scrollY);
+    
+    // Check for any element covering the stats section
+    if (document.getElementById('stats')) {
+      const statsEl = document.getElementById('stats');
+      statsEl.scrollIntoView();
+      setTimeout(() => {
+        const el = document.elementFromPoint(window.innerWidth/2, window.innerHeight/2);
+        console.log('Element at center after scrolling to stats:', el ? el.tagName + ' id=' + el.id + ' class=' + el.className : 'none');
+      }, 500);
+    }
+  };
+  check();
+</script>
+</body>
+</html>

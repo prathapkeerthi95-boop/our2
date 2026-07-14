@@ -23,6 +23,7 @@ const ZoomHero = () => {
   const dividerRef = useRef(null);
 
   useEffect(() => {
+    let carouselInterval;
     const ctx = gsap.context(() => {
 
       // Master entrance timeline
@@ -65,18 +66,6 @@ const ZoomHero = () => {
         "-=0.5"
       );
 
-      // Tags slide in from sides
-      tl.fromTo(tagLeftRef.current,
-        { x: -30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        "-=0.5"
-      );
-      tl.fromTo(tagRightRef.current,
-        { x: 30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
-        "-=0.6"
-      );
-
       // Subtitle + CTA
       tl.fromTo(subtitleRef.current,
         { y: 25, opacity: 0 },
@@ -106,15 +95,23 @@ const ZoomHero = () => {
           const nextIndex = (currentIndex + 1) % items.length;
           const next = items[nextIndex];
 
-          gsap.to(current, { yPercent: -110, opacity: 0, duration: 0.5, ease: "power2.in" });
+          gsap.to(current, { 
+            yPercent: -110, 
+            opacity: 0, 
+            duration: 0.5, 
+            ease: "power2.in",
+            onComplete: () => {
+              current.style.visibility = 'hidden';
+            }
+          });
           gsap.fromTo(next,
-            { yPercent: 110, opacity: 0, display: 'block' },
+            { yPercent: 110, opacity: 0, visibility: 'visible' },
             { yPercent: 0, opacity: 1, duration: 0.5, ease: "power2.out", delay: 0.15 }
           );
           currentIndex = nextIndex;
         };
 
-        setInterval(rotateCarousel, 2800);
+        carouselInterval = setInterval(rotateCarousel, 2800);
       }
 
       // Parallax on scroll
@@ -143,7 +140,10 @@ const ZoomHero = () => {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (carouselInterval) clearInterval(carouselInterval);
+    };
   }, []);
 
   // Character split helper
@@ -169,7 +169,7 @@ const ZoomHero = () => {
       style={{
         position: 'relative', width: '100%', height: '100vh',
         overflow: 'hidden', display: 'flex', alignItems: 'center',
-        background: '#FAFAFA'
+        background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
       }}
     >
       {/* AMBIENT GLOW */}
@@ -201,41 +201,15 @@ const ZoomHero = () => {
           padding: '0 2rem'
         }}
       >
-        {/* TOP TAG BAR */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          marginBottom: '2.5rem'
-        }}>
-          <div ref={tagLeftRef} style={{
-            display: 'flex', alignItems: 'center', gap: '0.6rem',
-            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
-          }}>
-            <span style={{
-              width: '8px', height: '8px', borderRadius: '50%',
-              background: 'var(--accent-crimson)',
-              animation: 'pulse 2s ease-in-out infinite'
-            }}></span>
-            Available for Projects
-          </div>
-
-          <div ref={tagRightRef} style={{
-            fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: 'rgba(11,12,16,0.35)', opacity: 0
-          }}>
-            Scroll to Explore ↓
-          </div>
-        </div>
-
         {/* HEADLINE — EDITORIAL SPLIT */}
         <div style={{ marginBottom: '1.5rem' }}>
           {/* Line 1 */}
-          <div ref={line1Ref} style={{ overflow: 'hidden' }}>
+          <div ref={line1Ref} style={{ overflow: 'hidden', paddingBottom: '0.1em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
-              lineHeight: 0.95,
+              lineHeight: 1.1,
               letterSpacing: '-0.04em',
               color: '#0B0C10',
               margin: 0
@@ -245,28 +219,22 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 2 — with accent word */}
-          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
-            <h1 style={{
+          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
+            <h1 className="gradient-text" style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
-              lineHeight: 0.95,
+              lineHeight: 1.1,
               letterSpacing: '-0.04em',
-              margin: 0,
-              background: 'var(--gradient-primary)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              margin: 0
             }}>
-              <span className="hero-char" style={{ display: 'inline-block', willChange: 'transform' }}>
-                Digital
-              </span>
+              {splitChars('Digital')}
             </h1>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
-              lineHeight: 0.95,
+              lineHeight: 1.1,
               letterSpacing: '-0.04em',
               color: '#0B0C10',
               margin: 0
@@ -276,12 +244,12 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 3 — with rotating word */}
-          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em' }}>
+          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
-              lineHeight: 0.95,
+              lineHeight: 1.1,
               letterSpacing: '-0.04em',
               color: '#0B0C10',
               margin: 0
@@ -294,11 +262,12 @@ const ZoomHero = () => {
               ref={carouselRef}
               style={{
                 position: 'relative',
-                display: 'inline-block',
-                height: 'clamp(3.5rem, 9vw, 8rem)',
-                minWidth: 'clamp(200px, 30vw, 450px)',
+                display: 'inline-grid',
+                gridTemplateColumns: '1fr',
+                gridTemplateRows: '1fr',
                 overflow: 'hidden',
-                verticalAlign: 'baseline'
+                verticalAlign: 'baseline',
+                paddingRight: '0.15em' // Prevent italic character truncation
               }}
             >
               {['Convert.', 'Dominate.', 'Inspire.', 'Scale.'].map((word, i) => (
@@ -306,17 +275,17 @@ const ZoomHero = () => {
                   key={i}
                   className="carousel-word"
                   style={{
-                    position: i === 0 ? 'relative' : 'absolute',
-                    top: 0, left: 0,
-                    display: i === 0 ? 'block' : 'none',
+                    gridArea: '1 / 1 / 2 / 2',
+                    visibility: i === 0 ? 'visible' : 'hidden',
                     fontSize: 'clamp(3.5rem, 9vw, 8rem)',
                     fontWeight: '800',
                     fontFamily: 'var(--font-display)',
-                    lineHeight: 0.95,
+                    lineHeight: 1.1, // Match preceding text exactly to align baselines
                     letterSpacing: '-0.04em',
                     fontStyle: 'italic',
                     color: 'var(--accent-crimson)',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    willChange: 'transform, opacity'
                   }}
                 >
                   {word}
