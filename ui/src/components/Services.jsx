@@ -284,6 +284,8 @@ export default function Services() {
   const idleAnims  = useRef([]);
   const growAnims  = useRef([]);
   const reduced    = useRef(false);
+  const isVisibleRef = useRef(false);
+  const sectionRectRef = useRef(null);
 
   /* ════════════════════════════════════════════════════
      INIT
@@ -294,6 +296,23 @@ export default function Services() {
 
     /* prefers-reduced-motion — respect user OS setting */
     reduced.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── Visibility gating — pause all heavy work when off-screen ── */
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisibleRef.current;
+      isVisibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting && !wasVisible) {
+        // Resume idle and grow animations
+        idleAnims.current.forEach(a => a && a.play && a.play());
+        growAnims.current.forEach(a => a && a.play && a.play());
+      } else if (!entry.isIntersecting && wasVisible) {
+        // Pause idle and grow animations to save CPU
+        idleAnims.current.forEach(a => a && a.pause && a.pause());
+        growAnims.current.forEach(a => a && a.pause && a.pause());
+      }
+    }, { threshold: 0.05 });
+    visibilityObserver.observe(section);
+    sectionRectRef.current = section.getBoundingClientRect();
 
     /* ── 1. Initial DOM state ── */
     chapRefs.current.forEach((el, i) => {
@@ -387,13 +406,22 @@ export default function Services() {
     if (fogRef.current) masterTL.fromTo(fogRef.current,
       { opacity: 0 }, { opacity: 0.14, duration: 1.4 }, 0.4
     );
-    /* f. Timeline rows stagger in */
+    /* f. Section header animates in */
+    const svcHeader = section.querySelector('.svc-header');
+    if (svcHeader) {
+      masterTL.fromTo(svcHeader,
+        { autoAlpha: 0, y: 24, filter: 'blur(6px)' },
+        { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out' },
+        0.45
+      );
+    }
+    /* g. Timeline rows stagger in */
     if (timelineColRef.current) {
       const rows = timelineColRef.current.querySelectorAll('.svc-row');
       masterTL.fromTo(rows,
         { autoAlpha: 0, x: -28, filter: 'blur(8px)' },
         { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 0.75, stagger: 0.12, ease: 'expo.out' },
-        0.55
+        0.65
       );
     }
     /* g. Title chars cascade in staggered */
@@ -556,14 +584,20 @@ export default function Services() {
 
     let raf;
     const tick = () => {
+      /* Skip all work when section is not in viewport */
+      if (!isVisibleRef.current) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+
       const { rx, ry } = mouseRef.current;
       const q = QT.current;
       const idx = activeRef.current;
       const ch = CHAPTERS[idx];
 
       /* Cursor halo tracks mouse */
-      q.haloX && q.haloX(mouseRef.current.x - 160);
-      q.haloY && q.haloY(mouseRef.current.y - 160);
+      q.haloX && q.haloX(mouseRef.current.x - 120);
+      q.haloY && q.haloY(mouseRef.current.y - 120);
 
       // Light rays drift with cursor
       q.raysX && q.raysX(rx * 25);
@@ -786,18 +820,21 @@ export default function Services() {
     };
     raf = requestAnimationFrame(tick);
 
-    /* ── 8. Mouse tracking ── */
+    /* ── 8. Mouse tracking (cached rect — no layout thrashing) ── */
     let lastX = 0, lastY = 0, lastTime = 0;
+    const onResize = () => { sectionRectRef.current = section.getBoundingClientRect(); };
+    window.addEventListener('resize', onResize, { passive: true });
     const onMove = (e) => {
-      const rect = section.getBoundingClientRect();
+      if (!isVisibleRef.current) return; /* skip when off-screen */
+      const rect = sectionRectRef.current || section.getBoundingClientRect();
       const clientX = e.clientX - rect.left;
       const clientY = e.clientY - rect.top;
       const now = performance.now();
       const dt = now - lastTime;
       const dx = clientX - lastX;
       const dy = clientY - lastY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const v = dt > 0 ? dist / dt : 0;
+      const distSq = dx * dx + dy * dy;
+      const v = dt > 0 ? Math.sqrt(distSq) / dt : 0;
 
       mouseRef.current = {
         x:  clientX,
@@ -878,7 +915,9 @@ export default function Services() {
 
     return () => {
       cancelAnimationFrame(raf);
+      visibilityObserver.disconnect();
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('resize', onResize);
       section.removeEventListener('keydown', onKey);
       section.removeEventListener('touchstart', onTS);
       section.removeEventListener('touchend', onTE);
@@ -1148,11 +1187,10 @@ export default function Services() {
       ref={sectionRef}
       id="services"
       aria-label="Our Services — Build, Launch, Brand, Grow"
-      tabIndex={0}
       style={{
         position: 'relative', height: '100vh', minHeight: '100vh', width: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '80px 4rem 20px', overflow: 'hidden', visibility: 'hidden',
+        display: 'flex', justifyContent: 'center',
+        padding: '100px 4rem 20px', overflow: 'hidden', visibility: 'hidden',
         transform: 'translate3d(0,0,0)', /* GPU layer */
         background: 'linear-gradient(160deg, #F3F6FA, #F7F9FC)',
       }}
@@ -1184,7 +1222,7 @@ export default function Services() {
         position: 'absolute', top: '5%', left: '5%', width: 720, height: 720,
         borderRadius: '50%', zIndex: 1, pointerEvents: 'none', opacity: 0,
         background: 'radial-gradient(circle,rgba(72,144,255,0.12) 0%,transparent 68%)',
-        filter: 'blur(100px)', willChange: 'transform',
+        filter: 'blur(60px)', willChange: 'transform',
       }} />
 
       {/* L5: Volumetric glow (pulsing extra drifting light) */}
@@ -1211,7 +1249,7 @@ export default function Services() {
       <div ref={fogRef} style={{
         position: 'absolute', inset: -90, zIndex: 1, pointerEvents: 'none', opacity: 0,
         background: 'radial-gradient(ellipse at 50% 50%,rgba(255,255,255,0.92) 0%,transparent 60%)',
-        filter: 'blur(55px)', willChange: 'transform',
+        filter: 'blur(35px)', willChange: 'transform',
       }} />
 
       {/* L8: Depth haze overlay */}
@@ -1227,10 +1265,10 @@ export default function Services() {
 
       {/* L10: Cursor halo (tint changes per chapter) */}
       <div ref={haloRef} style={{
-        position: 'absolute', top: 0, left: 0, width: 320, height: 320,
+        position: 'absolute', top: 0, left: 0, width: 240, height: 240,
         borderRadius: '50%', zIndex: 3, pointerEvents: 'none', opacity: 0,
         background: 'radial-gradient(circle,rgba(72,144,255,0.18) 0%,transparent 70%)',
-        filter: 'blur(50px)', willChange: 'transform',
+        filter: 'blur(30px)', willChange: 'transform',
       }} />
 
       {/* ══════════════════════════════════════════════
@@ -1238,7 +1276,7 @@ export default function Services() {
       ══════════════════════════════════════════════ */}
       <div className="services-desktop-view" style={{
         position: 'relative', zIndex: 10, display: 'flex', width: '100%', maxWidth: 1520,
-        height: 'calc(100vh - 100px)', minHeight: 460, alignItems: 'center', gap: '6rem',
+        height: 'calc(100vh - 100px)', minHeight: 460, alignItems: 'flex-start', gap: '6rem',
       }}>
 
         {/* ════════════════════════════════════
@@ -1253,11 +1291,40 @@ export default function Services() {
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             gap: '2.2rem',
             position: 'relative'
           }}
         >
+          {/* Section Header */}
+          <div className="svc-header" style={{ marginBottom: '2rem' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.22em',
+              color: '#FF2A54',
+              marginBottom: '0.6rem',
+            }}>
+              <span style={{ width: 28, height: 2, background: '#FF2A54', borderRadius: 2, display: 'inline-block' }} />
+              What We Do
+            </span>
+            <h2 className="svc-section-title" style={{
+              fontSize: 'clamp(2.4rem, 4vw, 3.6rem)',
+              fontWeight: 900,
+              fontFamily: 'var(--font-display)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+              color: '#0A0A10',
+              margin: 0,
+            }}>
+              Our Services
+            </h2>
+          </div>
+
           {CHAPTERS.map((ch, idx) => (
             <div
               key={idx}

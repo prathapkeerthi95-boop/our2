@@ -114,17 +114,7 @@ const ZoomHero = () => {
         carouselInterval = setInterval(rotateCarousel, 2800);
       }
 
-      // Parallax on scroll
-      gsap.to(contentRef.current, {
-        y: 200,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.5
-        }
-      });
+      // Removed Parallax on contentRef to prevent text from being pushed down and cut off by the container's overflow when scrolling.
 
       // Glow parallax
       gsap.to(glowRef.current, {
@@ -167,8 +157,9 @@ const ZoomHero = () => {
     <section
       ref={containerRef}
       style={{
-        position: 'relative', width: '100%', height: '100vh',
-        overflow: 'hidden', display: 'flex', alignItems: 'center',
+        position: 'relative', width: '100%',
+        overflow: 'hidden', display: 'flex', alignItems: 'flex-start',
+        paddingTop: '160px', paddingBottom: '20px',
         background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
       }}
     >
@@ -181,7 +172,7 @@ const ZoomHero = () => {
           width: '600px', height: '600px',
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(112,0,255,0.08) 0%, rgba(255,42,84,0.04) 50%, transparent 70%)',
-          filter: 'blur(80px)',
+          filter: 'blur(50px)',
           zIndex: 1,
           opacity: 0,
           pointerEvents: 'none'

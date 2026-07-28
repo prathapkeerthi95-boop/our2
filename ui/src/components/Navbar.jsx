@@ -43,27 +43,26 @@ const Navbar = () => {
         if (window.scrollY > heroHeight && !isPill) {
           isPill = true;
           
-          // Animate to Pill (Liquid Glass Dark Mode)
+          // Animate to Pill (Light Glass Mode)
           gsap.to(navInner, {
-            backgroundColor: 'rgba(10, 10, 15, 0.45)', // Translucent glass base
+            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Light translucent glass base
             backdropFilter: 'blur(32px) saturate(200%)',
-            webkitBackdropFilter: 'blur(32px) saturate(200%)', // For Safari
-            border: '1.5px solid rgba(255, 255, 255, 0.18)', // Refractive glass highlight border
+            webkitBackdropFilter: 'blur(32px) saturate(200%)',
+            border: '1.5px solid rgba(255, 255, 255, 0.5)', 
             borderRadius: '50px',
             margin: '1.2rem auto 0',
             maxWidth: '920px',
             padding: '0 2.2rem',
-            // Liquid shadow + cyan internal shadow glow reflection
-            boxShadow: '0 30px 60px rgba(0,0,0,0.45), inset 0 0 16px rgba(0, 229, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.25)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5)',
             duration: 0.55,
             ease: "power3.out"
           });
 
-          gsap.to([logoText, ...links], { color: '#FFFFFF', duration: 0.3 });
-          gsap.to(logoImg, { filter: 'invert(1) brightness(2)', duration: 0.3 });
+          gsap.to([logoText, ...links], { color: '#000000', duration: 0.3 }); // Keep text dark
+          gsap.to(logoImg, { filter: 'none', duration: 0.3 }); // No brightness invert needed
           gsap.to(btn, { 
-            borderColor: 'rgba(255,255,255,0.35)', 
-            color: '#FFFFFF', 
+            borderColor: 'rgba(0,0,0,0.3)', 
+            color: '#000000', 
             duration: 0.3 
           });
           
@@ -96,7 +95,7 @@ const Navbar = () => {
       }
     });
 
-    // Hover logic for the button needs to read the current state
+    // Hover logic for the button
     const handleBtnEnter = () => {
       gsap.to(btn, {
         backgroundColor: isPill ? '#FFFFFF' : '#000000',
@@ -132,9 +131,13 @@ const Navbar = () => {
         position: 'fixed', 
         top: 0, 
         left: 0,
+        right: 0,
         width: '100%', 
         zIndex: 9999,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        display: 'flex',
+        justifyContent: 'center',
+        padding: '0 1.5rem' // Ensure container padding is correct
       }}
     >
       <nav 
@@ -143,6 +146,7 @@ const Navbar = () => {
           pointerEvents: 'auto',
           margin: '0 auto',
           maxWidth: '1600px',
+          width: '100%',
           height: '64px',
           backgroundColor: 'transparent',
           border: '1px solid transparent',
@@ -150,9 +154,7 @@ const Navbar = () => {
           justifyContent: 'space-between', 
           alignItems: 'center', 
           padding: '0 3rem',
-          position: 'relative',
-          overflow: 'hidden',
-          transition: 'box-shadow 0.4s ease'
+          position: 'relative'
         }}
       >
         <MagneticElement>
@@ -166,14 +168,25 @@ const Navbar = () => {
               textDecoration: 'none'
             }}
           >
+            <style>
+              {`
+                @keyframes smoothBounce {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-8px); }
+                }
+              `}
+            </style>
             <img 
               ref={logoImgRef}
-              src="/logo.png?v=2" 
-              alt="NUVAROX Logo" 
-              onError={(e) => e.target.style.display = 'none'} 
+              src="/n-logo-clean.png" 
+              alt="N Logo" 
+              onError={(e) => { e.target.onerror = null; e.target.src = '/n-icon.png'; }} 
               style={{ 
-                height: '24px', 
-                width: 'auto'
+                height: '52px', 
+                width: 'auto',
+                animation: 'smoothBounce 2s ease-in-out infinite',
+                // Using the deeply cleaned transparent PNG instead of CSS blend hacks
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))'
               }} 
             />
           </a>

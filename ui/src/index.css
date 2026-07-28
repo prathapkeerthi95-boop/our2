@@ -1155,6 +1155,11 @@ select option { background: #fff; color: var(--text-black); }
   .stat-item::after { display: none; }
 }
 
+/* Performance: pause animations when element is not in viewport */
+.stats-section:not(.in-view) .stat-card {
+  animation-play-state: paused;
+}
+
 /* LENIS SMOOTH SCROLL BOILERPLATE */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -1356,11 +1361,6 @@ html.lenis, html.lenis body { height: auto; }
 
 .float-card-0 { animation: floatCard0 5.8s ease-in-out infinite alternate; }
 .float-card-1 { animation: floatCard1 7.2s ease-in-out infinite alternate; }
-.float-card-2 { animation: floatCard2 6.5s ease-in-out infinite alternate; }
-.float-card-3 { animation: floatCard3 7.8s ease-in-out infinite alternate; }
-
-.shadow-pulse-0 { animation: shadowPulse0 5.8s ease-in-out infinite alternate; }
-.shadow-pulse-1 { animation: shadowPulse1 7.2s ease-in-out infinite alternate; }
 .float-card-2 { animation: floatCard2 6.5s ease-in-out infinite alternate; }
 .float-card-3 { animation: floatCard3 7.8s ease-in-out infinite alternate; }
 

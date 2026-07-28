@@ -30,16 +30,14 @@ const stats = [
 const Stats = () => {
   const sectionRef = useRef(null);
   const numberRefs = useRef([]);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const cardsRef = useRef([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate each stat number counting up from 0
+      // Animate numbers counting up
       numberRefs.current.forEach((el, i) => {
         if (!el) return;
         const text = stats[i].value;
-        
-        // Skip animation for non-standard formats like 24/7
         if (text === '24/7') {
           el.textContent = text;
           return;
@@ -48,175 +46,169 @@ const Stats = () => {
         const numericPart = parseInt(text);
         if (isNaN(numericPart)) return;
 
-        const suffix = text.replace(/[0-9]/g, '');
         const obj = { val: 0 };
-
         gsap.to(obj, {
           val: numericPart,
-          duration: 2,
-          ease: "power2.out",
+          duration: 2.5,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 70%',
-            once: true
+            start: 'top 75%',
           },
           onUpdate: () => {
-            el.textContent = Math.round(obj.val) + suffix;
+            el.textContent = Math.floor(obj.val) + text.replace(/[0-9]/g, '');
           }
         });
       });
 
-      // Staggered card entrance reveal
-      gsap.from('.stat-card', {
-        scale: 0.85,
-        opacity: 0,
-        y: 40,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "back.out(1.2)",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-          once: true
+      // Entry animation for cards
+      gsap.fromTo('.stat-card-premium', 
+        { y: 50, opacity: 0, scale: 0.95 },
+        {
+          y: 0, opacity: 1, scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+          }
         }
-      });
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  // Global mouse tracker for the spotlight effect
+  const handleMouseMove = (e) => {
+    cardsRef.current.forEach(card => {
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  };
+
   return (
     <section 
-      id="stats" 
-      className="stats-section" 
-      ref={sectionRef}
-      style={{
-        padding: '3rem 0 5rem', // Tighter spacing, enough room for slide-out drawers
+      ref={sectionRef} 
+      onMouseMove={handleMouseMove}
+      style={{ 
+        background: 'transparent',
+        padding: '8rem 4%', 
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <div className="container" style={{ position: 'relative' }}>
-        <div className="stats-grid">
+      <style>
+        {`
+          .stat-card-premium {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.03);
+          }
+
+          .stat-card-premium:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+          }
+
+          .stat-value {
+            font-size: clamp(3rem, 4.5vw, 4.5rem);
+            font-weight: 900;
+            font-family: var(--font-display);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            z-index: 2;
+            color: #1A1A1A;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+
+          .stat-card-premium:hover .stat-value {
+            transform: scale(1.05);
+          }
+
+          .stat-label {
+            font-size: 0.85rem;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            font-family: var(--font-body);
+            z-index: 2;
+            transition: color 0.3s ease;
+          }
+
+          .stat-card-premium:hover .stat-label {
+            color: #1A1A1A;
+          }
+
+          .sarcasm-reveal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            background: #111111;
+            transform: translateY(101%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 3;
+            font-size: 0.95rem;
+            color: #F8FAFC;
+            line-height: 1.6;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          }
+
+          .stat-card-premium:hover .sarcasm-reveal {
+            transform: translateY(0);
+          }
+        `}
+      </style>
+
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '2rem'
+        }}>
           {stats.map((stat, index) => (
             <div 
               key={index} 
-              style={{ width: '100%', position: 'relative', minHeight: '220px' }}
+              className="stat-card-premium"
+              ref={el => cardsRef.current[index] = el}
             >
-              {/* 3D ground shadow that responds in reverse sync with card float */}
-              <div 
-                className={`shadow-pulse-${index}`}
-                style={{
-                  position: 'absolute',
-                  bottom: '-12px',
-                  left: '12.5%',
-                  width: '75%',
-                  height: '10px',
-                  background: 'rgba(0, 0, 0, 0.45)',
-                  borderRadius: '50%',
-                  zIndex: 0,
-                  pointerEvents: 'none',
-                  willChange: 'transform, opacity, filter'
-                }}
-              />
-
-              <div 
-                className={`stat-card float-card-${index}`}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                style={{ 
-                  position: 'relative', 
-                  cursor: 'pointer', 
-                  zIndex: hoveredIndex === index ? 30 : 2,
-                }}
+              <h3 
+                className="stat-value"
+                ref={el => numberRefs.current[index] = el}
               >
-                {/* Main Card (Glassmorphic layout) */}
-                <div style={{
-                  background: 'rgba(255, 255, 255, 0.14)',
-                  border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                  borderRadius: '24px',
-                  padding: '2.5rem 1.5rem',
-                  textAlign: 'center',
-                  boxShadow: hoveredIndex === index ? '0 24px 50px rgba(0,0,0,0.12)' : '0 8px 30px rgba(0,0,0,0.03)',
-                  transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)',
-                  transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease, background 0.3s ease',
-                  position: 'relative',
-                  zIndex: 2,
-                  backdropFilter: 'blur(10px)',
-                }}>
-                  <h3 ref={el => numberRefs.current[index] = el} style={{
-                    fontSize: 'clamp(2.5rem, 4vw, 3.8rem)',
-                    fontWeight: 800,
-                    color: '#FFFFFF',
-                    margin: '0 0 0.4rem',
-                    fontFamily: 'var(--font-display)',
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1
-                  }}>
-                    {stat.value}
-                  </h3>
-                  <p style={{
-                    margin: 0,
-                    color: '#0A0A10',
-                    fontSize: '0.78rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
-                    fontWeight: 700,
-                    fontFamily: 'var(--font-body)'
-                  }}>{stat.label}</p>
-                </div>
+                {stat.value}
+              </h3>
+              <p className="stat-label">{stat.label}</p>
 
-                {/* Sarcastic Slide-Out Card (White) */}
-                <div 
-                  style={{
-                    position: 'absolute',
-                    top: '80%', // Starts overlapping inside the main card
-                    left: '5%',
-                    width: '90%',
-                    background: '#FFFFFF',
-                    borderRadius: '0 0 20px 20px',
-                    boxShadow: '0 18px 40px rgba(0,0,0,0.12)',
-                    padding: '24px 16px 16px', // Extra top padding to handle overlay overlap
-                    zIndex: 1,
-                    pointerEvents: 'none',
-                    opacity: hoveredIndex === index ? 1 : 0,
-                    transform: hoveredIndex === index ? 'translateY(15px)' : 'translateY(-15px)',
-                    transition: 'opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    textAlign: 'center',
-                    border: '1px solid rgba(0,0,0,0.04)',
-                  }}
-                >
-                  <p 
-                    style={{ 
-                      margin: 0, 
-                      fontSize: '0.74rem', 
-                      color: 'rgba(10,10,16,0.75)', 
-                      lineHeight: 1.45,
-                      fontWeight: 600,
-                      textTransform: 'none',
-                      letterSpacing: 'normal',
-                      fontFamily: 'var(--font-body)'
-                    }}
-                  >
-                    {stat.sarcasm}
-                  </p>
-                </div>
+              <div className="sarcasm-reveal">
+                {stat.sarcasm}
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Scroll/Hover reveal label */}
-        <div style={{
-          position: 'absolute',
-          bottom: '-60px',
-          right: '20px',
-          fontSize: '0.62rem',
-          color: 'rgba(255, 255, 255, 0.35)',
-          letterSpacing: '0.24em',
-          fontFamily: 'var(--font-body)',
-          textTransform: 'uppercase',
-          pointerEvents: 'none'
-        }}>
-          [ Move mouse to reveal ]
         </div>
       </div>
     </section>

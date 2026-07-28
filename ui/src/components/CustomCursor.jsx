@@ -7,6 +7,7 @@ const CustomCursor = () => {
   const [cursorText, setCursorText] = useState("");
   const [isTouch, setIsTouch] = useState(false);
   const [isStatsSection, setIsStatsSection] = useState(false);
+  const isStatsSectionRef = useRef(false);
 
   useEffect(() => {
     // Detect touch device to avoid rendering custom cursor on mobile/tablets
@@ -45,7 +46,7 @@ const CustomCursor = () => {
     const onEnterLink = () => {
       gsap.to(cursorRef.current, { 
         scale: 2.2, 
-        backgroundColor: isStatsSection ? 'var(--accent-crimson, #FF2A54)' : 'rgba(112,0,255,0.85)', 
+        backgroundColor: isStatsSectionRef.current ? 'var(--accent-crimson, #FF2A54)' : 'rgba(112,0,255,0.85)', 
         duration: 0.18, 
         ease: "power2.out" 
       });
@@ -54,7 +55,7 @@ const CustomCursor = () => {
     const onLeaveLink = () => {
       gsap.to(cursorRef.current, { 
         scale: 1, 
-        backgroundColor: isStatsSection ? 'var(--accent-crimson, #FF2A54)' : '#FFFFFF', 
+        backgroundColor: isStatsSectionRef.current ? 'var(--accent-crimson, #FF2A54)' : '#FFFFFF', 
         duration: 0.18, 
         ease: "power2.out" 
       });
@@ -101,6 +102,7 @@ const CustomCursor = () => {
       // Stats section detection for cursor visibility
       const statsSec = target.closest('.stats-section');
       setIsStatsSection(!!statsSec);
+      isStatsSectionRef.current = !!statsSec;
 
       const portfolioItem = target.closest('.portfolio-item');
       if (portfolioItem) {
@@ -125,6 +127,7 @@ const CustomCursor = () => {
       const statsSec = target.closest('.stats-section');
       if (statsSec && (!relatedTarget || !relatedTarget.closest('.stats-section'))) {
         setIsStatsSection(false);
+        isStatsSectionRef.current = false;
       }
 
       const portfolioItem = target.closest('.portfolio-item');
@@ -153,7 +156,7 @@ const CustomCursor = () => {
         injectedStyle.remove();
       }
     };
-  }, [isStatsSection]);
+  }, []);
 
   if (isTouch) return null;
 

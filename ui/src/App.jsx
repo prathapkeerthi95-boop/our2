@@ -25,6 +25,12 @@ function App() {
   const panelsRef = useRef([]);
 
   useEffect(() => {
+    // 0. Force scroll to top on refresh and disable auto restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // Lock scroll during preloader
     document.body.style.overflow = 'hidden';
 
@@ -256,8 +262,7 @@ function App() {
       <div style={{ 
         position: 'relative', 
         zIndex: 10, 
-        backgroundColor: '#828282',
-        paddingBottom: '5rem'
+        backgroundColor: '#F5F3EF'
       }}>
         <Stats />
       </div>

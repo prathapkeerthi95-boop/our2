@@ -394,7 +394,11 @@ const Portfolio = () => {
   };
 
   return (
-    <section id="portfolio" style={{ backgroundColor: '#F5F3EF', paddingTop: '3rem', paddingBottom: '0', position: 'relative' }}>
+    <section id="portfolio" style={{ 
+      background: 'linear-gradient(135deg, #0a0f18 0%, #050608 100%)', 
+      paddingTop: '3rem', paddingBottom: '0', position: 'relative',
+      color: '#FFFFFF'
+    }}>
       
       {/* Background Layer: Cybernetic Backdrop Engine (Placed full-width absolute underneath the columns) */}
       <CyberneticBackdropEngine />
@@ -412,13 +416,13 @@ const Portfolio = () => {
             
             {/* Header Content moved to Right Column with bottom spacing */}
             <div style={{ marginBottom: '3.5rem' }}>
-              <div className="section-label reveal" style={{ marginBottom: '1rem' }}>
+              <div className="section-label reveal" style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.7)', borderColor: 'rgba(255,255,255,0.2)' }}>
                 Selected Work
               </div>
               <AnimatedHeading 
                 text="Projects That \n Speak Volumes" 
                 mode="scramble" 
-                style={{ color: 'var(--text-black)', fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.02em' }} 
+                style={{ color: '#FFFFFF', fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.02em' }} 
               />
             </div>
 
@@ -453,6 +457,7 @@ const Portfolio = () => {
                   <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
                     <img
                       src={projects[0].image} alt={projects[0].title}
+                      loading="lazy"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <div 
@@ -498,6 +503,7 @@ const Portfolio = () => {
                   <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
                     <img
                       src={projects[1].image} alt={projects[1].title}
+                      loading="lazy"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <div 
@@ -543,6 +549,7 @@ const Portfolio = () => {
                   <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
                     <img
                       src={projects[2].image} alt={projects[2].title}
+                      loading="lazy"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <div 
