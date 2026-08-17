@@ -1,585 +1,388 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AnimatedHeading from './AnimatedHeading';
-import CyberneticBackdropEngine from './CyberneticBackdropEngine';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { 
-    category: 'E-Commerce / Sports', 
-    title: 'Gagner Sports', 
-    image: 'https://images.unsplash.com/photo-1734574226134-9f0f07e62407?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTJ8fG1hcmF0aG9ufGVufDB8fDB8fHww', 
-    link: 'https://gagnersports.com/' 
+  {
+    num: '01',
+    id: 'gagner-sports',
+    category: 'E-Commerce',
+    tag: 'E-COMMERCE / SPORTS',
+    title: 'GAGNER SPORTS',
+    location: 'Paris, France & Online',
+    client: 'Gagner Sports Ltd',
+    completion: '2026',
+    services: 'Next.js, Tailwind, 3D WebGL Customizer, Shopify API',
+    summary: 'Ultra-fast sportswear platform with interactive 3D product customizer & custom checkout.',
+    description: 'Designed and engineered an ultra-responsive headless e-commerce experience for Gagner Sports. Includes custom 3D web-based gear customization, real-time stock sync across European distribution nodes, and lightning-fast sub-second page loads.',
+    highlights: [
+      '3D real-time gear customization canvas built with Three.js',
+      '120% boost in mobile conversion rate post launch',
+      'Integrated multi-currency localized checkout system',
+      'Headless architecture powered by Next.js & Shopify Plus'
+    ],
+    image: 'https://images.unsplash.com/photo-1734574226134-9f0f07e62407?w=1920&auto=format&fit=crop&q=95',
+    gallery: [
+      'https://images.unsplash.com/photo-1734574226134-9f0f07e62407?w=1920&auto=format&fit=crop&q=95',
+      'https://images.unsplash.com/photo-1517649763962-0c623266010b?w=1920&auto=format&fit=crop&q=95',
+      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&auto=format&fit=crop&q=95'
+    ],
+    link: 'https://gagnersports.com/'
   },
-  { 
-    category: 'Own Product / Real Estate', 
-    title: 'Premium Apartment', 
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80', 
-    link: '#' 
+  {
+    num: '02',
+    id: 'premium-residence',
+    category: 'Real Estate',
+    tag: 'REAL ESTATE / ARCHITECTURE',
+    title: 'AURA LUXURY RESIDENCE',
+    location: 'Mayiladuthurai, Tamil Nadu',
+    client: 'Aura Estates Group',
+    completion: '2026',
+    services: 'React, Three.js VR, Architectural 3D Rendering',
+    summary: 'Architectural digital showcase & interactive VR estate tour experience.',
+    description: 'Designed a high-end luxury architectural web experience for ultra-modern residential villas. Features web-based 3D walkthroughs, interactive floor plan overlays, and client booking consultation tools.',
+    highlights: [
+      'Interactive 360° panoramic virtual villa walkthroughs',
+      'Custom floor plan layer switcher with real-time room dimensions',
+      'Seamless multi-device mobile optimization',
+      'Instant private consultation booking integration'
+    ],
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=95',
+    gallery: [
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=95',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=95',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=95'
+    ],
+    link: '#'
   },
-  { 
-    category: 'Creative / Digital Identity', 
-    title: 'KE19 Portfolio', 
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80', 
-    link: 'https://ke19portfolio.netlify.app/' 
+  {
+    num: '03',
+    id: 'ke19-portfolio',
+    category: 'Creative & Branding',
+    tag: 'CREATIVE / DIGITAL IDENTITY',
+    title: 'KE19 PORTFOLIO',
+    location: 'Chennai, Tamil Nadu',
+    client: 'KE19 Studio',
+    completion: '2026',
+    services: 'React, GSAP Animations, WebGL Canvas Shaders',
+    summary: 'Award-winning interactive digital showcase with fluid WebGL motion graphics.',
+    description: 'A custom digital identity platform designed to captivate visitors with kinetic typography, interactive cursor physics, and high-performance WebGL scroll triggers.',
+    highlights: [
+      'Custom shader animations with reactive mouse physics',
+      'Smooth page transition engine with zero delay',
+      'Nominated for top web design interactive honors',
+      'Full dark theme aesthetic with custom typography'
+    ],
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1920&q=95',
+    gallery: [
+      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1920&q=95',
+      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1920&q=95',
+      'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=1920&q=95'
+    ],
+    link: 'https://ke19portfolio.netlify.app/'
   }
 ];
 
+const categories = ['All', 'E-Commerce', 'Real Estate', 'Creative & Branding'];
+
 const Portfolio = () => {
-  const canvasRef = useRef(null);
-  const p1Ref = useRef(null);
-  const p2Ref = useRef(null);
-  const p3Ref = useRef(null);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const [activeHero, setActiveHero] = useState(0);
-  const activeHeroRef = useRef(0);
-  const autoRotateTimer = useRef(null);
-  const inactivityTimer = useRef(null);
-  const isHovered = useRef(false);
-  const isTransitioning = useRef(false);
+  const pinnedContainerRef = useRef(null);
+  const slidesWrapperRef = useRef(null);
+  const slideRefs = useRef([]);
 
-  const cardRefs = [p1Ref, p2Ref, p3Ref];
+  const filteredProjects = activeFilter === 'All' 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
 
-  // Define fanned slots in the 60% right-hand projects column
-  const slots = [
-    // Slot 0: Top-Center Hero (Z-Index: 100, fully opaque, large & wide)
-    { x: 0, y: -20, scaleX: 1.6, scaleY: 1.3, zIndex: 100, opacity: 1 },
-    // Slot 1: Bottom-Right Background (Z-Index: 30, partially faded, small)
-    { x: 160, y: 280, scaleX: 0.85, scaleY: 0.85, zIndex: 30, opacity: 1 },
-    // Slot 2: Bottom-Left Background (Z-Index: 20, partially faded, small)
-    { x: -160, y: 280, scaleX: 0.85, scaleY: 0.85, zIndex: 20, opacity: 1 }
-  ];
-
-  // Particle emission helper on lock
-  const triggerLockParticles = (el) => {
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const container = canvasRef.current;
-    if (!container) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const originX = rect.left - containerRect.left + rect.width / 2;
-    const originY = rect.top - containerRect.top + rect.height / 2;
-
-    for (let i = 0; i < 12; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'lock-particle';
-      particle.style.cssText = `
-        position: absolute;
-        left: ${originX}px;
-        top: ${originY}px;
-        width: 6px;
-        height: 6px;
-        background: ${i % 2 === 0 ? '#00F0FF' : '#FF2A54'};
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 10;
-        box-shadow: 0 0 8px ${i % 2 === 0 ? '#00F0FF' : '#FF2A54'};
-      `;
-      container.appendChild(particle);
-
-      const angle = (i / 12) * Math.PI * 2;
-      const distance = 40 + Math.random() * 60;
-      const destX = originX + Math.cos(angle) * distance;
-      const destY = originY + Math.sin(angle) * distance;
-
-      gsap.to(particle, {
-        left: destX,
-        top: destY,
-        opacity: 0,
-        scale: 0.2,
-        duration: 0.6 + Math.random() * 0.4,
-        ease: "power2.out",
-        onComplete: () => {
-          particle.remove();
-        }
-      });
-    }
-  };
-
-  const animateToSlots = (activeIdx, duration = 1.0) => {
-    isTransitioning.current = true;
-    cardRefs.forEach((ref, cardIdx) => {
-      const el = ref.current;
-      if (!el) return;
-
-      const slotIdx = (cardIdx - activeIdx + 3) % 3;
-      const slot = slots[slotIdx];
-
-      // Add dynamic visual blur classes based on transitioning slots
-      if (slotIdx === 0) {
-        el.classList.add('p1-entering'); // Neon glow target edge
-      } else if (slotIdx === 1) {
-        el.classList.add('p2-entering'); // Velocity horizontal blur
-      } else {
-        el.classList.add('p3-entering'); // Velocity vertical blur
-      }
-
-      gsap.to(el, {
-        x: slot.x,
-        y: slot.y,
-        scaleX: slot.scaleX,
-        scaleY: slot.scaleY,
-        opacity: slot.opacity,
-        duration: duration,
-        ease: "power3.inOut",
-        onStart: () => {
-          // Mid-point stacking context update
-          gsap.delayedCall(duration / 2.2, () => {
-            if (el) el.style.zIndex = slot.zIndex;
-          });
-        },
-        onComplete: () => {
-          el.classList.remove('p1-entering', 'p2-entering', 'p3-entering');
-          el.classList.add('locked-state');
-
-          // Trigger particle snap on the newly promoted Hero card
-          if (slotIdx === 0) {
-            triggerLockParticles(el);
-          }
-          isTransitioning.current = false;
-        }
-      });
-    });
-  };
-
-  const startAutoRotation = () => {
-    stopAutoRotation();
-    autoRotateTimer.current = setInterval(() => {
-      if (isHovered.current || isTransitioning.current) return;
-      setActiveHero((prev) => {
-        const next = (prev + 1) % 3;
-        activeHeroRef.current = next;
-        animateToSlots(next);
-        return next;
-      });
-    }, 2000); // 2-second interval
-  };
-
-  const stopAutoRotation = () => {
-    if (autoRotateTimer.current) {
-      clearInterval(autoRotateTimer.current);
-      autoRotateTimer.current = null;
-    }
-  };
-
-  const clearInactivityTimer = () => {
-    if (inactivityTimer.current) {
-      clearTimeout(inactivityTimer.current);
-      inactivityTimer.current = null;
-    }
-  };
-
+  // GSAP ScrollTrigger Pinned Overlapping Stack Animation
   useEffect(() => {
-    const isDesktop = window.innerWidth >= 992;
-    
-    const ctx = gsap.context(() => {
-      if (isDesktop) {
-        // Step 1: Establish Baseline "Before" scene (off-screen setup)
-        gsap.set(p1Ref.current, { x: -300, y: slots[0].y, scaleX: 0.9, scaleY: 0.9, opacity: 0 });
-        gsap.set(p2Ref.current, { x: 350, y: slots[1].y, scaleX: 0.7, scaleY: 0.7, opacity: 0 });
-        gsap.set(p3Ref.current, { x: slots[2].x, y: 350, scaleX: 0.7, scaleY: 0.7, opacity: 0 });
+    if (!pinnedContainerRef.current) return;
 
+    const ctx = gsap.context(() => {
+      const slides = slideRefs.current.filter(Boolean);
+      if (slides.length === 0) return;
+
+      slides.forEach((slide, i) => {
+        if (i === 0) {
+          gsap.set(slide, { yPercent: 0 });
+        } else {
+          gsap.set(slide, { yPercent: 100 });
+        }
+      });
+
+      if (slides.length > 1) {
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: canvasRef.current,
-            start: "top 70%",
-            once: true
+            trigger: pinnedContainerRef.current,
+            start: "top top",
+            end: () => `+=${(slides.length - 1) * 100}%`,
+            pin: true,
+            scrub: 0.5,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
           }
         });
 
-        // Frame 1: Project 1 (Robotics UI) slides in
-        tl.to(p1Ref.current, {
-          x: slots[0].x,
-          y: slots[0].y,
-          scaleX: slots[0].scaleX,
-          scaleY: slots[0].scaleY,
-          opacity: slots[0].opacity,
-          duration: 1.1,
-          ease: "power3.out",
-          onStart: () => {
-            if (p1Ref.current) {
-              p1Ref.current.style.zIndex = slots[0].zIndex;
-              p1Ref.current.classList.add('p1-entering');
-            }
-          }
+        slides.forEach((slide, i) => {
+          if (i === 0) return;
+          tl.to(slide, {
+            yPercent: 0,
+            ease: "none",
+            duration: 1
+          });
         });
-
-        // Frame 2: Project 1 locks & Project 2 slides in
-        tl.to(p1Ref.current, {
-          keyframes: [
-            { scaleX: slots[0].scaleX * 1.02, scaleY: slots[0].scaleY * 1.02, duration: 0.12 },
-            { scaleX: slots[0].scaleX, scaleY: slots[0].scaleY, duration: 0.15, ease: "power2.out" }
-          ],
-          onComplete: () => {
-            if (p1Ref.current) {
-              p1Ref.current.classList.remove('p1-entering');
-              p1Ref.current.classList.add('locked-state');
-              triggerLockParticles(p1Ref.current);
-            }
-          }
-        });
-
-        tl.to(p2Ref.current, {
-          x: slots[1].x,
-          y: slots[1].y,
-          scaleX: slots[1].scaleX,
-          scaleY: slots[1].scaleY,
-          opacity: slots[1].opacity,
-          duration: 0.8,
-          ease: "back.out(1.15)",
-          onStart: () => {
-            if (p2Ref.current) {
-              p2Ref.current.style.zIndex = slots[1].zIndex;
-              p2Ref.current.classList.add('p2-entering');
-            }
-          },
-          onComplete: () => {
-            if (p2Ref.current) {
-              p2Ref.current.classList.remove('p2-entering');
-              p2Ref.current.classList.add('locked-state');
-              triggerLockParticles(p2Ref.current);
-            }
-          }
-        }, "-=0.3");
-
-        // Frame 3 & 4: Project 3 rises to complete grid
-        tl.to(p3Ref.current, {
-          x: slots[2].x,
-          y: slots[2].y,
-          scaleX: slots[2].scaleX,
-          scaleY: slots[2].scaleY,
-          opacity: slots[2].opacity,
-          duration: 1.0,
-          ease: "power4.out",
-          onStart: () => {
-            if (p3Ref.current) {
-              p3Ref.current.style.zIndex = slots[2].zIndex;
-              p3Ref.current.classList.add('p3-entering');
-            }
-          },
-          onComplete: () => {
-            if (p3Ref.current) {
-              p3Ref.current.classList.remove('p3-entering');
-              p3Ref.current.classList.add('locked-state');
-              triggerLockParticles(p3Ref.current);
-              // Start automatic fan rotations
-              startAutoRotation();
-            }
-          }
-        }, "-=0.2");
-
-      } else {
-        // Mobile / Tablet fallback reveals
-        gsap.fromTo([p1Ref.current, p2Ref.current, p3Ref.current],
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: canvasRef.current,
-              start: "top 80%",
-              once: true
-            }
-          }
-        );
       }
-    }, canvasRef);
+    }, pinnedContainerRef);
+
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
 
     return () => {
       ctx.revert();
-      stopAutoRotation();
-      clearInactivityTimer();
+      clearTimeout(timer);
     };
+  }, [activeFilter, filteredProjects.length]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Layer 4 Parallax & Coordinate Cursor Matrix
-  const handleMouseMove = (e) => {
-    const isDesktop = window.innerWidth >= 992;
-    if (!isDesktop) return;
-
-    isHovered.current = true; // Pause auto rotation on active interaction
-    stopAutoRotation();
-    clearInactivityTimer();
-
-    // Resume rotation after 2 seconds of inactivity
-    inactivityTimer.current = setTimeout(() => {
-      isHovered.current = false;
-      startAutoRotation();
-    }, 2000);
-
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-
-    const normX = x / (rect.width / 2);
-    const normY = y / (rect.height / 2);
-
-    cardRefs.forEach((ref, cardIdx) => {
-      const el = ref.current;
-      if (!el) return;
-
-      const slotIdx = (cardIdx - activeHeroRef.current + 3) % 3;
-      const slot = slots[slotIdx];
-
-      // Dynamic parallax multipliers based on slot depth
-      let parallaxMult = 16;
-      let rotMult = 4;
-      if (slotIdx === 0) {
-        parallaxMult = 20; // Hero shifts the most
-        rotMult = 5;
-      } else if (slotIdx === 1) {
-        parallaxMult = 8;  // Background right shifts the least
-        rotMult = 2;
-      } else {
-        parallaxMult = 12; // Background left shifts moderately
-        rotMult = 3;
-      }
-
-      gsap.to(el, {
-        x: slot.x + normX * parallaxMult,
-        y: slot.y + normY * parallaxMult,
-        duration: 0.6,
-        ease: "power2.out"
-      });
-    });
+  const openProjectModal = (project) => {
+    setSelectedProject(project);
+    setActiveImageIndex(0);
   };
 
-  const handleMouseLeave = () => {
-    clearInactivityTimer();
-    isHovered.current = false; // Resume auto rotation
-    startAutoRotation();
-    
-    // Reset cards to default coordinates in their active slots
-    cardRefs.forEach((ref, cardIdx) => {
-      const el = ref.current;
-      if (!el) return;
-
-      const slotIdx = (cardIdx - activeHeroRef.current + 3) % 3;
-      const slot = slots[slotIdx];
-
-      gsap.to(el, {
-        x: slot.x,
-        y: slot.y,
-        duration: 1.0,
-        ease: "power3.out"
-      });
-    });
+  const nextImage = () => {
+    if (!selectedProject) return;
+    setActiveImageIndex((prev) => (prev + 1) % selectedProject.gallery.length);
   };
 
-  // Click handler promoting clicked background card to Hero
-  const handleCardClick = (cardIdx, e) => {
-    const isDesktop = window.innerWidth >= 992;
-    if (!isDesktop) return;
+  const prevImage = () => {
+    if (!selectedProject) return;
+    setActiveImageIndex((prev) => (prev - 1 + selectedProject.gallery.length) % selectedProject.gallery.length);
+  };
 
-    const slotIdx = (cardIdx - activeHero + 3) % 3;
-    if (slotIdx !== 0) {
-      e.preventDefault();
-      setActiveHero(cardIdx);
-      activeHeroRef.current = cardIdx;
-      animateToSlots(cardIdx);
-      
-      clearInactivityTimer();
-      isHovered.current = true;
-      inactivityTimer.current = setTimeout(() => {
-        isHovered.current = false;
-        startAutoRotation();
-      }, 2000);
-    }
+  const navigateModalProject = (direction) => {
+    if (!selectedProject) return;
+    const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
+    const nextIndex = (currentIndex + direction + projects.length) % projects.length;
+    setSelectedProject(projects[nextIndex]);
+    setActiveImageIndex(0);
   };
 
   return (
-    <section id="portfolio" style={{ 
-      background: 'linear-gradient(135deg, #0a0f18 0%, #050608 100%)', 
-      paddingTop: '3rem', paddingBottom: '0', position: 'relative',
-      color: '#FFFFFF'
-    }}>
-      
-      {/* Background Layer: Cybernetic Backdrop Engine (Placed full-width absolute underneath the columns) */}
-      <CyberneticBackdropEngine />
-
-      <div style={{ width: '100%', maxWidth: '100%', padding: '0 4%', position: 'relative', zIndex: 2 }}>
-
-        {/* Two-Column Grid: Left Column holds the Robot Head space, Right Column holds the Projects */}
-        <div className="portfolio-grid-container">
-          
-          {/* Left Column: Empty spacer wrapper to preserve area for HUD core & Robot Head */}
-          <div style={{ pointerEvents: 'none', height: '560px' }} />
-
-          {/* Right Column: Title and Unified Dynamic Projects Canvas */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
-            {/* Header Content moved to Right Column with bottom spacing */}
-            <div style={{ marginBottom: '3.5rem' }}>
-              <div className="section-label reveal" style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.7)', borderColor: 'rgba(255,255,255,0.2)' }}>
-                Selected Work
-              </div>
-              <AnimatedHeading 
-                text="Projects That \n Speak Volumes" 
-                mode="scramble" 
-                style={{ color: '#FFFFFF', fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.02em' }} 
-              />
-            </div>
-
-            {/* Unified Dynamic Projects Canvas */}
-            <div 
-              ref={canvasRef}
-              className="portfolio-interactive-canvas"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-            >
-            {/* Project 1: Robotics UI (Foreground Left/Top) */}
-            <div ref={p1Ref} className="portfolio-card-wrapper portfolio-card-1">
-              <div className="portfolio-card-inner-float-1">
-                <a
-                  href={projects[0].link} target="_blank" rel="noopener noreferrer"
-                  onClick={(e) => handleCardClick(0, e)}
-                  className={`portfolio-item ${activeHero === 0 ? 'is-hero-card' : ''}`}
-                  style={{
-                    display: 'block',
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    textDecoration: 'none',
-                    cursor: 'none',
-                    border: '1px solid rgba(0,0,0,0.05)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    backgroundColor: '#FFF'
-                  }}
-                >
-                  <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-                    <img
-                      src={projects[0].image} alt={projects[0].title}
-                      loading="lazy"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    <div 
-                      className="port-overlay"
-                      style={{
-                        position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
-                        opacity: 1, transition: 'opacity 0.4s ease', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.5rem'
-                      }}
-                    >
-                      <div style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-                        {projects[0].category}
-                      </div>
-                      <h3 style={{ color: 'white', fontSize: '1.8rem', margin: 0, fontWeight: 700, letterSpacing: '-0.02em' }}>
-                        {projects[0].title}
-                      </h3>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            {/* Project 2: Cyber Board (Background Right) */}
-            <div ref={p2Ref} className="portfolio-card-wrapper portfolio-card-2">
-              <div className="portfolio-card-inner-float-2">
-                <a
-                  href={projects[1].link} target="_blank" rel="noopener noreferrer"
-                  onClick={(e) => handleCardClick(1, e)}
-                  className={`portfolio-item ${activeHero === 1 ? 'is-hero-card' : ''}`}
-                  style={{
-                    display: 'block',
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    textDecoration: 'none',
-                    cursor: 'none',
-                    border: '1px solid rgba(0,0,0,0.05)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    backgroundColor: '#FFF'
-                  }}
-                >
-                  <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-                    <img
-                      src={projects[1].image} alt={projects[1].title}
-                      loading="lazy"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    <div 
-                      className="port-overlay"
-                      style={{
-                        position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
-                        opacity: 1, transition: 'opacity 0.4s ease', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.5rem'
-                      }}
-                    >
-                      <div style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-                        {projects[1].category}
-                      </div>
-                      <h3 style={{ color: 'white', fontSize: '1.6rem', margin: 0, fontWeight: 700, letterSpacing: '-0.02em' }}>
-                        {projects[1].title}
-                      </h3>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            {/* Project 3: Premium Apartment (Foreground Center) */}
-            <div ref={p3Ref} className="portfolio-card-wrapper portfolio-card-3">
-              <div className="portfolio-card-inner-float-3">
-                <a
-                  href={projects[2].link} target="_blank" rel="noopener noreferrer"
-                  onClick={(e) => handleCardClick(2, e)}
-                  className={`portfolio-item ${activeHero === 2 ? 'is-hero-card' : ''}`}
-                  style={{
-                    display: 'block',
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '16px',
-                    overflow: 'hidden',
-                    textDecoration: 'none',
-                    cursor: 'none',
-                    border: '1px solid rgba(0,0,0,0.05)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    backgroundColor: '#FFF'
-                  }}
-                >
-                  <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-                    <img
-                      src={projects[2].image} alt={projects[2].title}
-                      loading="lazy"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                    <div 
-                      className="port-overlay"
-                      style={{
-                        position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)',
-                        opacity: 1, transition: 'opacity 0.4s ease', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.5rem'
-                      }}
-                    >
-                      <div style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-                        {projects[2].category}
-                      </div>
-                      <h3 style={{ color: 'white', fontSize: '1.6rem', margin: 0, fontWeight: 700, letterSpacing: '-0.02em' }}>
-                        {projects[2].title}
-                      </h3>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
+    <section id="portfolio" className="metaskapes-projects-section">
+      {/* Header Container */}
+      <div className="metaskapes-container">
+        
+        {/* Section Header with exact preserved Title transition effect from Image 2 */}
+        <div className="metaskapes-header-wrapper">
+          <div className="section-label reveal metaskapes-badge">
+            Selected Work
           </div>
+          
+          <AnimatedHeading 
+            text="Projects That \n Speak Volumes" 
+            mode="scramble" 
+            style={{ 
+              color: '#FFFFFF', 
+              fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', 
+              lineHeight: 1.1, 
+              fontWeight: 900, 
+              letterSpacing: '-0.02em',
+              marginBottom: '1rem'
+            }} 
+          />
 
+          <p className="metaskapes-subtext">
+            Explore our curated portfolio of bespoke web applications, e-commerce platforms, luxury digital showcases, and mobile ecosystems.
+          </p>
         </div>
 
       </div>
 
-    </div>
-  </section>
-);
+      {/* GSAP ScrollTrigger Pinned Overlapping Stack Container */}
+      <div ref={pinnedContainerRef} className="metaskapes-pinned-section">
+        <div ref={slidesWrapperRef} className="metaskapes-slides-wrapper">
+          {filteredProjects.map((project, idx) => (
+            <div 
+              key={project.id} 
+              ref={(el) => { if (el) slideRefs.current[idx] = el; }}
+              className="metaskapes-gsap-slide"
+              style={{ zIndex: idx + 1 }}
+              onClick={() => openProjectModal(project)}
+            >
+              {/* Full-bleed 100vh bright image background */}
+              <div className="metaskapes-sticky-bg-wrapper">
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="metaskapes-sticky-image"
+                />
+                {/* Subtle text contrast gradient mask only top-left */}
+                <div className="metaskapes-sticky-mask" />
+              </div>
+
+              {/* Metaskapes Clean Top-Left Header: Giant Number + Title & Location */}
+              <div className="metaskapes-sticky-content">
+                <div className="metaskapes-sticky-brand">
+                  <span className="metaskapes-sticky-num">{project.num}</span>
+                  <div className="metaskapes-sticky-titles">
+                    <h3 className="metaskapes-sticky-title">{project.title}</h3>
+                    <p className="metaskapes-sticky-location">{project.location}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Metaskapes Case Study Detail Modal */}
+      {selectedProject && (
+        <div className="metaskapes-modal-backdrop" onClick={() => setSelectedProject(null)}>
+          <div className="metaskapes-modal-dialog" onClick={(e) => e.stopPropagation()}>
+            
+            {/* Modal Header */}
+            <div className="metaskapes-modal-header">
+              <div>
+                <span className="metaskapes-modal-tag">{selectedProject.tag}</span>
+                <h2 className="metaskapes-modal-title">{selectedProject.title}</h2>
+              </div>
+              <button 
+                className="metaskapes-modal-close" 
+                onClick={() => setSelectedProject(null)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Image Slider */}
+            <div className="metaskapes-modal-gallery">
+              <div className="metaskapes-slider-main">
+                <img 
+                  src={selectedProject.gallery[activeImageIndex]} 
+                  alt={`${selectedProject.title} preview ${activeImageIndex + 1}`} 
+                  className="metaskapes-slider-img"
+                />
+                
+                {selectedProject.gallery.length > 1 && (
+                  <>
+                    <button className="metaskapes-slider-nav prev" onClick={prevImage}>
+                      ‹
+                    </button>
+                    <button className="metaskapes-slider-nav next" onClick={nextImage}>
+                      ›
+                    </button>
+                    <div className="metaskapes-slider-counter">
+                      {activeImageIndex + 1} / {selectedProject.gallery.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnails Row */}
+              {selectedProject.gallery.length > 1 && (
+                <div className="metaskapes-slider-thumbnails">
+                  {selectedProject.gallery.map((img, index) => (
+                    <button
+                      key={index}
+                      className={`metaskapes-thumb-btn ${activeImageIndex === index ? 'is-active' : ''}`}
+                      onClick={() => setActiveImageIndex(index)}
+                    >
+                      <img src={img} alt={`Thumb ${index + 1}`} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Metaskapes Metadata Grid */}
+            <div className="metaskapes-meta-grid">
+              <div className="metaskapes-meta-item">
+                <span className="metaskapes-meta-label">LOCATION</span>
+                <span className="metaskapes-meta-val">{selectedProject.location}</span>
+              </div>
+              <div className="metaskapes-meta-item">
+                <span className="metaskapes-meta-label">CLIENT</span>
+                <span className="metaskapes-meta-val">{selectedProject.client}</span>
+              </div>
+              <div className="metaskapes-meta-item">
+                <span className="metaskapes-meta-label">COMPLETION</span>
+                <span className="metaskapes-meta-val">{selectedProject.completion}</span>
+              </div>
+              <div className="metaskapes-meta-item">
+                <span className="metaskapes-meta-label">SERVICES / TECH</span>
+                <span className="metaskapes-meta-val">{selectedProject.services}</span>
+              </div>
+            </div>
+
+            {/* Overview & Highlights */}
+            <div className="metaskapes-modal-body">
+              <h4 className="metaskapes-body-heading">Project Overview</h4>
+              <p className="metaskapes-body-desc">{selectedProject.description}</p>
+
+              <h4 className="metaskapes-body-heading" style={{ marginTop: '1.5rem' }}>Key Deliverables & Impact</h4>
+              <ul className="metaskapes-highlights-list">
+                {selectedProject.highlights.map((item, i) => (
+                  <li key={i}>
+                    <span className="metaskapes-check-icon">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Modal Actions & Footer Navigation */}
+            <div className="metaskapes-modal-footer">
+              <div className="metaskapes-modal-nav-btns">
+                <button className="metaskapes-nav-link" onClick={() => navigateModalProject(-1)}>
+                  ← Prev Project
+                </button>
+                <button className="metaskapes-nav-link" onClick={() => navigateModalProject(1)}>
+                  Next Project →
+                </button>
+              </div>
+
+              {selectedProject.link && selectedProject.link !== '#' ? (
+                <a 
+                  href={selectedProject.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="metaskapes-live-link-btn"
+                >
+                  Visit Website
+                  <svg className="metaskapes-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              ) : (
+                <span className="metaskapes-live-link-btn disabled">
+                  Internal Enterprise Case Study
+                </span>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default Portfolio;

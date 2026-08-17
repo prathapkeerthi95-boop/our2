@@ -10,10 +10,22 @@ const Footer = () => {
             <div className="navbar-logo" style={{ marginBottom: '0.5rem' }}>
               NUVAROX
             </div>
-            <p>
+            <p style={{ marginBottom: '1.2rem' }}>
               An elite digital agency engineering next-generation websites, mobile apps,
               brand identities, and growth strategies for ambitious businesses.
             </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <img 
+                src="/n-logo-vivid.png" 
+                alt="Nuvvarox Company Logo" 
+                style={{
+                  height: '48px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 0 16px rgba(0, 229, 255, 0.75))'
+                }}
+              />
+            </div>
           </div>
 
           {/* Services */}

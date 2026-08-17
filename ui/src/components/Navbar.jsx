@@ -177,6 +177,7 @@ const Navbar = () => {
               `}
             </style>
             <img 
+              id="mainNavbarLogo"
               ref={logoImgRef}
               src="/n-logo-clean.png" 
               alt="N Logo" 
@@ -185,7 +186,6 @@ const Navbar = () => {
                 height: '52px', 
                 width: 'auto',
                 animation: 'smoothBounce 2s ease-in-out infinite',
-                // Using the deeply cleaned transparent PNG instead of CSS blend hacks
                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))'
               }} 
             />

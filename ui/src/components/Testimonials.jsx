@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 
+import AnimatedHeading from './AnimatedHeading';
+
 const testimonials = [
   {
     client: 'TECHNOVA',
@@ -54,8 +56,30 @@ const Testimonials = () => {
       }
     };
 
+    const handleScroll = () => {
+      setActiveTestimonial(null);
+    };
+
     window.addEventListener('mousemove', moveTooltip);
-    return () => window.removeEventListener('mousemove', moveTooltip);
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+
+    // 3. Intersection Observer to hide tooltip when section scrolls out of view
+    const sectionEl = document.getElementById('testimonials');
+    let observer;
+    if (sectionEl) {
+      observer = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) {
+          setActiveTestimonial(null);
+        }
+      }, { threshold: 0.05 });
+      observer.observe(sectionEl);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', moveTooltip);
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      if (observer) observer.disconnect();
+    };
   }, []);
 
   return (
@@ -69,13 +93,14 @@ const Testimonials = () => {
         cursor: activeTestimonial ? 'none' : 'auto',
       }}
       onClick={() => setActiveTestimonial(null)}
+      onMouseLeave={() => setActiveTestimonial(null)}
     >
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div className="section-label" style={{ justifyContent: 'center', color: '#666666' }}>
           Testimonials
         </div>
       </div>
- 
+
       {/* Kinetic Marquee Wrapper */}
       <div style={{ width: '100%', overflow: 'hidden' }}>
         {/* Kinetic Marquee */}
@@ -141,10 +166,12 @@ const Testimonials = () => {
             left: 0,
             pointerEvents: 'none',
             zIndex: 99999,
+            display: activeTestimonial ? 'block' : 'none',
+            visibility: activeTestimonial ? 'visible' : 'hidden',
             opacity: activeTestimonial ? 1 : 0,
             transform: `translate3d(-50%, -110%, 0) scale(${activeTestimonial ? 1 : 0.85})`,
             transformOrigin: 'bottom center',
-            transition: 'opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           <div style={{

@@ -9,7 +9,6 @@ const chars = '!<>-_\\/[]{}—=+*^?#________';
 export default function AnimatedHeading({ text, mode = 'mask', className = '', style = {}, delay = 0 }) {
   const containerRef = useRef(null);
 
-  // Split text into words, preserving spaces and supporting \n for line breaks
   const words = text.split(' ').map((word, i) => ({
     text: word,
     key: `word-${i}`,
@@ -22,15 +21,14 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
 
     const el = containerRef.current;
     
-    // We wait a tiny bit to ensure layout is done
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
       
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
-          start: "top 85%",
-          once: true
+          start: "top 88%",
+          toggleActions: "play reverse play reverse"
         },
         delay: delay
       });
@@ -38,22 +36,43 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
       if (mode === 'mask') {
         const wordEls = el.querySelectorAll('.anim-word-inner');
         tl.fromTo(wordEls, 
-          { yPercent: 120, rotateZ: 3 },
-          { yPercent: 0, rotateZ: 0, duration: 1.2, stagger: 0.05, ease: "expo.out" }
+          { yPercent: 130, rotateZ: 4, opacity: 0 },
+          { yPercent: 0, rotateZ: 0, opacity: 1, duration: 0.55, stagger: 0.03, ease: "expo.out" }
         );
       } 
       else if (mode === 'blur') {
         const wordEls = el.querySelectorAll('.anim-word');
         tl.fromTo(wordEls,
-          { filter: "blur(20px)", opacity: 0, scale: 1.2 },
-          { filter: "blur(0px)", opacity: 1, scale: 1, duration: 1.5, stagger: 0.05, ease: "power3.out" }
+          { filter: "blur(25px)", opacity: 0, scale: 1.28 },
+          { filter: "blur(0px)", opacity: 1, scale: 1, duration: 0.6, stagger: 0.03, ease: "power3.out" }
         );
       }
       else if (mode === 'rotate') {
         const charEls = el.querySelectorAll('.anim-char');
         tl.fromTo(charEls,
-          { rotateX: -90, opacity: 0, transformOrigin: "50% 50% -50px" },
-          { rotateX: 0, opacity: 1, duration: 1, stagger: 0.02, ease: "back.out(1.7)" }
+          { rotateX: -90, opacity: 0, transformOrigin: "50% 100% -40px" },
+          { rotateX: 0, opacity: 1, duration: 0.5, stagger: 0.015, ease: "back.out(1.7)" }
+        );
+      }
+      else if (mode === 'slide') {
+        const wordEls = el.querySelectorAll('.anim-word');
+        tl.fromTo(wordEls,
+          { x: -50, opacity: 0, clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' },
+          { x: 0, opacity: 1, clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 0.55, stagger: 0.03, ease: "power4.out" }
+        );
+      }
+      else if (mode === 'bounce') {
+        const wordEls = el.querySelectorAll('.anim-word');
+        tl.fromTo(wordEls,
+          { y: -65, opacity: 0, rotateZ: -5 },
+          { y: 0, opacity: 1, rotateZ: 0, duration: 0.6, stagger: 0.03, ease: "power2.out" }
+        );
+      }
+      else if (mode === 'tracking') {
+        const wordEls = el.querySelectorAll('.anim-word');
+        tl.fromTo(wordEls,
+          { opacity: 0, letterSpacing: '-0.08em', y: 30 },
+          { opacity: 1, letterSpacing: '0.02em', y: 0, duration: 0.55, stagger: 0.03, ease: "power3.out" }
         );
       }
       else if (mode === 'scramble') {
@@ -76,7 +95,7 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
                 charEl.style.color = ""; // reset
               }
             }
-          }, i * 0.03); // stagger manually
+          }, i * 0.03);
         });
       }
     }, 100);
@@ -84,24 +103,34 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
     return () => clearTimeout(timer);
   }, [mode, delay]);
 
+  const isCharLevel = mode === 'scramble' || mode === 'rotate';
+
   return (
     <h2 ref={containerRef} className={className} style={{ ...style, margin: 0 }}>
       {words.map((w, wordIndex) => {
         if (w.isBreak) return <br key={w.key} />;
         return (
-          <span key={w.key} className="anim-word" style={{ display: 'inline-block', overflow: mode === 'mask' ? 'hidden' : 'visible', verticalAlign: 'top' }}>
-            {mode === 'mask' || mode === 'blur' ? (
+          <span 
+            key={w.key} 
+            className="anim-word" 
+            style={{ 
+              display: 'inline-block', 
+              overflow: mode === 'mask' ? 'hidden' : 'visible', 
+              verticalAlign: 'top',
+              willChange: 'transform, opacity, filter'
+            }}
+          >
+            {!isCharLevel ? (
               <span className={mode === 'mask' ? "anim-word-inner" : ""} style={{ display: 'inline-block' }}>
                 {w.text}
               </span>
             ) : (
-              // For rotate and scramble, we need character level
               w.text.split('').map((char, charIndex) => (
                 <span 
                   key={charIndex} 
                   className="anim-char" 
                   data-char={char}
-                  style={{ display: 'inline-block', opacity: mode === 'scramble' || mode === 'rotate' ? 0 : 1 }}
+                  style={{ display: 'inline-block', opacity: mode === 'scramble' || mode === 'rotate' ? 0 : 1, perspective: 400 }}
                 >
                   {char}
                 </span>

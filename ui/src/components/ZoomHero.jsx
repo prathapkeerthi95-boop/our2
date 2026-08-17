@@ -159,7 +159,7 @@ const ZoomHero = () => {
       style={{
         position: 'relative', width: '100%',
         overflow: 'hidden', display: 'flex', alignItems: 'flex-start',
-        paddingTop: '160px', paddingBottom: '20px',
+        paddingTop: '160px', paddingBottom: '4.5rem',
         background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
       }}
     >
@@ -210,16 +210,21 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 2 — with accent word */}
-          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
-            <h1 className="gradient-text" style={{
+          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
+            <h1 className="hero-char" style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
               fontWeight: '800',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
-              margin: 0
+              background: 'linear-gradient(135deg, #FF2A54 0%, #7000FF 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              display: 'inline-block',
+              margin: 0,
+              marginRight: '0.28em'
             }}>
-              {splitChars('Digital')}
+              Digital
             </h1>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',

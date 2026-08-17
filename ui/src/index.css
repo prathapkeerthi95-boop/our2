@@ -34,29 +34,35 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-crimson) var(--bg-white);
-  background-color: var(--bg-white);
+html, body {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background-color: #F3F6FA;
 }
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg-white); }
-::-webkit-scrollbar-thumb { background: var(--accent-crimson); border-radius: 3px; }
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
 
 body {
-  background-color: var(--bg-white);
+  background-color: #F3F6FA;
   color: var(--text-black);
   font-family: var(--font-body);
-  overflow-x: clip;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   cursor: none;
 }
 
-main {
+#root, main {
   background-color: var(--bg-white);
-  overflow: visible;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
 }
 
 /* ============================================
@@ -540,7 +546,7 @@ section {
 }
 
 .services-container {
-  background: linear-gradient(160deg, #F3F6FA, #F7F9FC);
+  background: #F5F3EF;
   margin-top: -1.5px !important;
   margin-bottom: 0 !important;
   padding: 0 !important;
@@ -548,14 +554,12 @@ section {
   min-height: 100vh !important;
 }
 
-.services-container > .pin-spacer {
-  background: linear-gradient(160deg, #F3F6FA, #F7F9FC) !important;
-  margin-top: -1.5px !important;
-  margin-bottom: 0 !important;
-}
-
+#services-wrapper,
+#services,
 .pin-spacer {
-  background: inherit !important;
+  background: #F5F3EF !important;
+  margin-top: -2px !important;
+  margin-bottom: 0 !important;
 }
 
 .services-grid-new {
@@ -721,24 +725,39 @@ section {
    ABOUT / WHY US
    ============================================ */
 .about-section {
-  padding: clamp(4rem, 8vw, 7rem) 0;
+  padding: clamp(3rem, 6vw, 5rem) 0 1.5rem 0;
   position: relative;
+  overflow: visible;
+  overflow-x: clip;
 }
 
 .about-grid {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 5rem;
-  align-items: start; /* use start so columns stay top-aligned */
+  align-items: stretch;
 }
 
 @media (min-width: 1025px) {
   .about-left-container {
-    align-self: stretch; /* stretch to full height of right column */
+    align-self: stretch;
     position: relative;
     z-index: 10;
-    overflow: visible; /* required for sticky child to work */
-    padding-bottom: calc(clamp(4rem, 8vw, 7rem) * 2); /* double section padding so card stops with visible gap */
+  }
+}
+
+.pin-spacer {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+@media (max-width: 1024px) {
+  .about-sticky-wrapper {
+    position: relative !important;
+    top: auto !important;
   }
 }
 
@@ -1500,4 +1519,1276 @@ html.lenis, html.lenis body { height: auto; }
   display: none !important;
 }
 
+/* ============================================
+   CONTACT / ORDER FORM INPUT STYLING
+   ============================================ */
+.form-group {
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 1.1rem 1.4rem;
+  background: rgba(18, 18, 28, 0.7);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(0, 229, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.2rem center;
+  background-size: 1.2rem;
+}
+
+.form-group select option {
+  background-color: #0D0D1A;
+  color: #FFFFFF;
+  padding: 0.8rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #00E5FF !important;
+  background: rgba(25, 25, 40, 0.9) !important;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  background: rgba(22, 22, 34, 0.8) !important;
+}
+
+/* ============================================
+   METASKAPES REPLICA PROJECTS SECTION STYLES
+   ============================================ */
+
+.metaskapes-projects-section {
+  position: relative;
+  background: #0B0C10;
+  padding: 6rem 0 0;
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+.metaskapes-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.metaskapes-header-wrapper {
+  margin-bottom: 3rem;
+  max-width: 800px;
+}
+
+.metaskapes-badge {
+  margin-bottom: 1.25rem;
+}
+
+.metaskapes-subtext {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+/* Category Tabs Bar */
+.metaskapes-tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 3.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.metaskapes-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.metaskapes-tab-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+.metaskapes-tab-pill.is-active {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: #00E5FF;
+  color: #FFFFFF;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+}
+
+.metaskapes-tab-count {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.metaskapes-tab-pill.is-active .metaskapes-tab-count {
+  background: #00E5FF;
+  color: #050608;
+}
+
+/* Projects Grid */
+.metaskapes-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metaskapes-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #0D0F17;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.metaskapes-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 229, 255, 0.18), 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.metaskapes-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+}
+
+.metaskapes-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-card:hover .metaskapes-card-image {
+  transform: scale(1.06);
+}
+
+.metaskapes-card-top-tags {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.metaskapes-category-tag {
+  padding: 0.4rem 0.9rem;
+  border-radius: 30px;
+  background: rgba(5, 6, 8, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  color: #00E5FF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.metaskapes-location-tag {
+  padding: 0.4rem 0.9rem;
+  border-radius: 30px;
+  background: rgba(5, 6, 8, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.metaskapes-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 20%, rgba(5, 6, 9, 0.6) 60%, rgba(5, 6, 9, 0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  z-index: 2;
+  transition: background 0.4s ease;
+}
+
+.metaskapes-card:hover .metaskapes-card-overlay {
+  background: linear-gradient(180deg, transparent 10%, rgba(5, 6, 9, 0.7) 50%, rgba(5, 6, 9, 0.98) 100%);
+}
+
+.metaskapes-card-title {
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+  transition: color 0.3s;
+}
+
+.metaskapes-card:hover .metaskapes-card-title {
+  color: #00E5FF;
+}
+
+.metaskapes-card-summary {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.metaskapes-card-action {
+  display: flex;
+  align-items: center;
+}
+
+.metaskapes-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.3s;
+}
+
+.metaskapes-arrow-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-card:hover .metaskapes-action-btn {
+  color: #00E5FF;
+}
+
+.metaskapes-card:hover .metaskapes-arrow-icon {
+  transform: translateX(6px);
+}
+
+/* Modal Dialog */
+.metaskapes-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(4, 5, 8, 0.85);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+  animation: fadeInModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.metaskapes-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  background: #0B0E17;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 229, 255, 0.15);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(30px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.metaskapes-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.75rem 2rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metaskapes-modal-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #00E5FF;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+
+.metaskapes-modal-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.metaskapes-modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.metaskapes-modal-close:hover {
+  background: rgba(255, 42, 84, 0.2);
+  border-color: #FF2A54;
+  color: #FFFFFF;
+  transform: rotate(90deg);
+}
+
+.metaskapes-modal-gallery {
+  padding: 1.5rem 2rem 1rem;
+  background: #070911;
+}
+
+.metaskapes-slider-main {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000000;
+}
+
+.metaskapes-slider-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease;
+}
+
+.metaskapes-slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(5, 6, 8, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 5;
+}
+
+.metaskapes-slider-nav.prev { left: 1rem; }
+.metaskapes-slider-nav.next { right: 1rem; }
+
+.metaskapes-slider-nav:hover {
+  background: #00E5FF;
+  color: #050608;
+  border-color: #00E5FF;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.metaskapes-slider-counter {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  background: rgba(5, 6, 8, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.metaskapes-slider-thumbnails {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.metaskapes-thumb-btn {
+  width: 80px;
+  height: 54px;
+  min-width: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+
+.metaskapes-thumb-btn.is-active,
+.metaskapes-thumb-btn:hover {
+  opacity: 1;
+  border-color: #00E5FF;
+}
+
+.metaskapes-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.metaskapes-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 768px) {
+  .metaskapes-meta-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.metaskapes-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.metaskapes-meta-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.metaskapes-meta-val {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.metaskapes-modal-body {
+  padding: 1.75rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.metaskapes-body-heading {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.6rem;
+}
+
+.metaskapes-body-desc {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.metaskapes-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .metaskapes-highlights-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metaskapes-highlights-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.metaskapes-check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.15);
+  color: #00E5FF;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.metaskapes-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  background: #070911;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 600px) {
+  .metaskapes-modal-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.metaskapes-modal-nav-btns {
+  display: flex;
+  gap: 1rem;
+}
+
+.metaskapes-nav-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s;
+  padding: 0;
+}
+
+.metaskapes-nav-link:hover {
+  color: #00E5FF;
+}
+
+.metaskapes-live-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 40px;
+  background: linear-gradient(135deg, #00E5FF, #7000FF);
+  color: #FFFFFF;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+}
+
+.metaskapes-live-link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.5);
+  color: #FFFFFF;
+}
+
+.metaskapes-live-link-btn.disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ============================================
+   METASKAPES FULL-WIDTH BANNER IMAGE STACK
+   ============================================ */
+
+.metaskapes-fullwidth-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.metaskapes-fullwidth-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 60vh, 620px);
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-fullwidth-banner:hover {
+  transform: scale(1.015);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 30px 80px rgba(0, 229, 255, 0.2), 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.metaskapes-banner-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.metaskapes-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-image {
+  transform: scale(1.06);
+}
+
+.metaskapes-banner-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg, 
+    rgba(5, 7, 12, 0.92) 0%, 
+    rgba(5, 7, 12, 0.65) 45%, 
+    rgba(5, 7, 12, 0.3) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-gradient-overlay {
+  background: linear-gradient(
+    90deg, 
+    rgba(5, 7, 12, 0.96) 0%, 
+    rgba(5, 7, 12, 0.75) 50%, 
+    rgba(5, 7, 12, 0.4) 100%
+  );
+}
+
+.metaskapes-banner-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 3rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-banner-content {
+    padding: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-banner-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+@media (max-width: 600px) {
+  .metaskapes-banner-brand {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Giant Numbering like 01, 02 in Metaskapes website screenshot */
+.metaskapes-giant-num {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 9vw, 9rem);
+  font-weight: 300;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: -0.04em;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: color 0.4s ease;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-giant-num {
+  color: #00E5FF;
+}
+
+.metaskapes-banner-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.metaskapes-banner-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 0.4rem 0;
+  transition: color 0.3s;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-title {
+  color: #FFFFFF;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.metaskapes-banner-location {
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.metaskapes-banner-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-banner-meta {
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-banner-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+}
+
+.metaskapes-live-link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.5);
+  color: #FFFFFF;
+}
+
+.metaskapes-live-link-btn.disabled {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* ============================================
+   METASKAPES FULL-WIDTH BANNER IMAGE STACK
+   ============================================ */
+
+.metaskapes-fullwidth-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.metaskapes-fullwidth-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 60vh, 620px);
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-fullwidth-banner:hover {
+  transform: scale(1.015);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 30px 80px rgba(0, 229, 255, 0.2), 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.metaskapes-banner-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.metaskapes-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-image {
+  transform: scale(1.06);
+}
+
+.metaskapes-banner-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg, 
+    rgba(5, 7, 12, 0.92) 0%, 
+    rgba(5, 7, 12, 0.65) 45%, 
+    rgba(5, 7, 12, 0.3) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-gradient-overlay {
+  background: linear-gradient(
+    90deg, 
+    rgba(5, 7, 12, 0.96) 0%, 
+    rgba(5, 7, 12, 0.75) 50%, 
+    rgba(5, 7, 12, 0.4) 100%
+  );
+}
+
+.metaskapes-banner-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 3rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-banner-content {
+    padding: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-banner-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+@media (max-width: 600px) {
+  .metaskapes-banner-brand {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Giant Numbering like 01, 02 in Metaskapes website screenshot */
+.metaskapes-giant-num {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 9vw, 9rem);
+  font-weight: 300;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: -0.04em;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: color 0.4s ease;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-giant-num {
+  color: #00E5FF;
+}
+
+.metaskapes-banner-text-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.metaskapes-banner-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 0.4rem 0;
+  transition: color 0.3s;
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-title {
+  color: #FFFFFF;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.metaskapes-banner-location {
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.metaskapes-banner-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-banner-meta {
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-banner-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metaskapes-fullwidth-banner:hover .metaskapes-banner-action-btn {
+  background: #00E5FF;
+  color: #050608;
+  border-color: #00E5FF;
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+}
+
+/* ============================================
+   METASKAPES STICKY OVERLAPPING SCROLL TRANSITION
+   ============================================ */
+
+.metaskapes-sticky-stack-container {
+  position: relative;
+  width: 100%;
+}
+
+.metaskapes-sticky-slide {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.85);
+  background: #05070C;
+}
+
+.metaskapes-sticky-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.metaskapes-sticky-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(1.08) contrast(1.05) saturate(1.1);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+}
+
+.metaskapes-sticky-slide:hover .metaskapes-sticky-image {
+  transform: scale(1.05);
+  filter: brightness(1.12) contrast(1.06) saturate(1.12);
+}
+
+/* Subtle top-left contrast shadow so white text remains readable while keeping images super bright */
+.metaskapes-sticky-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.5) 0%, 
+    rgba(0, 0, 0, 0.12) 35%, 
+    transparent 65%
+  );
+  transition: background 0.4s ease;
+}
+
+.metaskapes-sticky-slide:hover .metaskapes-sticky-mask {
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.55) 0%, 
+    rgba(0, 0, 0, 0.15) 35%, 
+    transparent 65%
+  );
+}
+
+.metaskapes-sticky-content {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 4rem 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-sticky-content {
+    padding: 2.5rem 1.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-sticky-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  pointer-events: auto;
+}
+
+@media (max-width: 600px) {
+  .metaskapes-sticky-brand {
+    gap: 0.75rem;
+  }
+}
+
+/* Metaskapes Giant 01, 02 Numbering (Exact matches screenshots 1-6!) */
+.metaskapes-sticky-num {
+  font-family: var(--font-display);
+  font-size: clamp(5.5rem, 12vw, 13rem);
+  font-weight: 300;
+  line-height: 0.8;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.05em;
+  text-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+
+.metaskapes-sticky-slide:hover .metaskapes-sticky-num {
+  color: #00E5FF;
+}
+
+.metaskapes-sticky-titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.metaskapes-sticky-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
+  transition: color 0.3s;
+}
+
+.metaskapes-sticky-slide:hover .metaskapes-sticky-title {
+  color: #FFFFFF;
+  text-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+}
+
+.metaskapes-sticky-location {
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.metaskapes-sticky-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.5rem;
+  pointer-events: auto;
+}
+
+@media (max-width: 900px) {
+  .metaskapes-sticky-action-group {
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.metaskapes-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.metaskapes-sticky-slide:hover .metaskapes-explore-btn {
+  background: #00E5FF;
+  color: #050608;
+  border-color: #00E5FF;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.metaskapes-slide-counter {
+  position: absolute;
+  bottom: 3rem;
+  right: 5vw;
+  z-index: 5;
+  padding: 0.45rem 1.1rem;
+  border-radius: 30px;
+  background: rgba(5, 7, 12, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+/* GSAP ScrollTrigger Pinned Overlapping Stack Container */
+.metaskapes-pinned-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.metaskapes-slides-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.metaskapes-gsap-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 -25px 60px rgba(0, 0, 0, 0.9);
+  will-change: transform;
+}
 
