@@ -1,15 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import AnimatedHeading from './AnimatedHeading';
 import MagneticElement from './MagneticElement';
-import GridBackground from './GridBackground';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const ZoomHero = () => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
+  const canvasRef = useRef(null);
+  
+  // Element Refs for Animations
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
   const line3Ref = useRef(null);
@@ -18,24 +19,34 @@ const ZoomHero = () => {
   const scrollRef = useRef(null);
   const glowRef = useRef(null);
   const carouselRef = useRef(null);
-  const tagLeftRef = useRef(null);
-  const tagRightRef = useRef(null);
   const dividerRef = useRef(null);
+
+  const splitChars = (text, className = '') => {
+    return text.split('').map((char, i) => (
+      <span
+        key={i}
+        className={`hero-char ${className}`}
+        style={{
+          display: 'inline-block',
+          willChange: 'transform',
+          ...(char === ' ' ? { width: '0.25em' } : {})
+        }}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  };
 
   useEffect(() => {
     let carouselInterval;
     const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.5 }); 
 
-      // Master entrance timeline
-      const tl = gsap.timeline({ delay: 3.6 });
-
-      // Ambient glow pulse in
       tl.fromTo(glowRef.current,
         { scale: 0.3, opacity: 0 },
         { scale: 1, opacity: 1, duration: 2, ease: "power2.out" }
       );
 
-      // Line 1 chars stagger
       const chars1 = line1Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars1,
         { yPercent: 110, opacity: 0 },
@@ -43,7 +54,6 @@ const ZoomHero = () => {
         "-=1.5"
       );
 
-      // Line 2 chars stagger (slight delay)
       const chars2 = line2Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars2,
         { yPercent: 110, opacity: 0 },
@@ -51,7 +61,6 @@ const ZoomHero = () => {
         "-=0.7"
       );
 
-      // Line 3 chars stagger
       const chars3 = line3Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars3,
         { yPercent: 110, opacity: 0 },
@@ -59,14 +68,12 @@ const ZoomHero = () => {
         "-=0.7"
       );
 
-      // Divider line grows
       tl.fromTo(dividerRef.current,
         { scaleX: 0 },
         { scaleX: 1, duration: 0.8, ease: "power3.inOut" },
         "-=0.5"
       );
 
-      // Subtitle + CTA
       tl.fromTo(subtitleRef.current,
         { y: 25, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
@@ -78,14 +85,12 @@ const ZoomHero = () => {
         "-=0.5"
       );
 
-      // Scroll indicator
       tl.fromTo(scrollRef.current,
         { opacity: 0, y: 10 },
-        { opacity: 0.4, y: 0, duration: 0.6, ease: "power2.out" },
+        { opacity: 0.5, y: 0, duration: 0.6, ease: "power2.out" },
         "-=0.3"
       );
 
-      // Carousel rotation
       if (carouselRef.current) {
         const items = carouselRef.current.querySelectorAll('.carousel-word');
         let currentIndex = 0;
@@ -114,11 +119,8 @@ const ZoomHero = () => {
         carouselInterval = setInterval(rotateCarousel, 2800);
       }
 
-      // Removed Parallax on contentRef to prevent text from being pushed down and cut off by the container's overflow when scrolling.
-
-      // Glow parallax
       gsap.to(glowRef.current, {
-        y: 100,
+        y: 150,
         scale: 1.3,
         scrollTrigger: {
           trigger: containerRef.current,
@@ -136,22 +138,76 @@ const ZoomHero = () => {
     };
   }, []);
 
-  // Character split helper
-  const splitChars = (text, className = '') => {
-    return text.split('').map((char, i) => (
-      <span
-        key={i}
-        className={`hero-char ${className}`}
-        style={{
-          display: 'inline-block',
-          willChange: 'transform',
-          ...(char === ' ' ? { width: '0.25em' } : {})
-        }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ));
-  };
+  // CANVAS BACKGROUND: Premium Multiply Abstract Waves
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let time = 0;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Bolder, richer colors so they stand out more against a true grey background
+    // PERFORMANCE: Reduced layers from 8/12/10/15 to 4/5/4/3 (total 16 vs 45)
+    const waves = [
+      { yOffset: 0.4, frequency: 0.003, amplitude: 130, speed: 1.5, color: 'rgba(255, 42, 84, 0.18)', layers: 4 },
+      { yOffset: 0.5, frequency: 0.002, amplitude: 170, speed: 1.1, color: 'rgba(112, 0, 255, 0.18)', layers: 5 },
+      { yOffset: 0.65, frequency: 0.004, amplitude: 100, speed: 1.8, color: 'rgba(0, 150, 255, 0.18)', layers: 4 },
+      { yOffset: 0.8, frequency: 0.0015, amplitude: 220, speed: 0.8, color: 'rgba(112, 0, 255, 0.12)', layers: 3 }
+    ];
+
+    // Only render when hero is visible
+    let isVisible = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    }, { threshold: 0 });
+    observer.observe(canvas);
+
+    const render = () => {
+      if (!isVisible) { animationFrameId = requestAnimationFrame(render); return; }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = 'multiply';
+
+      time += 0.015;
+
+      waves.forEach((wave) => {
+        for (let j = 0; j < wave.layers; j++) {
+          ctx.beginPath();
+          // PERFORMANCE: step 40px instead of 20px — halves lineTo calls
+          for(let i = 0; i <= canvas.width; i += 40) {
+            const dx = i * wave.frequency;
+            const yOffset = Math.sin(dx + time * wave.speed) * wave.amplitude 
+                          + Math.cos(dx * 1.5 - time * (wave.speed * 0.8)) * (wave.amplitude * 0.4);
+            const twist = Math.sin(dx * 0.8 + time + j * 0.15) * 40;
+            const y = (canvas.height * wave.yOffset) + yOffset + twist + (j * 4);
+            
+            if (i === 0) ctx.moveTo(i, y);
+            else ctx.lineTo(i, y);
+          }
+          ctx.strokeStyle = wave.color;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      });
+
+      ctx.globalCompositeOperation = 'source-over';
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <section
@@ -160,29 +216,62 @@ const ZoomHero = () => {
         position: 'relative', width: '100%',
         overflow: 'hidden', display: 'flex', alignItems: 'flex-start',
         paddingTop: '160px', paddingBottom: '4.5rem',
-        background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
+        minHeight: '100vh',
+        /* TRUE PREMIUM GREY BACKGROUND */
+        background: '#E2E6ED'
       }}
     >
-      {/* AMBIENT GLOW */}
+      {/* 
+        ================================================================
+        CENTER ABSTRACT BACKGROUND IMAGE (Unique & Attractive)
+        ================================================================
+      */}
+      <div 
+        className="hero-bg-image"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '1000px',
+          height: '1000px',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.18, /* Soft opacity so it perfectly blends */
+          mixBlendMode: 'multiply', /* Creates a beautiful ink-like overlay on the grey */
+          WebkitMaskImage: 'radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%)',
+          maskImage: 'radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+
+      <canvas 
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: 0, left: 0,
+          width: '100%', height: '100%',
+          zIndex: 0,
+          pointerEvents: 'none'
+        }}
+      />
+
       <div
         ref={glowRef}
         style={{
           position: 'absolute',
-          top: '15%', left: '55%',
-          width: '600px', height: '600px',
+          top: '15%', left: '45%',
+          width: '700px', height: '700px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(112,0,255,0.08) 0%, rgba(255,42,84,0.04) 50%, transparent 70%)',
-          filter: 'blur(50px)',
+          background: 'radial-gradient(circle, rgba(112, 0, 255, 0.08) 0%, rgba(255, 42, 84, 0.05) 50%, transparent 70%)',
+          filter: 'blur(60px)',
           zIndex: 1,
           opacity: 0,
           pointerEvents: 'none'
         }}
       />
-      
-      {/* INTERACTIVE GRID BACKGROUND */}
-      <GridBackground />
 
-      {/* MAIN CONTENT */}
       <div
         ref={contentRef}
         className="container"
@@ -192,31 +281,31 @@ const ZoomHero = () => {
           padding: '0 2rem'
         }}
       >
-        {/* HEADLINE — EDITORIAL SPLIT */}
         <div style={{ marginBottom: '1.5rem' }}>
           {/* Line 1 */}
           <div ref={line1Ref} style={{ overflow: 'hidden', paddingBottom: '0.1em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-              fontWeight: '800',
+              fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
-              color: '#0B0C10',
+              color: '#11131A',
               margin: 0
             }}>
               {splitChars('We Craft')}
             </h1>
           </div>
 
-          {/* Line 2 — with accent word */}
+          {/* Line 2 — UNIQUE VIBRANT GRADIENT TEXT */}
           <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
             <h1 className="hero-char" style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-              fontWeight: '800',
+              fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
+              /* Extremely unique, attractive Crimson/Purple gradient */
               background: 'linear-gradient(135deg, #FF2A54 0%, #7000FF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -228,11 +317,11 @@ const ZoomHero = () => {
             </h1>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-              fontWeight: '800',
+              fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
-              color: '#0B0C10',
+              color: '#11131A',
               margin: 0
             }}>
               {splitChars('Ecosystems')}
@@ -243,11 +332,11 @@ const ZoomHero = () => {
           <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
             <h1 style={{
               fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-              fontWeight: '800',
+              fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
-              color: '#0B0C10',
+              color: '#11131A',
               margin: 0
             }}>
               {splitChars('That')}
@@ -263,7 +352,7 @@ const ZoomHero = () => {
                 gridTemplateRows: '1fr',
                 overflow: 'hidden',
                 verticalAlign: 'baseline',
-                paddingRight: '0.15em' // Prevent italic character truncation
+                paddingRight: '0.15em' 
               }}
             >
               {['Convert.', 'Dominate.', 'Inspire.', 'Scale.'].map((word, i) => (
@@ -274,12 +363,13 @@ const ZoomHero = () => {
                     gridArea: '1 / 1 / 2 / 2',
                     visibility: i === 0 ? 'visible' : 'hidden',
                     fontSize: 'clamp(3.5rem, 9vw, 8rem)',
-                    fontWeight: '800',
+                    fontWeight: '900',
                     fontFamily: 'var(--font-display)',
-                    lineHeight: 1.1, // Match preceding text exactly to align baselines
+                    lineHeight: 1.1, 
                     letterSpacing: '-0.04em',
                     fontStyle: 'italic',
-                    color: 'var(--accent-crimson)',
+                    /* Beautiful deep purple to match the gradient */
+                    color: '#7000FF',
                     whiteSpace: 'nowrap',
                     willChange: 'transform, opacity'
                   }}
@@ -296,7 +386,7 @@ const ZoomHero = () => {
           ref={dividerRef}
           style={{
             width: '100%', height: '1px',
-            background: 'rgba(11,12,16,0.1)',
+            background: 'rgba(0,0,0,0.12)', 
             marginBottom: '1.5rem',
             transformOrigin: 'left center'
           }}
@@ -310,8 +400,8 @@ const ZoomHero = () => {
           <p
             ref={subtitleRef}
             style={{
-              fontSize: '1.05rem', lineHeight: '1.7', fontWeight: '400',
-              color: 'rgba(11,12,16,0.5)', maxWidth: '420px', margin: 0,
+              fontSize: '1.1rem', lineHeight: '1.7', fontWeight: '500',
+              color: 'rgba(17,19,26,0.6)', maxWidth: '420px', margin: 0,
               opacity: 0
             }}
           >
@@ -321,7 +411,7 @@ const ZoomHero = () => {
 
           <div ref={ctaRef} style={{ display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0 }}>
             <MagneticElement>
-              <a href="#portfolio" className="btn-premium">
+              <a href="#portfolio" className="btn-hero-gradient">
                 <span>See Our Work</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginLeft: '0.5rem' }}>
                   <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -329,7 +419,7 @@ const ZoomHero = () => {
               </a>
             </MagneticElement>
             <MagneticElement>
-              <a href="#contact" className="btn-outline" style={{ padding: '1.2rem 2.5rem' }}>
+              <a href="#contact" className="btn-hero-glass">
                 <span>Let's Talk</span>
               </a>
             </MagneticElement>
@@ -337,7 +427,6 @@ const ZoomHero = () => {
         </div>
       </div>
 
-      {/* SCROLL INDICATOR */}
       <div
         ref={scrollRef}
         style={{
@@ -348,23 +437,83 @@ const ZoomHero = () => {
         }}
       >
         <div style={{
-          width: '1px', height: '40px',
-          background: 'linear-gradient(to bottom, rgba(11,12,16,0.2), transparent)',
+          width: '1px', height: '60px',
+          background: 'linear-gradient(to bottom, rgba(112, 0, 255, 0.5), transparent)',
           animation: 'scrollPulse 2s ease-in-out infinite'
         }}/>
       </div>
 
-      {/* CSS ANIMATIONS */}
       <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.8); }
+        /* 
+          1. Unique Radiant Gradient Button 
+        */
+        .btn-hero-gradient {
+          display: inline-flex;
+          align-items: center;
+          padding: 1.2rem 2.5rem;
+          background: linear-gradient(135deg, #FF2A54 0%, #7000FF 100%);
+          color: #FFFFFF;
+          font-weight: 800;
+          font-family: var(--font-display);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          border-radius: 50px;
+          text-decoration: none;
+          box-shadow: 0 10px 30px rgba(112, 0, 255, 0.25);
+          transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+          border: 1px solid rgba(255,255,255,0.1);
         }
+        .btn-hero-gradient:hover {
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 0 16px 40px rgba(255, 42, 84, 0.35);
+          background: linear-gradient(135deg, #FF3B62 0%, #8322FF 100%);
+        }
+
+        /* 
+          2. Unique Glassmorphism Secondary Button
+        */
+        .btn-hero-glass {
+          display: inline-flex;
+          align-items: center;
+          padding: 1.2rem 2.5rem;
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          color: #11131A;
+          font-weight: 800;
+          font-family: var(--font-display);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          border-radius: 50px;
+          border: 1px solid rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+          transition: all 0.3s ease;
+        }
+        .btn-hero-glass:hover {
+          background: #FFFFFF;
+          border-color: #7000FF;
+          color: #7000FF;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px rgba(112, 0, 255, 0.15);
+        }
+
         @keyframes scrollPulse {
           0% { transform: scaleY(0); transform-origin: top; }
           50% { transform: scaleY(1); transform-origin: top; }
           51% { transform-origin: bottom; }
           100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* Abstract Image Animation */
+        .hero-bg-image {
+          animation: slowSpinBg 80s linear infinite;
+          transform-origin: center center;
+        }
+
+        @keyframes slowSpinBg {
+          0% { transform: translate(-50%, -50%) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
       `}</style>
     </section>

@@ -24,11 +24,9 @@ const projects = [
       'Integrated multi-currency localized checkout system',
       'Headless architecture powered by Next.js & Shopify Plus'
     ],
-    image: 'https://images.unsplash.com/photo-1734574226134-9f0f07e62407?w=1920&auto=format&fit=crop&q=95',
+    image: '/gagner_remastered.jpg',
     gallery: [
-      'https://images.unsplash.com/photo-1734574226134-9f0f07e62407?w=1920&auto=format&fit=crop&q=95',
-      'https://images.unsplash.com/photo-1517649763962-0c623266010b?w=1920&auto=format&fit=crop&q=95',
-      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&auto=format&fit=crop&q=95'
+      '/gagner_remastered.jpg'
     ],
     link: 'https://gagnersports.com/'
   },
@@ -50,11 +48,9 @@ const projects = [
       'Seamless multi-device mobile optimization',
       'Instant private consultation booking integration'
     ],
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=95',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=3840&q=100',
     gallery: [
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=95',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=95',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=95'
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=3840&q=100'
     ],
     link: '#'
   },
@@ -76,17 +72,103 @@ const projects = [
       'Nominated for top web design interactive honors',
       'Full dark theme aesthetic with custom typography'
     ],
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1920&q=95',
+    image: '/ke19_remastered.jpg',
     gallery: [
-      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1920&q=95',
-      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1920&q=95',
-      'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&w=1920&q=95'
+      '/ke19_remastered.jpg'
     ],
     link: 'https://ke19portfolio.netlify.app/'
   }
 ];
 
 const categories = ['All', 'E-Commerce', 'Real Estate', 'Creative & Branding'];
+
+const AbstractRingsBackground = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let time = 0;
+    
+    // Only render when in viewport for performance
+    let isVisible = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+    });
+    observer.observe(canvas);
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      // Make it cover the top header area
+      canvas.height = window.innerHeight * 1.2; 
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    // 3D Wireframe Rings (adapted to light theme colors: Cyan & Purple)
+    const rings = [
+      { cx: canvas.width * 0.15, cy: canvas.height * 0.4, radiusX: 350, radiusY: 140, color: 'rgba(0, 229, 255, 0.4)', speed: 0.002, rotation: 0.5, layers: 25 },
+      { cx: canvas.width * 0.85, cy: canvas.height * 0.3, radiusX: 450, radiusY: 180, color: 'rgba(112, 0, 255, 0.25)', speed: -0.0015, rotation: -0.3, layers: 20 },
+      { cx: canvas.width * 0.6, cy: canvas.height * 0.8, radiusX: 550, radiusY: 220, color: 'rgba(0, 229, 255, 0.2)', speed: 0.001, rotation: 0.1, layers: 30 },
+    ];
+
+    const render = () => {
+      if (!isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Multiply blend mode makes the cyan/purple look like rich ink on the white background
+      ctx.globalCompositeOperation = 'multiply'; 
+      time += 1;
+
+      rings.forEach(ring => {
+        ctx.save();
+        ctx.translate(ring.cx, ring.cy);
+        ctx.rotate(ring.rotation + time * ring.speed);
+        
+        // Draw layers of dotted ellipses to create the 3D wireframe mesh look
+        for (let j = 0; j < ring.layers; j++) {
+           const scale = 1 + (j * 0.015); // Spread them out like a 3D tube
+           const offset = j * 2.5;
+           ctx.beginPath();
+           for (let i = 0; i <= Math.PI * 2; i += 0.05) {
+             const x = Math.cos(i) * ring.radiusX * scale;
+             const y = Math.sin(i) * ring.radiusY * scale + offset;
+             if (i === 0) ctx.moveTo(x, y);
+             else ctx.lineTo(x, y);
+           }
+           ctx.strokeStyle = ring.color;
+           ctx.lineWidth = 0.8;
+           // Creates the "dotted/particle" look from the reference image
+           ctx.setLineDash([2, 8]); 
+           ctx.stroke();
+        }
+        ctx.restore();
+      });
+
+      ctx.globalCompositeOperation = 'source-over';
+      animationFrameId = requestAnimationFrame(render);
+    };
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '120vh', zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+      <canvas ref={canvasRef} style={{ display: 'block' }} />
+      {/* Soft gradient mask to fade the rings out seamlessly at the bottom */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, #F9FAFB 100%)' }} />
+    </div>
+  );
+};
 
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -186,8 +268,12 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio" className="metaskapes-projects-section">
+      
+      {/* BRAND NEW: ABSTRACT 3D WIREFRAME RINGS EFFECT */}
+      <AbstractRingsBackground />
+
       {/* Header Container */}
-      <div className="metaskapes-container">
+      <div className="metaskapes-container" style={{ position: 'relative', zIndex: 10 }}>
         
         {/* Section Header with exact preserved Title transition effect from Image 2 */}
         <div className="metaskapes-header-wrapper">
@@ -199,7 +285,7 @@ const Portfolio = () => {
             text="Projects That \n Speak Volumes" 
             mode="scramble" 
             style={{ 
-              color: '#FFFFFF', 
+              color: '#11131A', // Dark text for Light Theme
               fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', 
               lineHeight: 1.1, 
               fontWeight: 900, 
@@ -208,7 +294,7 @@ const Portfolio = () => {
             }} 
           />
 
-          <p className="metaskapes-subtext">
+          <p className="metaskapes-subtext" style={{ color: 'rgba(0,0,0,0.6)' }}>
             Explore our curated portfolio of bespoke web applications, e-commerce platforms, luxury digital showcases, and mobile ecosystems.
           </p>
         </div>
@@ -224,7 +310,13 @@ const Portfolio = () => {
               ref={(el) => { if (el) slideRefs.current[idx] = el; }}
               className="metaskapes-gsap-slide"
               style={{ zIndex: idx + 1 }}
-              onClick={() => openProjectModal(project)}
+              onClick={() => {
+                if (project.link && project.link !== '#') {
+                  window.open(project.link, '_blank', 'noopener,noreferrer');
+                } else {
+                  openProjectModal(project);
+                }
+              }}
             >
               {/* Full-bleed 100vh bright image background */}
               <div className="metaskapes-sticky-bg-wrapper">
@@ -237,10 +329,34 @@ const Portfolio = () => {
                 <div className="metaskapes-sticky-mask" />
               </div>
 
-              {/* Metaskapes Clean Top-Left Header: Giant Number + Title & Location */}
+              {/* Unique Tech Category Indicator + Title & Location */}
               <div className="metaskapes-sticky-content">
-                <div className="metaskapes-sticky-brand">
-                  <span className="metaskapes-sticky-num">{project.num}</span>
+                <div className="metaskapes-sticky-brand" style={{ display: 'flex', alignItems: 'center' }}>
+                  
+                  {/* Replaced Giant Number with Unique Vertical Badge */}
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginRight: '2.5rem',
+                    gap: '1rem',
+                    opacity: 0.9
+                  }}>
+                    <div style={{ width: '2px', height: '50px', background: 'linear-gradient(to bottom, #00E5FF, transparent)' }} />
+                    <span style={{ 
+                      writingMode: 'vertical-rl', 
+                      transform: 'rotate(180deg)', 
+                      color: '#00E5FF', 
+                      letterSpacing: '0.4em', 
+                      fontSize: '0.75rem', 
+                      fontWeight: 800,
+                      textShadow: '0 0 10px rgba(0, 229, 255, 0.6)'
+                    }}>
+                      {project.tag}
+                    </span>
+                    <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#00E5FF', boxShadow: '0 0 10px #00E5FF' }} />
+                  </div>
+
                   <div className="metaskapes-sticky-titles">
                     <h3 className="metaskapes-sticky-title">{project.title}</h3>
                     <p className="metaskapes-sticky-location">{project.location}</p>

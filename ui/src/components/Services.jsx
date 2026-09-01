@@ -312,6 +312,7 @@ export default function Services() {
   const rightWrapperRef = useRef(null);
   const visualRef = useRef(null);
   const centerRef = useRef(null);
+  const headerRef = useRef(null);
 
   /* ── GSAP ScrollTrigger Pinned Scroll Sequence ── */
   useEffect(() => {
@@ -333,6 +334,42 @@ export default function Services() {
     return () => {
       st.kill();
     };
+  }, []);
+
+  /* ── UNIQUE HEADER SCROLL ENTRANCE ── */
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: headerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+
+      // 1. The gradient accent line extends from 0 width
+      tl.fromTo('.svc-hdr-line',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.6, ease: 'power3.inOut' }
+      );
+
+      // 2. The label text sweeps in from left with blur
+      tl.fromTo('.svc-hdr-label',
+        { x: -30, opacity: 0, filter: 'blur(8px)' },
+        { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' },
+        '-=0.3'
+      );
+
+      // 3. Each word of "Our Services" pops up from below with stagger
+      tl.fromTo('.svc-hdr-word',
+        { y: 60, opacity: 0, rotateX: 40, scale: 0.9 },
+        { y: 0, opacity: 1, rotateX: 0, scale: 1, duration: 0.7, stagger: 0.12, ease: 'back.out(1.5)' },
+        '-=0.3'
+      );
+    }, headerRef);
+
+    return () => ctx.revert();
   }, []);
 
   /* ── GSAP Staggered Entrance Animation for Center Text Content on Service Switch ── */
@@ -409,16 +446,17 @@ export default function Services() {
     >
       <div style={{ maxWidth: '1440px', width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
-        {/* Section Header */}
-        <div style={{ marginBottom: '32px' }}>
+        {/* Section Header — with unique scroll entrance effects */}
+        <div ref={headerRef} style={{ marginBottom: '32px', perspective: '600px' }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #FF2A54, #7000FF)', borderRadius: 2 }} />
-            <span style={{ background: 'linear-gradient(90deg, #FF2A54 0%, #7000FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <span className="svc-hdr-line" style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #FF2A54, #7000FF)', borderRadius: 2, transformOrigin: 'left center', display: 'inline-block' }} />
+            <span className="svc-hdr-label" style={{ background: 'linear-gradient(90deg, #FF2A54 0%, #7000FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>
               WHAT WE DO
             </span>
           </div>
-          <h2 style={{ fontSize: 'clamp(3rem, 5.2vw, 4.5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#0A0A10', letterSpacing: '-0.035em', margin: 0, lineHeight: 1.05 }}>
-            Our Services
+          <h2 style={{ fontSize: 'clamp(3rem, 5.2vw, 4.5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#0A0A10', letterSpacing: '-0.035em', margin: 0, lineHeight: 1.05, display: 'flex', gap: '0.3em', flexWrap: 'wrap' }}>
+            <span className="svc-hdr-word" style={{ display: 'inline-block' }}>Our</span>
+            <span className="svc-hdr-word" style={{ display: 'inline-block' }}>Services</span>
           </h2>
         </div>
 

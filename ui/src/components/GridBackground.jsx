@@ -16,8 +16,8 @@ const GridBackground = () => {
 
     // Particles array
     let particles = [];
-    const particleCount = 50; // Number of floating particles
-    const connectionDistance = 100; // How close they must be to connect
+    const particleCount = 25; // PERF: Reduced from 50 to 25
+    const connectionDistance = 80; // PERF: Reduced from 100
 
     const resize = () => {
       width = window.innerWidth;
