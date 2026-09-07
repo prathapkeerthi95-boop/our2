@@ -94,16 +94,48 @@ const Stats = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="stats">
+    <section ref={sectionRef} id="stats" style={{ position: 'relative', overflow: 'hidden' }}>
       <style>{`
         #stats {
-          /* Very compact section padding */
-          padding: 4rem 5%;
-          /* Plain, ultra-clean premium background */
-          background: #FAFAFA;
+          /* Generous top padding so navbar never overlaps cards */
+          padding: 7rem 5% 4rem;
+          /* Transparent to show unified CircularMotionFrameBackground */
+          background: transparent;
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
+        }
+
+        .stats-container {
+          width: 100%;
+          max-width: 1200px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Top Left Black Reveal Badge */
+        .stats-header-badge {
+          align-self: flex-start;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 1rem;
+          padding: 6px 14px;
+          border-radius: 20px;
+          background: #000000;
+          color: #FFFFFF;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+          animation: pulseArrow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseArrow {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(4px); }
         }
 
         .stats-grid {
@@ -111,7 +143,6 @@ const Stats = () => {
           grid-template-columns: repeat(4, 1fr);
           gap: 1.5rem;
           width: 100%;
-          max-width: 1200px;
         }
 
         /* ——— COMPACT, CLEAN CARD ——— */
@@ -131,10 +162,10 @@ const Stats = () => {
           padding: 20px;
           
           cursor: default;
-          border: 1px solid rgba(0,0,0,0.04);
+          border: 1.5px solid #CBD5E1;
           
-          /* Very subtle clean shadow */
-          box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+          /* Clean shadow */
+          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
           
           overflow: hidden; 
           transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
@@ -255,34 +286,41 @@ const Stats = () => {
         }
       `}</style>
 
-      <div className="stats-grid">
-        {stats.map((stat, i) => (
-          <div 
-            key={i} 
-            className="stat-card"
-            style={{
-              '--card-accent': stat.accent,
-              '--card-glow': stat.accentGlow,
-            }}
-          >
-            <div className="stat-badge">
-              <span className="stat-badge-dot" />
-              {stat.badge}
-            </div>
-            
-            <div className="stat-content-main">
-              <h3 className="stat-value" ref={el => numberRefs.current[i] = el}>
-                {stat.value}
-              </h3>
-              <p className="stat-label">{stat.label}</p>
-            </div>
+      <div className="stats-container">
+        <div className="stats-header-badge">
+          <span>Tap / Hover to reveal</span>
+          <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>→</span>
+        </div>
 
-            {/* This reveals smoothly inside the fixed card box */}
-            <div className="stat-details">
-              {stat.details}
+        <div className="stats-grid">
+          {stats.map((stat, i) => (
+            <div 
+              key={i} 
+              className="stat-card"
+              style={{
+                '--card-accent': stat.accent,
+                '--card-glow': stat.accentGlow,
+              }}
+            >
+              <div className="stat-badge">
+                <span className="stat-badge-dot" />
+                {stat.badge}
+              </div>
+              
+              <div className="stat-content-main">
+                <h3 className="stat-value" ref={el => numberRefs.current[i] = el}>
+                  {stat.value}
+                </h3>
+                <p className="stat-label">{stat.label}</p>
+              </div>
+
+              {/* This reveals smoothly inside the fixed card box */}
+              <div className="stat-details">
+                {stat.details}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

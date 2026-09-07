@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const chars = '!<>-_\\/[]{}—=+*^?#________';
 
-export default function AnimatedHeading({ text, mode = 'mask', className = '', style = {}, delay = 0 }) {
+export default function AnimatedHeading({ text, mode = 'mask', className = '', style = {}, delay = 0, wordStyles = {} }) {
   const containerRef = useRef(null);
 
   const words = text.split(' ').map((word, i) => ({
@@ -28,7 +28,7 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
         scrollTrigger: {
           trigger: el,
           start: "top 88%",
-          toggleActions: "play reverse play reverse"
+          toggleActions: "play none none none"
         },
         delay: delay
       });
@@ -109,6 +109,9 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
     <h2 ref={containerRef} className={className} style={{ ...style, margin: 0 }}>
       {words.map((w, wordIndex) => {
         if (w.isBreak) return <br key={w.key} />;
+        const wordClean = w.text.replace(/[^a-zA-Z0-9]/g, '');
+        const customWordStyle = wordStyles[w.text] || wordStyles[wordClean] || {};
+
         return (
           <span 
             key={w.key} 
@@ -117,11 +120,12 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
               display: 'inline-block', 
               overflow: mode === 'mask' ? 'hidden' : 'visible', 
               verticalAlign: 'top',
-              willChange: 'transform, opacity, filter'
+              willChange: 'transform, opacity, filter',
+              ...customWordStyle
             }}
           >
             {!isCharLevel ? (
-              <span className={mode === 'mask' ? "anim-word-inner" : ""} style={{ display: 'inline-block' }}>
+              <span className={mode === 'mask' ? "anim-word-inner" : ""} style={{ display: 'inline-block', ...customWordStyle }}>
                 {w.text}
               </span>
             ) : (

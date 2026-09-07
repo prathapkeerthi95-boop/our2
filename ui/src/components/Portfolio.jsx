@@ -24,9 +24,9 @@ const projects = [
       'Integrated multi-currency localized checkout system',
       'Headless architecture powered by Next.js & Shopify Plus'
     ],
-    image: '/gagner_remastered.jpg',
+    image: '/gagner-sports-showcase.jpg',
     gallery: [
-      '/gagner_remastered.jpg'
+      '/gagner-sports-showcase.jpg'
     ],
     link: 'https://gagnersports.com/'
   },
@@ -72,9 +72,9 @@ const projects = [
       'Nominated for top web design interactive honors',
       'Full dark theme aesthetic with custom typography'
     ],
-    image: '/ke19_remastered.jpg',
+    image: '/ke19-showcase.jpg',
     gallery: [
-      '/ke19_remastered.jpg'
+      '/ke19-showcase.jpg'
     ],
     link: 'https://ke19portfolio.netlify.app/'
   }
@@ -207,7 +207,7 @@ const Portfolio = () => {
             end: () => `+=${(slides.length - 1) * 100}%`,
             pin: true,
             scrub: 0.5,
-            anticipatePin: 1,
+            refreshPriority: 1,
             invalidateOnRefresh: true
           }
         });
@@ -267,11 +267,7 @@ const Portfolio = () => {
   };
 
   return (
-    <section id="portfolio" className="metaskapes-projects-section">
-      
-      {/* BRAND NEW: ABSTRACT 3D WIREFRAME RINGS EFFECT */}
-      <AbstractRingsBackground />
-
+    <section id="portfolio" className="metaskapes-projects-section" style={{ position: 'relative', overflow: 'hidden', background: 'transparent' }}>
       {/* Header Container */}
       <div className="metaskapes-container" style={{ position: 'relative', zIndex: 10 }}>
         

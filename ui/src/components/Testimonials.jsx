@@ -39,7 +39,7 @@ const reviewsRow2 = [
     accent: 'linear-gradient(135deg, #EF4444, #991B1B)'
   },
   {
-    name: 'Ananya Iyer', role: 'Design Lead, Modo', avatar: 'AI',
+    name: 'Anika Roy', role: 'Design Lead, Modo', avatar: 'AR',
     quote: 'The UI/UX is breathtaking. User engagement jumped 300% in the first month alone. Absolutely stunning work.',
     color: '#3B82F6',
     accent: 'linear-gradient(135deg, #3B82F6, #1D4ED8)'

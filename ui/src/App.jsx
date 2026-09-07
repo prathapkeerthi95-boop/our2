@@ -9,12 +9,14 @@ import Services from './components/Services';
 import About from './components/About';
 import Stats from './components/Stats';
 import Portfolio from './components/Portfolio';
+import CircularMotionFrameBackground from './components/CircularMotionFrameBackground';
 import Process from './components/Process';
 import Testimonials from './components/Testimonials';
 import CTABanner from './components/CTABanner';
 import ContactForm from './components/OrderForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
+import WhatsAppBubbleWidget from './components/WhatsAppBubbleWidget';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +26,7 @@ function App() {
   const logoWrapperRef = useRef(null);
   const titleRef = useRef(null);
   const taglineRef = useRef(null);
+  const waveCanvasRef = useRef(null);
 
   useEffect(() => {
     // 0. Force scroll to top on refresh and disable auto restoration
@@ -35,6 +38,60 @@ function App() {
     // Lock scroll during preloader
     document.body.style.overflow = 'hidden';
 
+    // Canvas fluid wave ribbon animation in logo colors across center
+    const canvas = waveCanvasRef.current;
+    let waveAnimId;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let step = 0;
+
+      const resize = () => {
+        if (canvas) {
+          canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
+          canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight;
+        }
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      const waves = [
+        { color1: 'rgba(72, 202, 228, 0.55)', color2: 'rgba(0, 229, 255, 0.75)', speed: 0.015, amplitude: 70, wavelength: 0.005, offset: 0, heightRatio: 0.52 },
+        { color1: 'rgba(0, 180, 216, 0.65)', color2: 'rgba(2, 128, 144, 0.80)', speed: 0.022, amplitude: 55, wavelength: 0.007, offset: 2.1, heightRatio: 0.56 },
+        { color1: 'rgba(10, 37, 64, 0.45)', color2: 'rgba(0, 119, 182, 0.70)', speed: 0.012, amplitude: 85, wavelength: 0.004, offset: 4.2, heightRatio: 0.60 }
+      ];
+
+      const draw = () => {
+        if (!ctx || !canvas) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        step += 1;
+
+        waves.forEach((w) => {
+          ctx.beginPath();
+          const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+          grad.addColorStop(0, w.color1);
+          grad.addColorStop(0.5, w.color2);
+          grad.addColorStop(1, w.color1);
+          ctx.fillStyle = grad;
+
+          const centerY = canvas.height * w.heightRatio;
+
+          ctx.moveTo(0, canvas.height);
+          for (let x = 0; x <= canvas.width; x += 4) {
+            const y = centerY + Math.sin(x * w.wavelength + step * w.speed + w.offset) * w.amplitude 
+                             + Math.cos(x * 0.002 + step * (w.speed * 0.5)) * (w.amplitude * 0.4);
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(canvas.width, canvas.height);
+          ctx.closePath();
+          ctx.fill();
+        });
+
+        waveAnimId = requestAnimationFrame(draw);
+      };
+
+      draw();
+    }
+
     // Seamless Morph Splash Screen Timeline (2.1s total)
     const tl = gsap.timeline({
       onComplete: () => {
@@ -43,14 +100,14 @@ function App() {
       }
     });
 
-    // 1. Official Vivid N Logo Scale & Radiant Neon Aura Reveal (0.0s -> 0.65s)
+    // 1. Official Vivid N Logo Scale & Soft Radiant Aura Reveal (0.0s -> 0.65s)
     if (logoWrapperRef.current) {
       tl.fromTo(logoWrapperRef.current,
-        { scale: 0.7, opacity: 0, filter: 'drop-shadow(0 0 0px rgba(0, 229, 255, 0))' },
+        { scale: 0.7, opacity: 0, filter: 'drop-shadow(0 0 0px rgba(10, 37, 64, 0))' },
         {
           scale: 1,
           opacity: 1,
-          filter: 'drop-shadow(0 0 45px rgba(0, 229, 255, 0.85)) drop-shadow(0 0 60px rgba(255, 42, 84, 0.65))',
+          filter: 'drop-shadow(0 15px 35px rgba(10, 37, 64, 0.22)) drop-shadow(0 0 25px rgba(0, 180, 216, 0.3))',
           duration: 0.65,
           ease: 'back.out(1.7)'
         },
@@ -58,7 +115,7 @@ function App() {
       );
     }
 
-    // 2. NUZAROX Title 3D Kinetic Depth Split & Chromatic Shimmer Reveal (0.35s -> 1.4s) [+1.0s duration]
+    // 2. NUZAROX Title 3D Kinetic Depth Split & Crisp Navy Reveal (0.35s -> 1.4s)
     if (titleRef.current) {
       const charEls = titleRef.current.querySelectorAll('.preloader-char');
       
@@ -83,7 +140,7 @@ function App() {
       );
     }
 
-    // 3. YOUR GROWTH, OUR MISSION Metallic Laser Wave Sweep & Neon Pulse (0.75s -> 1.8s) [+1.0s breath hold]
+    // 3. YOUR GROWTH. OUR MISSION Metallic Wave Sweep (0.75s -> 1.8s)
     if (taglineRef.current) {
       tl.fromTo(taglineRef.current,
         { y: 25, opacity: 0, letterSpacing: '0.12em', filter: 'blur(10px)' },
@@ -92,7 +149,6 @@ function App() {
           opacity: 1, 
           letterSpacing: '0.42em', 
           filter: 'blur(0px)',
-          textShadow: '0 0 28px rgba(0, 229, 255, 0.95), 0 0 50px rgba(0, 229, 255, 0.7)',
           duration: 0.75, 
           ease: 'expo.out' 
         },
@@ -121,7 +177,7 @@ function App() {
             x: `+=${deltaX}`,
             y: `+=${deltaY}`,
             scale: targetScale,
-            filter: 'drop-shadow(0 0 16px rgba(0, 229, 255, 0.8))',
+            filter: 'drop-shadow(0 4px 14px rgba(10, 37, 64, 0.25))',
             duration: 0.88,
             ease: 'power3.inOut'
           });
@@ -152,7 +208,7 @@ function App() {
       }, 2.15);
     }
 
-    // Dark backdrop dissolves smoothly into light mode revealing Hero section underneath
+    // Light backdrop dissolves smoothly into light mode revealing Hero section underneath
     if (preloaderBgRef.current) {
       tl.to(preloaderBgRef.current, {
         opacity: 0,
@@ -237,7 +293,7 @@ function App() {
         scrollTrigger: {
           trigger: el,
           start: 'top 92%',
-          toggleActions: 'play reverse play reverse'
+          toggleActions: 'play none none none'
         }
       });
     });
@@ -257,7 +313,7 @@ function App() {
           scrollTrigger: {
             trigger: el,
             start: 'top 94%',
-            toggleActions: 'play reverse play reverse'
+            toggleActions: 'play none none none'
           }
         }
       );
@@ -285,7 +341,7 @@ function App() {
         scrollTrigger: {
           trigger: el,
           start: 'top 92%',
-          toggleActions: 'play reverse play reverse'
+          toggleActions: 'play none none none'
         }
       });
     });
@@ -317,7 +373,7 @@ function App() {
           scrollTrigger: {
             trigger: el,
             start: "top 90%", 
-            toggleActions: "play reverse play reverse"
+            toggleActions: "play none none none"
           }
         }
       );
@@ -334,7 +390,7 @@ function App() {
     <>
       <CustomCursor />
       
-      {/* SEAMLESS MORPH SPLASH SCREEN — STRICTLY 3 BRANDING ELEMENTS */}
+      {/* SEAMLESS MORPH SPLASH SCREEN — MATCHING REFERENCE IMAGE WITH LOGO WAVE EFFECT */}
       <div 
         ref={preloaderRef}
         style={{
@@ -343,20 +399,31 @@ function App() {
           pointerEvents: 'none', overflow: 'hidden'
         }}
       >
-        {/* DARK CINEMATIC BACKDROP */}
+        {/* LIGHT OFF-WHITE BACKDROP */}
         <div 
           ref={preloaderBgRef}
           style={{
             position: 'absolute', inset: 0,
-            backgroundColor: '#060609',
+            background: 'linear-gradient(135deg, #F8FAFC 0%, #E9F0F8 50%, #E2E8F0 100%)',
             zIndex: 1
+          }}
+        />
+
+        {/* LOGO COLOR WAVE CANVAS EFFECT */}
+        <canvas 
+          ref={waveCanvasRef}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            zIndex: 2,
+            pointerEvents: 'none'
           }}
         />
 
         {/* CENTER CONTENT CONTAINER */}
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 2rem' }}>
           
-          {/* 1. OFFICIAL CALIBRATED LOGO IMAGE WITH NEON CYAN & CRIMSON RADIANT AURA */}
+          {/* 1. OFFICIAL CALIBRATED LOGO IMAGE WITH SOFT RADIANT SHADOW */}
           <div 
             ref={logoWrapperRef}
             style={{ 
@@ -378,28 +445,55 @@ function App() {
             />
           </div>
 
-          {/* 2. NUZAROX BRAND TITLE */}
+          {/* 2. NUZAROX BRAND TITLE MATCHING IMAGE 2 (WITH CUSTOM CYAN-TEAL RIBBON A) */}
           <div style={{ overflow: 'hidden', marginBottom: '0.4rem', willChange: 'transform, opacity' }}>
             <h1 
               ref={titleRef}
               style={{ 
                 fontFamily: 'var(--font-display)', 
-                fontSize: 'clamp(2.2rem, 4.8vw, 4.2rem)', 
+                fontSize: 'clamp(2.5rem, 5.5vw, 4.8rem)', 
                 fontWeight: '900', 
-                letterSpacing: '0.38em', 
-                color: '#FFFFFF',
+                letterSpacing: '0.32em', 
+                color: '#0B2545',
                 margin: 0,
                 textTransform: 'uppercase',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.04em'
               }}
             >
-              {["N", "U", "Z", "A", "R", "O", "X"].map((char, index) => (
-                <span key={index} className="preloader-char" style={{ display: 'inline-block' }}>{char}</span>
-              ))}
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>N</span>
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>U</span>
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>Z</span>
+              
+              {/* STYLIZED BRAND LETTER A MATCHING IMAGE 2 */}
+              <span className="preloader-char" style={{ display: 'inline-flex', alignItems: 'center', position: 'relative', width: '0.78em', height: '0.78em', margin: '0 0.05em' }}>
+                <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+                  <defs>
+                    <linearGradient id="aGradientSwoosh" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#0077B6" />
+                      <stop offset="50%" stopColor="#00B4D8" />
+                      <stop offset="100%" stopColor="#00E5FF" />
+                    </linearGradient>
+                  </defs>
+                  {/* Navy A Left Leg */}
+                  <path fill="#0B2545" d="M12 90 L48 10 H60 L24 90 Z" />
+                  {/* Navy A Right Leg */}
+                  <path fill="#0B2545" d="M78 90 L48 10 H60 L90 90 Z" />
+                  {/* Cyan-Teal Ribbon Crossbar Swoosh */}
+                  <path fill="url(#aGradientSwoosh)" d="M15 62 Q50 35 92 52 Q50 62 25 72 Z" style={{ filter: 'drop-shadow(0 2px 8px rgba(0, 229, 255, 0.5))' }} />
+                </svg>
+              </span>
+
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>R</span>
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>O</span>
+              <span className="preloader-char" style={{ display: 'inline-block', color: '#0B2545' }}>X</span>
             </h1>
           </div>
 
-          {/* 3. TAGLINE IN VIBRANT CYAN */}
+          {/* 3. TAGLINE IN CRISP DARK CHARCOAL NAVY */}
           <div style={{ overflow: 'hidden', willChange: 'transform, opacity' }}>
             <p 
               ref={taglineRef}
@@ -408,14 +502,14 @@ function App() {
                 fontSize: 'clamp(0.72rem, 1.4vw, 0.95rem)',
                 fontWeight: 800,
                 letterSpacing: '0.38em',
-                color: '#00E5FF',
+                color: '#1E293B',
                 margin: 0,
                 textTransform: 'uppercase',
                 opacity: 0,
-                textShadow: '0 0 16px rgba(0, 229, 255, 0.85), 0 0 30px rgba(0, 229, 255, 0.5)'
+                textShadow: '0 2px 10px rgba(0, 180, 216, 0.2)'
               }}
             >
-              YOUR GROWTH, OUR MISSION
+              YOUR GROWTH. OUR MISSION.
             </p>
           </div>
 
@@ -441,7 +535,8 @@ function App() {
       <section id="services-wrapper" style={{ 
         position: 'relative', 
         zIndex: 10,
-        backgroundColor: '#F5F3EF'
+        backgroundColor: '#F5F3EF',
+        overflow: 'hidden'
       }}>
         <Services />
       </section>
@@ -455,20 +550,10 @@ function App() {
         <About />
       </div>
 
-      {/* STATS SECTION */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10, 
-        backgroundColor: '#F5F3EF'
-      }}>
+      {/* UNIFIED CIRCULAR MOTION FRAME SYSTEM FOR STATS & PORTFOLIO */}
+      <div style={{ position: 'relative', zIndex: 10, backgroundColor: '#FAFAF8', overflow: 'hidden' }}>
+        <CircularMotionFrameBackground />
         <Stats />
-      </div>
-
-      {/* PORTFOLIO SECTION */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10
-      }}>
         <Portfolio />
       </div>
 
@@ -482,18 +567,16 @@ function App() {
         <Testimonials />
       </div>
 
-      {/* CTA + CONTACT */}
+      {/* CONTACT */}
       <div style={{ 
         position: 'relative', 
-        zIndex: 10, 
-        backgroundColor: '#0D0D1A', 
-        color: '#FFF' 
-      }} className="section-dark">
-        <CTABanner />
+        zIndex: 10
+      }}>
         <ContactForm />
       </div>
 
       <Footer />
+      <WhatsAppBubbleWidget />
     </>
   );
 }

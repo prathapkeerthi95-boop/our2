@@ -48,10 +48,10 @@ const VectorWavesBackground = () => (
       style={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}
     >
       <defs>
-        <linearGradient id="waveGradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0052D4" />
-          <stop offset="50%" stopColor="#4364F7" />
-          <stop offset="100%" stopColor="#6FB1FC" />
+        <linearGradient id="waveGradBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#0A2E5C" />
+          <stop offset="45%" stopColor="#006E8C" />
+          <stop offset="100%" stopColor="#00A896" />
         </linearGradient>
         <linearGradient id="waveGradGrey" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#E2E8F0" />
@@ -75,7 +75,7 @@ const VectorWavesBackground = () => (
         opacity="0.4"
       />
 
-      {/* Foreground Deep Blue/Cyan Swoosh */}
+      {/* Foreground Logo Greenish-Blue/Teal Swoosh */}
       <path 
         className="swoosh-anim-3"
         fill="url(#waveGradBlue)" 
@@ -100,6 +100,170 @@ const VectorWavesBackground = () => (
       @keyframes waveBreathe {
         0% { transform: scaleY(1) translateY(0); }
         100% { transform: scaleY(1.15) translateY(15px); }
+      }
+    `}</style>
+  </div>
+);
+
+const SpinningTechOrbitsBackground = () => (
+  <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+    {/* ── LEFT SPINNING TECH CIRCLE ORBIT (PURE LIGHT BLUE OUTLINE - ALIGNED TO DISCOVERY ON LEFT) ── */}
+    <div style={{
+      position: 'absolute',
+      top: '50%',
+      left: '-180px',
+      width: '560px',
+      height: '560px',
+      transform: 'translateY(-50%)',
+      pointerEvents: 'none'
+    }}>
+      <svg viewBox="0 0 560 560" style={{ width: '100%', height: '100%' }}>
+        <defs>
+          <linearGradient id="topLogoBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00E5FF" />
+            <stop offset="50%" stopColor="#38BDF8" />
+            <stop offset="100%" stopColor="#7DD3FC" />
+          </linearGradient>
+          <filter id="topBlueGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="14" floodColor="#00E5FF" floodOpacity="0.25" />
+          </filter>
+        </defs>
+
+        {/* 1. Outer Tick Mark Ring (Spinning Clockwise) */}
+        <g className="spin-cw-slow" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="268" stroke="url(#topLogoBlueGrad)" strokeWidth="3" strokeDasharray="4 7" fill="none" opacity="0.85" />
+          <circle cx="280" cy="280" r="245" stroke="rgba(0, 229, 255, 0.4)" strokeWidth="1.5" strokeDasharray="12 12" fill="none" />
+        </g>
+
+        {/* 2. Segmented Thick Block Ring (Spinning Counter-Clockwise) */}
+        <g className="spin-ccw-med" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="215" stroke="url(#topLogoBlueGrad)" strokeWidth="30" strokeDasharray="36 16" fill="none" opacity="0.3" />
+          <circle cx="280" cy="280" r="192" stroke="#00E5FF" strokeWidth="2.5" strokeDasharray="7 7" fill="none" opacity="0.85" />
+        </g>
+
+        {/* 3. Main Glowing Logo Blue Outline Ring */}
+        <g className="spin-cw-fast" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="168" stroke="url(#topLogoBlueGrad)" strokeWidth="5" fill="none" style={{ filter: 'drop-shadow(0 0 14px #00E5FF)' }} />
+          <circle cx="280" cy="280" r="153" stroke="rgba(56, 189, 248, 0.6)" strokeWidth="1.8" strokeDasharray="18 9 5 9" fill="none" />
+        </g>
+
+        {/* 4. Inner Neumorphic Center Circle */}
+        <circle cx="280" cy="280" r="128" fill="#F0F9FF" stroke="rgba(255,255,255,0.95)" strokeWidth="3.5" style={{ filter: 'url(#topBlueGlow)' }} />
+        <circle cx="280" cy="280" r="100" fill="rgba(248, 250, 252, 0.98)" />
+      </svg>
+    </div>
+
+    {/* ── RIGHT SPINNING TECH CIRCLE ORBIT (PURE LIGHT GREEN OUTLINE) ── */}
+    <div style={{
+      position: 'absolute',
+      top: '50%',
+      right: '-180px',
+      width: '560px',
+      height: '560px',
+      transform: 'translateY(-50%)',
+      pointerEvents: 'none'
+    }}>
+      <svg viewBox="0 0 560 560" style={{ width: '100%', height: '100%' }}>
+        <defs>
+          <linearGradient id="bottomLogoGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00FFAD" />
+            <stop offset="50%" stopColor="#2DD4BF" />
+            <stop offset="100%" stopColor="#6EE7B7" />
+          </linearGradient>
+          <filter id="bottomGreenGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="14" floodColor="#00FFAD" floodOpacity="0.25" />
+          </filter>
+        </defs>
+
+        {/* 1. Outer Tick Mark Ring (Spinning Counter-Clockwise) */}
+        <g className="spin-ccw-slow" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="268" stroke="url(#bottomLogoGreenGrad)" strokeWidth="3" strokeDasharray="4 7" fill="none" opacity="0.85" />
+          <circle cx="280" cy="280" r="245" stroke="rgba(0, 255, 173, 0.4)" strokeWidth="1.5" strokeDasharray="12 12" fill="none" />
+        </g>
+
+        {/* 2. Segmented Thick Block Ring (Spinning Clockwise) */}
+        <g className="spin-cw-med" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="215" stroke="url(#bottomLogoGreenGrad)" strokeWidth="30" strokeDasharray="36 16" fill="none" opacity="0.3" />
+          <circle cx="280" cy="280" r="192" stroke="#00FFAD" strokeWidth="2.5" strokeDasharray="7 7" fill="none" opacity="0.85" />
+        </g>
+
+        {/* 3. Main Glowing Logo Green Outline Ring */}
+        <g className="spin-ccw-fast" style={{ transformOrigin: '280px 280px' }}>
+          <circle cx="280" cy="280" r="168" stroke="url(#bottomLogoGreenGrad)" strokeWidth="5" fill="none" style={{ filter: 'drop-shadow(0 0 14px #00FFAD)' }} />
+          <circle cx="280" cy="280" r="153" stroke="rgba(45, 212, 191, 0.6)" strokeWidth="1.8" strokeDasharray="18 9 5 9" fill="none" />
+        </g>
+
+        {/* 4. Inner Neumorphic Center Circle */}
+        <circle cx="280" cy="280" r="128" fill="#F0FDF4" stroke="rgba(255,255,255,0.95)" strokeWidth="3.5" style={{ filter: 'url(#bottomGreenGlow)' }} />
+        <circle cx="280" cy="280" r="100" fill="rgba(248, 250, 252, 0.98)" />
+      </svg>
+    </div>
+
+    {/* ── LIVE CONTINUOUS ANIMATIONS (SPINNING + ELECTRIC PULSES + ENERGY SHOCK COLLISION) ── */}
+    <style>{`
+      @keyframes spinCW {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes spinCCW {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(-360deg); }
+      }
+      .spin-cw-slow { animation: spinCW 38s linear infinite; }
+      .spin-cw-med { animation: spinCW 24s linear infinite; }
+      .spin-cw-fast { animation: spinCW 15s linear infinite; }
+      .spin-ccw-slow { animation: spinCCW 32s linear infinite; }
+      .spin-ccw-med { animation: spinCCW 20s linear infinite; }
+      .spin-ccw-fast { animation: spinCCW 13s linear infinite; }
+
+      @keyframes pulseFlowLeft {
+        0% { stroke-dashoffset: 200; }
+        100% { stroke-dashoffset: 0; }
+      }
+      @keyframes pulseFlowRight {
+        0% { stroke-dashoffset: -200; }
+        100% { stroke-dashoffset: 0; }
+      }
+
+      .circuit-pulse-left-1 { animation: pulseFlowLeft 2.2s linear infinite; }
+      .circuit-pulse-left-2 { animation: pulseFlowLeft 2.6s linear infinite 0.4s; }
+      .circuit-pulse-left-3 { animation: pulseFlowLeft 1.9s linear infinite 0.2s; }
+      .circuit-pulse-left-4 { animation: pulseFlowLeft 2.4s linear infinite 0.6s; }
+      .circuit-pulse-left-5 { animation: pulseFlowLeft 2.8s linear infinite 0.3s; }
+
+      .circuit-pulse-right-1 { animation: pulseFlowRight 2.2s linear infinite; }
+      .circuit-pulse-right-2 { animation: pulseFlowRight 2.6s linear infinite 0.4s; }
+      .circuit-pulse-right-3 { animation: pulseFlowRight 1.9s linear infinite 0.2s; }
+      .circuit-pulse-right-4 { animation: pulseFlowRight 2.4s linear infinite 0.6s; }
+      .circuit-pulse-right-5 { animation: pulseFlowRight 2.8s linear infinite 0.3s; }
+      @keyframes sparksRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .electric-pulse-left { animation: pulseMoveLeft 1.2s linear infinite; }
+      .electric-pulse-right { animation: pulseMoveRight 1.2s linear infinite; }
+      .electric-spark-left, .electric-spark-right { animation: sparkJitter 0.25s steps(4) infinite; }
+      
+      .shockwave-ring-1 {
+        animation: shockwavePulse1 1.8s ease-out infinite;
+        transform-origin: 50% 50%;
+        transform-box: fill-box;
+      }
+      .shockwave-ring-2 {
+        animation: shockwavePulse2 1.8s ease-out infinite 0.9s;
+        transform-origin: 50% 50%;
+        transform-box: fill-box;
+      }
+      .energy-core-pulse {
+        animation: energyCoreBreathe 1.2s ease-in-out infinite alternate;
+        transform-origin: 50% 50%;
+        transform-box: fill-box;
+      }
+      .collision-sparks {
+        animation: sparksRotate 5s linear infinite;
+        transform-origin: 50% 50%;
+        transform-box: fill-box;
       }
     `}</style>
   </div>
@@ -202,7 +366,7 @@ const Process = () => {
         overflow: 'hidden' // Important for horizontal scroll
       }}
     >
-      {/* NEW ANIMATED VECTOR WAVES BACKGROUND */}
+      {/* 1. TOP ANIMATED VECTOR WAVES SWOOSH BACKGROUND */}
       <VectorWavesBackground />
 
       {/* ── UNIQUE ANIMATED HEADER ── */}
@@ -218,11 +382,11 @@ const Process = () => {
         }}
       >
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', overflow: 'hidden' }}>
-          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #00E5FF, #7000FF)', transformOrigin: 'left' }} />
-          <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.2em', color: '#7000FF', textTransform: 'uppercase' }}>
+          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
+          <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.2em', color: '#00A896', textTransform: 'uppercase' }}>
             Our Process
           </span>
-          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(270deg, #00E5FF, #7000FF)', transformOrigin: 'right' }} />
+          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)', transformOrigin: 'right' }} />
         </div>
         
         <h2 style={{ 
@@ -255,15 +419,23 @@ const Process = () => {
           width: '100%', 
           display: 'flex', 
           alignItems: 'center',
+          position: 'relative',
+          overflow: 'hidden',
           borderTop: '1px solid rgba(0,0,0,0.05)',
           borderBottom: '1px solid rgba(0,0,0,0.05)'
         }}
       >
+        {/* 2. LIVE SPINNING TECH CIRCLE ORBITS (BLUE LEFT ALIGNED TO DISCOVERY & GREEN RIGHT ALIGNED TO ENGINEERING) */}
+        <SpinningTechOrbitsBackground />
+
+
         <div 
           ref={horizontalWrapperRef}
           style={{ 
             display: 'flex', 
             height: '100%',
+            position: 'relative',
+            zIndex: 1,
             willChange: 'transform'
           }}
         >
@@ -271,20 +443,21 @@ const Process = () => {
             <div 
               key={index}
               ref={(el) => stepRefs.current[index] = el}
+              className="proc-step-item"
               style={{
-                width: '85vw', // Reduced from 100vw so you can peek the next item & less empty space
+                width: '85vw',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                padding: '0 2vw', // Reduced padding
-                gap: '4vw', // Reduced gap between text and image
+                padding: '0 2vw',
+                gap: '4vw',
                 flexShrink: 0
               }}
             >
               
               {/* LEFT HALF - MASSIVE CONTENT */}
-              <div style={{ flex: '1', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+              <div className="proc-step-left" style={{ flex: '1', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                 <div style={{ 
                   position: 'absolute',
                   top: '-10%',
@@ -346,7 +519,7 @@ const Process = () => {
               </div>
 
               {/* RIGHT HALF - HUGE PARALLAX IMAGE */}
-              <div style={{
+              <div className="proc-step-right" style={{
                 flex: '1',
                 height: '70%',
                 borderRadius: '24px',

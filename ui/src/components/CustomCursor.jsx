@@ -170,18 +170,15 @@ const CustomCursor = () => {
         width: '24px',
         height: '24px',
         borderRadius: '50%', 
-        backgroundColor: isStatsSection 
-          ? 'var(--accent-crimson, #FF2A54)' 
-          : '#FFFFFF', 
+        backgroundColor: 'rgba(56, 189, 248, 0.25)', 
+        border: '1.5px solid rgba(56, 189, 248, 0.8)',
+        backdropFilter: 'blur(4px)',
         pointerEvents: 'none',
         zIndex: 100000,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        mixBlendMode: isStatsSection ? 'normal' : 'difference',
-        border: isStatsSection 
-          ? '1.5px solid rgba(255, 255, 255, 0.25)' 
-          : 'none',
+        mixBlendMode: 'normal',
         overflow: 'hidden',
         willChange: 'transform'
       }}

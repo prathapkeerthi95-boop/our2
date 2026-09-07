@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagneticElement from './MagneticElement';
@@ -12,6 +12,7 @@ const Navbar = () => {
   const logoImgRef = useRef(null);
   const linksRef = useRef([]);
   const btnRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const navContainer = navContainerRef.current;
@@ -58,13 +59,16 @@ const Navbar = () => {
             ease: "power3.out"
           });
 
-          gsap.to([logoText, ...links], { color: '#000000', duration: 0.3 }); // Keep text dark
-          gsap.to(logoImg, { filter: 'none', duration: 0.3 }); // No brightness invert needed
-          gsap.to(btn, { 
-            borderColor: 'rgba(0,0,0,0.3)', 
-            color: '#000000', 
-            duration: 0.3 
-          });
+          if (logoText) gsap.to(logoText, { color: '#000000', duration: 0.3 });
+          if (links.length) gsap.to(links.filter(Boolean), { color: '#000000', duration: 0.3 });
+          if (logoImg) gsap.to(logoImg, { filter: 'none', duration: 0.3 });
+          if (btn) {
+            gsap.to(btn, { 
+              borderColor: 'rgba(0,0,0,0.3)', 
+              color: '#000000', 
+              duration: 0.3 
+            });
+          }
           
         } else if (window.scrollY <= heroHeight && isPill) {
           isPill = false;
@@ -84,19 +88,23 @@ const Navbar = () => {
             ease: "power3.out"
           });
 
-          gsap.to([logoText, ...links], { color: '#000000', duration: 0.3 });
-          gsap.to(logoImg, { filter: 'none', duration: 0.3 });
-          gsap.to(btn, { 
-            borderColor: 'rgba(0,0,0,0.3)', 
-            color: '#000000', 
-            duration: 0.3 
-          });
+          if (logoText) gsap.to(logoText, { color: '#000000', duration: 0.3 });
+          if (links.length) gsap.to(links.filter(Boolean), { color: '#000000', duration: 0.3 });
+          if (logoImg) gsap.to(logoImg, { filter: 'none', duration: 0.3 });
+          if (btn) {
+            gsap.to(btn, { 
+              borderColor: 'rgba(0,0,0,0.3)', 
+              color: '#000000', 
+              duration: 0.3 
+            });
+          }
         }
       }
     });
 
     // Hover logic for the button
     const handleBtnEnter = () => {
+      if (!btn) return;
       gsap.to(btn, {
         backgroundColor: isPill ? '#FFFFFF' : '#000000',
         color: isPill ? '#000000' : '#FFFFFF',
@@ -106,6 +114,7 @@ const Navbar = () => {
     };
     
     const handleBtnLeave = () => {
+      if (!btn) return;
       gsap.to(btn, {
         backgroundColor: 'transparent',
         color: isPill ? '#FFFFFF' : '#000000',
@@ -114,13 +123,17 @@ const Navbar = () => {
       });
     };
 
-    btn.addEventListener('mouseenter', handleBtnEnter);
-    btn.addEventListener('mouseleave', handleBtnLeave);
+    if (btn) {
+      btn.addEventListener('mouseenter', handleBtnEnter);
+      btn.addEventListener('mouseleave', handleBtnLeave);
+    }
 
     return () => {
       st.kill();
-      btn.removeEventListener('mouseenter', handleBtnEnter);
-      btn.removeEventListener('mouseleave', handleBtnLeave);
+      if (btn) {
+        btn.removeEventListener('mouseenter', handleBtnEnter);
+        btn.removeEventListener('mouseleave', handleBtnLeave);
+      }
     };
   }, []);
 
@@ -137,11 +150,43 @@ const Navbar = () => {
         pointerEvents: 'none',
         display: 'flex',
         justifyContent: 'center',
-        padding: '0 1.5rem' // Ensure container padding is correct
+        padding: '0 1rem'
       }}
     >
+      <style>{`
+        @media (max-width: 900px) {
+          .desktop-nav-links {
+            display: none !important;
+          }
+          .mobile-menu-btn {
+            display: flex !important;
+          }
+          .nav-inner-container {
+            padding: 0 1.2rem !important;
+            height: 60px !important;
+          }
+        }
+        @media (min-width: 901px) {
+          .mobile-menu-btn {
+            display: none !important;
+          }
+          .desktop-nav-links {
+            display: flex !important;
+          }
+        }
+        @keyframes smoothBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes mobileMenuSlideDown {
+          from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
+
       <nav 
         ref={navInnerRef}
+        className="nav-inner-container"
         style={{
           pointerEvents: 'auto',
           margin: '0 auto',
@@ -157,6 +202,7 @@ const Navbar = () => {
           position: 'relative'
         }}
       >
+        {/* LOGO TOP LEFT */}
         <MagneticElement>
           <a 
             href="#" 
@@ -168,14 +214,6 @@ const Navbar = () => {
               textDecoration: 'none'
             }}
           >
-            <style>
-              {`
-                @keyframes smoothBounce {
-                  0%, 100% { transform: translateY(0); }
-                  50% { transform: translateY(-8px); }
-                }
-              `}
-            </style>
             <img 
               id="mainNavbarLogo"
               ref={logoImgRef}
@@ -183,7 +221,7 @@ const Navbar = () => {
               alt="N Logo" 
               onError={(e) => { e.target.onerror = null; e.target.src = '/n-icon.png'; }} 
               style={{ 
-                height: '52px', 
+                height: '48px', 
                 width: 'auto',
                 animation: 'smoothBounce 2s ease-in-out infinite',
                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))'
@@ -192,8 +230,9 @@ const Navbar = () => {
           </a>
         </MagneticElement>
 
+        {/* DESKTOP NAV LINKS */}
         <ul 
-          className="navbar-links"
+          className="desktop-nav-links navbar-links"
           style={{ 
             display: 'flex', 
             gap: '2.5rem', 
@@ -232,15 +271,19 @@ const Navbar = () => {
                 href="#contact" 
                 ref={btnRef}
                 style={{ 
-                  padding: '0.5rem 1.2rem', 
+                  padding: '0.5rem 1.15rem', 
                   fontSize: '0.8rem', 
-                  border: `1px solid rgba(0,0,0,0.3)`, 
+                  border: '1px solid rgba(0, 0, 0, 0.15)', 
                   color: '#000000',
-                  borderRadius: '50px',
+                  borderRadius: '40px',
                   fontWeight: '700',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(240, 245, 255, 0.35) 100%)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.04), inset 0 1px 1px rgba(255,255,255,0.9)',
                   textDecoration: 'none',
                   display: 'inline-block',
-                  transition: 'border-color 0.3s, color 0.3s'
+                  transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
                 }}
               >
                 Start a Project
@@ -248,9 +291,143 @@ const Navbar = () => {
             </MagneticElement>
           </li>
         </ul>
+
+        {/* MOBILE MENU TOGGLE BUTTON (TOP RIGHT) */}
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle Navigation Menu"
+          style={{
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            padding: 0,
+            zIndex: 10001,
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <div style={{ width: '20px', height: '15px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <span style={{
+              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
+              transform: mobileMenuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none',
+              transition: 'transform 0.3s ease'
+            }} />
+            <span style={{
+              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
+              opacity: mobileMenuOpen ? 0 : 1,
+              transition: 'opacity 0.2s ease'
+            }} />
+            <span style={{
+              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
+              transform: mobileMenuOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none',
+              transition: 'transform 0.3s ease'
+            }} />
+          </div>
+        </button>
       </nav>
+
+      {/* MOBILE NAV DRAWER OVERLAY */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop Blur */}
+          <div 
+            onClick={() => setMobileMenuOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.35)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              zIndex: 9998,
+              pointerEvents: 'auto'
+            }}
+          />
+
+          {/* Mobile Menu Panel */}
+          <div
+            style={{
+              position: 'fixed',
+              top: '72px',
+              left: '16px',
+              right: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.96)',
+              backdropFilter: 'blur(30px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+              border: '1.5px solid rgba(255, 255, 255, 0.8)',
+              borderRadius: '24px',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.9)',
+              padding: '1.25rem',
+              zIndex: 9999,
+              pointerEvents: 'auto',
+              animation: 'mobileMenuSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {['Services', 'About', 'Portfolio', 'Process', 'Clients'].map((item) => {
+                const href = item === 'Clients' ? '#testimonials' : `#${item.toLowerCase()}`;
+                return (
+                  <li key={item}>
+                    <a
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      style={{
+                        display: 'block',
+                        padding: '0.8rem 1.1rem',
+                        color: '#111827',
+                        textDecoration: 'none',
+                        fontSize: '1.05rem',
+                        fontWeight: 700,
+                        borderRadius: '14px',
+                        backgroundColor: 'transparent',
+                        transition: 'all 0.2s ease',
+                        letterSpacing: '-0.01em'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.08)'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      {item}
+                    </a>
+                  </li>
+                );
+              })}
+              <li style={{ marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <a
+                  href="#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    display: 'block',
+                    padding: '0.9rem 1.2rem',
+                    textAlign: 'center',
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    fontSize: '0.95rem',
+                    fontWeight: 800,
+                    borderRadius: '50px',
+                    background: 'linear-gradient(135deg, #00E5FF 0%, #00A896 100%)',
+                    boxShadow: '0 8px 25px rgba(0, 229, 255, 0.35)',
+                    letterSpacing: '0.02em',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Start a Project
+                </a>
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 export default Navbar;
+

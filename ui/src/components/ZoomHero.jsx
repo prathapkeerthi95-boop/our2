@@ -28,7 +28,8 @@ const ZoomHero = () => {
         className={`hero-char ${className}`}
         style={{
           display: 'inline-block',
-          willChange: 'transform',
+          willChange: 'transform, opacity, filter',
+          transformStyle: 'preserve-3d',
           ...(char === ' ' ? { width: '0.25em' } : {})
         }}
       >
@@ -40,32 +41,38 @@ const ZoomHero = () => {
   useEffect(() => {
     let carouselInterval;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.5 }); 
+      const tl = gsap.timeline({ delay: 0.4 }); 
 
       tl.fromTo(glowRef.current,
         { scale: 0.3, opacity: 0 },
         { scale: 1, opacity: 1, duration: 2, ease: "power2.out" }
       );
 
+      // Set 3D perspective context for explosive character reveal
+      gsap.set([line1Ref.current, line2Ref.current, line3Ref.current], {
+        perspective: 1000,
+        transformStyle: 'preserve-3d'
+      });
+
       const chars1 = line1Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars1,
-        { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
+        { yPercent: 140, rotateX: -95, rotateY: 20, scale: 0.55, opacity: 0, filter: 'blur(12px)' },
+        { yPercent: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.15, stagger: 0.028, ease: "back.out(1.9)" },
         "-=1.5"
       );
 
       const chars2 = line2Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars2,
-        { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
-        "-=0.7"
+        { yPercent: 140, rotateX: -95, rotateY: -20, scale: 0.55, opacity: 0, filter: 'blur(12px)' },
+        { yPercent: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.15, stagger: 0.028, ease: "back.out(1.9)" },
+        "-=0.85"
       );
 
       const chars3 = line3Ref.current.querySelectorAll('.hero-char');
       tl.fromTo(chars3,
-        { yPercent: 110, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 1, stagger: 0.03, ease: "expo.out" },
-        "-=0.7"
+        { yPercent: 140, rotateX: -95, rotateY: 20, scale: 0.55, opacity: 0, filter: 'blur(12px)' },
+        { yPercent: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.15, stagger: 0.028, ease: "back.out(1.9)" },
+        "-=0.85"
       );
 
       tl.fromTo(dividerRef.current,
@@ -293,7 +300,7 @@ const ZoomHero = () => {
               color: '#11131A',
               margin: 0
             }}>
-              {splitChars('We Craft')}
+              {splitChars('Our Craft')}
             </h1>
           </div>
 
@@ -337,7 +344,8 @@ const ZoomHero = () => {
               lineHeight: 1.1,
               letterSpacing: '-0.04em',
               color: '#11131A',
-              margin: 0
+              margin: 0,
+              marginRight: '0.32em'
             }}>
               {splitChars('That')}
             </h1>
@@ -445,57 +453,62 @@ const ZoomHero = () => {
 
       <style>{`
         /* 
-          1. Unique Radiant Gradient Button 
+          1. Frosted Liquid Glass Primary Button (Compact & Ultra-Refined)
         */
         .btn-hero-gradient {
           display: inline-flex;
           align-items: center;
-          padding: 1.2rem 2.5rem;
-          background: linear-gradient(135deg, #FF2A54 0%, #7000FF 100%);
+          padding: 0.75rem 1.6rem;
+          font-size: 0.85rem;
+          background: linear-gradient(135deg, rgba(255, 42, 84, 0.85) 0%, rgba(112, 0, 255, 0.85) 100%);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           color: #FFFFFF;
           font-weight: 800;
           font-family: var(--font-display);
           text-transform: uppercase;
-          letter-spacing: 0.1em;
-          border-radius: 50px;
+          letter-spacing: 0.08em;
+          border-radius: 40px;
           text-decoration: none;
-          box-shadow: 0 10px 30px rgba(112, 0, 255, 0.25);
-          transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid rgba(255, 255, 255, 0.45);
+          box-shadow: 0 8px 24px rgba(112, 0, 255, 0.28), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.7), inset 0 -1.5px 2px rgba(0, 0, 0, 0.2);
+          transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .btn-hero-gradient:hover {
-          transform: translateY(-4px) scale(1.02);
-          box-shadow: 0 16px 40px rgba(255, 42, 84, 0.35);
-          background: linear-gradient(135deg, #FF3B62 0%, #8322FF 100%);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 12px 32px rgba(255, 42, 84, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.95);
+          background: linear-gradient(135deg, rgba(255, 55, 95, 0.95) 0%, rgba(130, 30, 255, 0.95) 100%);
+          border-color: rgba(255, 255, 255, 0.7);
         }
 
         /* 
-          2. Unique Glassmorphism Secondary Button
+          2. Frosted Liquid Glass Secondary Button (Compact & Ultra-Refined)
         */
         .btn-hero-glass {
           display: inline-flex;
           align-items: center;
-          padding: 1.2rem 2.5rem;
-          background: rgba(255, 255, 255, 0.6);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
+          padding: 0.75rem 1.6rem;
+          font-size: 0.85rem;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(240, 245, 255, 0.4) 100%);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           color: #11131A;
           font-weight: 800;
           font-family: var(--font-display);
           text-transform: uppercase;
-          letter-spacing: 0.1em;
-          border-radius: 50px;
-          border: 1px solid rgba(255, 255, 255, 0.8);
+          letter-spacing: 0.08em;
+          border-radius: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.75);
           text-decoration: none;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-          transition: all 0.3s ease;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95);
+          transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .btn-hero-glass:hover {
-          background: #FFFFFF;
-          border-color: #7000FF;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(235, 243, 255, 0.8) 100%);
+          border-color: rgba(112, 0, 255, 0.45);
           color: #7000FF;
-          transform: translateY(-4px);
-          box-shadow: 0 8px 25px rgba(112, 0, 255, 0.15);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 28px rgba(112, 0, 255, 0.18), inset 0 1.5px 2px #FFFFFF;
         }
 
         @keyframes scrollPulse {
