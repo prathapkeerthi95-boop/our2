@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Shield, Zap, Users, Award } from 'lucide-react';
 import AnimatedHeading from './AnimatedHeading';
-import NeumorphicCircleOrbits from './NeumorphicCircleOrbits';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -688,6 +687,10 @@ const About = () => {
 
   // Helper to compute smooth CSS translate transform for clockwise grid slot movement
   const getCardTransform = (cardIndex, targetSlotIndex) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return 'translate(0px, 0px)';
+    }
+    
     const initialSlots = [
       { c: 0, r: 0 }, // Feature 0 (Obsessive Speed): initial Top-Left
       { c: 1, r: 0 }, // Feature 1 (Rock-Solid Security): initial Top-Right
@@ -828,8 +831,7 @@ const About = () => {
 
   return (
     <section id="about" ref={sectionRef} className="about-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Neumorphic 3/4 Circle Layers with Live Orbiting Logo Color Balls */}
-      <NeumorphicCircleOrbits align="left" />
+      {/* Background removed as requested */}
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="about-grid">

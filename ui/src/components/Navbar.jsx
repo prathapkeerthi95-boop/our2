@@ -46,26 +46,26 @@ const Navbar = () => {
           
           // Animate to Pill (Light Glass Mode)
           gsap.to(navInner, {
-            backgroundColor: 'rgba(255, 255, 255, 0.7)', // Light translucent glass base
+            backgroundColor: 'rgba(255, 255, 255, 0.75)', // Light translucent glass base
             backdropFilter: 'blur(32px) saturate(200%)',
             webkitBackdropFilter: 'blur(32px) saturate(200%)',
-            border: '1.5px solid rgba(255, 255, 255, 0.5)', 
+            border: '1.5px solid rgba(0, 0, 0, 0.08)', 
             borderRadius: '50px',
             margin: '1.2rem auto 0',
             maxWidth: '920px',
             padding: '0 2.2rem',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.5)',
             duration: 0.55,
             ease: "power3.out"
           });
 
-          if (logoText) gsap.to(logoText, { color: '#000000', duration: 0.3 });
-          if (links.length) gsap.to(links.filter(Boolean), { color: '#000000', duration: 0.3 });
-          if (logoImg) gsap.to(logoImg, { filter: 'none', duration: 0.3 });
+          if (logoText) gsap.to(logoText, { color: '#11131A', duration: 0.3 });
+          if (links.length) gsap.to(links.filter(Boolean), { color: '#11131A', duration: 0.3 });
+          if (logoImg) gsap.to(logoImg, { filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))', duration: 0.3 });
           if (btn) {
             gsap.to(btn, { 
-              borderColor: 'rgba(0,0,0,0.3)', 
-              color: '#000000', 
+              borderColor: 'rgba(0, 0, 0, 0.15)', 
+              color: '#11131A', 
               duration: 0.3 
             });
           }
@@ -88,13 +88,13 @@ const Navbar = () => {
             ease: "power3.out"
           });
 
-          if (logoText) gsap.to(logoText, { color: '#000000', duration: 0.3 });
-          if (links.length) gsap.to(links.filter(Boolean), { color: '#000000', duration: 0.3 });
-          if (logoImg) gsap.to(logoImg, { filter: 'none', duration: 0.3 });
+          if (logoText) gsap.to(logoText, { color: '#11131A', duration: 0.3 });
+          if (links.length) gsap.to(links.filter(Boolean), { color: '#11131A', duration: 0.3 });
+          if (logoImg) gsap.to(logoImg, { filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))', duration: 0.3 });
           if (btn) {
             gsap.to(btn, { 
-              borderColor: 'rgba(0,0,0,0.3)', 
-              color: '#000000', 
+              borderColor: 'rgba(0, 0, 0, 0.15)', 
+              color: '#11131A', 
               duration: 0.3 
             });
           }
@@ -106,9 +106,9 @@ const Navbar = () => {
     const handleBtnEnter = () => {
       if (!btn) return;
       gsap.to(btn, {
-        backgroundColor: isPill ? '#FFFFFF' : '#000000',
-        color: isPill ? '#000000' : '#FFFFFF',
-        borderColor: isPill ? '#FFFFFF' : '#000000',
+        backgroundColor: '#11131A',
+        color: '#FAFAFA',
+        borderColor: '#11131A',
         duration: 0.2
       });
     };
@@ -116,9 +116,9 @@ const Navbar = () => {
     const handleBtnLeave = () => {
       if (!btn) return;
       gsap.to(btn, {
-        backgroundColor: 'transparent',
-        color: isPill ? '#FFFFFF' : '#000000',
-        borderColor: isPill ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)',
+        backgroundColor: isPill ? 'rgba(255, 255, 255, 0.4)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 245, 255, 0.6) 100%)',
+        color: '#11131A',
+        borderColor: 'rgba(0, 0, 0, 0.15)',
         duration: 0.2
       });
     };
@@ -208,7 +208,7 @@ const Navbar = () => {
             href="#" 
             ref={logoTextRef}
             style={{ 
-              color: '#000000', 
+              color: '#11131A', 
               display: 'flex', 
               alignItems: 'center', 
               textDecoration: 'none'
@@ -250,7 +250,7 @@ const Navbar = () => {
                   href={href} 
                   ref={el => linksRef.current[index] = el}
                   style={{ 
-                    color: '#000000', 
+                    color: '#11131A', 
                     textDecoration: 'none', 
                     fontSize: '0.85rem', 
                     fontWeight: 600,
@@ -267,25 +267,25 @@ const Navbar = () => {
           })}
           <li>
             <MagneticElement>
-              <a 
-                href="#contact" 
-                ref={btnRef}
-                style={{ 
-                  padding: '0.5rem 1.15rem', 
-                  fontSize: '0.8rem', 
-                  border: '1px solid rgba(0, 0, 0, 0.15)', 
-                  color: '#000000',
-                  borderRadius: '40px',
-                  fontWeight: '700',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(240, 245, 255, 0.35) 100%)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.04), inset 0 1px 1px rgba(255,255,255,0.9)',
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
-                }}
-              >
+                <a 
+                  href="#contact" 
+                  ref={btnRef}
+                  style={{ 
+                    padding: '0.5rem 1.15rem', 
+                    fontSize: '0.8rem', 
+                    border: '1px solid rgba(0, 0, 0, 0.15)', 
+                    color: '#11131A',
+                    borderRadius: '40px',
+                    fontWeight: '700',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 245, 255, 0.6) 100%)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    boxShadow: '0 4px 15px rgba(255,255,255,0.05), inset 0 1px 1px rgba(255,255,255,0.1)',
+                    textDecoration: 'none',
+                    display: 'inline-block',
+                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
+                  }}
+                >
                 Start a Project
               </a>
             </MagneticElement>

@@ -12,7 +12,7 @@ const CustomCursor = () => {
   useEffect(() => {
     // Detect touch device to avoid rendering custom cursor on mobile/tablets
     const checkTouch = () => {
-      return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+      return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     };
 
     if (checkTouch()) {
@@ -172,7 +172,6 @@ const CustomCursor = () => {
         borderRadius: '50%', 
         backgroundColor: 'rgba(56, 189, 248, 0.25)', 
         border: '1.5px solid rgba(56, 189, 248, 0.8)',
-        backdropFilter: 'blur(4px)',
         pointerEvents: 'none',
         zIndex: 100000,
         display: 'flex',

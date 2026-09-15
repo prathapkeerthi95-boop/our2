@@ -56,7 +56,11 @@ body {
   font-family: var(--font-body);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  cursor: none;
+}
+
+/* Only hide cursor on devices with a real mouse pointer */
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: none; }
 }
 
 #root, main {
@@ -1105,12 +1109,12 @@ select option { background: #fff; color: var(--text-black); }
   line-height: 1.6;
 }
 
-.footer-col h4 {
-  font-size: 0.84rem;
-  font-weight: 800;
+.footer-unique-heading, .footer-col h4 {
+  font-size: 0.95rem;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #0F172A;
+  letter-spacing: 0.18em;
+  color: #022B5D; /* Nuzarox deep navy brand color */
   margin-bottom: 1.25rem;
 }
 
@@ -1137,32 +1141,41 @@ select option { background: #fff; color: var(--text-black); }
 
 .footer-bottom p { font-size: 0.82rem; color: #475569; font-weight: 600; }
 
-.footer-social {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.footer-social a {
-  width: 36px;
-  height: 36px;
+.footer-social-pill {
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid rgba(15, 23, 42, 0.18);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.65);
+  background: #E2E8F0;
   color: #0F172A;
-  text-decoration: none;
-  transition: all 0.3s;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 800;
+  transition: all 0.3s ease;
 }
 
-.footer-social a:hover {
-  border-color: #3282FF;
-  color: #3282FF;
-  background: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(50, 130, 255, 0.2);
+.social-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.social-list-item:hover .footer-social-pill {
+  background: #00E5FF;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.social-list-item:hover {
+  color: #0F172A;
+  transform: translateX(5px);
 }
 
 /* ============================================
@@ -1604,7 +1617,7 @@ html.lenis, html.lenis body { height: auto; }
 
 .metaskapes-projects-section {
   position: relative;
-  background: linear-gradient(180deg, #F9FAFB 0%, #FFFFFF 100%); /* PREMIUM LIGHT THEME */
+  background: transparent; /* Allow wrapper waves to show through */
   padding: 6rem 0 0;
   color: #111111; /* Dark text for light theme */
   overflow: hidden;
@@ -2805,7 +2818,7 @@ html.lenis, html.lenis body { height: auto; }
   height: 100%;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 -25px 60px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.08); /* Soft shadow for light theme */
   will-change: transform;
 }
 

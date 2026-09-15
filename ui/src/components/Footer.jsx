@@ -18,12 +18,11 @@ const Footer = () => {
     resize();
     window.addEventListener('resize', resize);
 
-    // Live wave ribbon lines matching NUZAROX Logo Colors (Electric Cyan, Cyan-Blue, Emerald Neon Mint)
     const waves = [
-      { yOffset: 0.35, frequency: 0.003, amplitude: 55, speed: 1.4, color: 'rgba(0, 229, 255, 0.40)', layers: 5 },
-      { yOffset: 0.50, frequency: 0.002, amplitude: 75, speed: 1.0, color: 'rgba(0, 136, 255, 0.35)', layers: 6 },
-      { yOffset: 0.65, frequency: 0.004, amplitude: 45, speed: 1.6, color: 'rgba(0, 230, 118, 0.32)', layers: 5 },
-      { yOffset: 0.80, frequency: 0.0018, amplitude: 85, speed: 0.8, color: 'rgba(50, 130, 255, 0.30)', layers: 4 }
+      { yOffset: 0.35, frequency: 0.003, amplitude: 55, speed: 1.4, color: 'rgba(0, 229, 255, 0.60)', layers: 5 },
+      { yOffset: 0.50, frequency: 0.002, amplitude: 75, speed: 1.0, color: 'rgba(0, 136, 255, 0.45)', layers: 6 },
+      { yOffset: 0.65, frequency: 0.004, amplitude: 45, speed: 1.6, color: 'rgba(0, 230, 118, 0.42)', layers: 5 },
+      { yOffset: 0.80, frequency: 0.0018, amplitude: 85, speed: 0.8, color: 'rgba(50, 130, 255, 0.40)', layers: 4 }
     ];
 
     let isVisible = true;
@@ -35,7 +34,8 @@ const Footer = () => {
     const render = () => {
       if (!isVisible) { animationFrameId = requestAnimationFrame(render); return; }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.globalCompositeOperation = 'multiply';
+      // Use source-over for light theme waves to avoid darkening them
+      ctx.globalCompositeOperation = 'source-over';
 
       time += 0.015;
 
@@ -58,7 +58,6 @@ const Footer = () => {
         }
       });
 
-      ctx.globalCompositeOperation = 'source-over';
       animationFrameId = requestAnimationFrame(render);
     };
 
@@ -72,7 +71,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="footer" style={{ position: 'relative', overflow: 'hidden' }}>
+    <footer className="footer" style={{ position: 'relative', overflow: 'hidden', background: '#F8F9FA' }}>
       <canvas 
         ref={canvasRef}
         style={{
@@ -80,7 +79,8 @@ const Footer = () => {
           top: 0, left: 0,
           width: '100%', height: '100%',
           zIndex: 1,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          opacity: 0.6
         }}
       />
 
@@ -88,71 +88,82 @@ const Footer = () => {
         <div className="footer-grid">
           {/* Brand */}
           <div className="footer-brand">
-            <div className="navbar-logo" style={{ marginBottom: '0.5rem' }}>
-              NUZAROX
-            </div>
-            <p style={{ marginBottom: '1.2rem' }}>
-              An elite digital agency engineering next-generation websites, mobile apps,
-              brand identities, and growth strategies for ambitious businesses.
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.2rem' }}>
               <img 
-                src="/n-logo-vivid.png" 
+                src="/nuzarox-full-logo.png" 
                 alt="Nuzarox Company Logo" 
                 style={{
-                  height: '48px',
+                  height: '80px',
                   width: 'auto',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 0 16px rgba(0, 229, 255, 0.75))'
+                  mixBlendMode: 'multiply' /* This removes the white background against the off-white footer! */
                 }}
               />
             </div>
+            <p style={{ color: '#475569' }}>
+              An elite digital agency engineering next-generation websites, mobile apps,
+              brand identities, and growth strategies for ambitious businesses.
+            </p>
           </div>
 
           {/* Services */}
           <div className="footer-col">
-            <h4>Services</h4>
+            <h4 className="footer-unique-heading">Services</h4>
             <ul>
-              <li><a href="#services">Web Development</a></li>
-              <li><a href="#services">Mobile Apps</a></li>
-              <li><a href="#services">Digital Marketing</a></li>
-              <li><a href="#services">Brand & Logo Design</a></li>
-              <li><a href="#services">UI/UX Design</a></li>
+              <li><a href="#services" style={{ color: '#475569' }}>Web Development</a></li>
+              <li><a href="#services" style={{ color: '#475569' }}>Mobile Apps</a></li>
+              <li><a href="#services" style={{ color: '#475569' }}>Digital Marketing</a></li>
+              <li><a href="#services" style={{ color: '#475569' }}>Brand & Logo Design</a></li>
+              <li><a href="#services" style={{ color: '#475569' }}>UI/UX Design</a></li>
             </ul>
           </div>
 
           {/* Company */}
           <div className="footer-col">
-            <h4>Company</h4>
+            <h4 className="footer-unique-heading">Company</h4>
             <ul>
-              <li><a href="#about">About Us</a></li>
-              <li><a href="#portfolio">Our Work</a></li>
-              <li><a href="#process">Process</a></li>
-              <li><a href="#testimonials">Testimonials</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#about" style={{ color: '#475569' }}>About Us</a></li>
+              <li><a href="#portfolio" style={{ color: '#475569' }}>Our Work</a></li>
+              <li><a href="#process" style={{ color: '#475569' }}>Process</a></li>
+              <li><a href="#testimonials" style={{ color: '#475569' }}>Testimonials</a></li>
+              <li><a href="#contact" style={{ color: '#475569' }}>Contact</a></li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Follow Us (Replaces Contact) */}
           <div className="footer-col">
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="mailto:nuzaroxtech@gmail.com">nuzaroxtech@gmail.com</a></li>
-              <li><a href="tel:+918939431717">+91 89394 31717</a></li>
-              <li><a href="tel:+919962113240">+91 99621 13240</a></li>
-              <li><a href="#">Chennai, India</a></li>
-            </ul>
+            <h4 className="footer-unique-heading">Follow Us</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+              <a href="https://www.instagram.com/nuza_rox?stkn=MTB1eWNtZnpsYmdiOA==" target="_blank" rel="noopener noreferrer" className="social-list-item">
+                <span className="footer-social-pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </span>
+                <span className="social-text">Instagram</span>
+              </a>
+              <a href="https://www.linkedin.com/in/nuzarox-techies-b504b5429/" target="_blank" rel="noopener noreferrer" className="social-list-item">
+                <span className="footer-social-pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                </span>
+                <span className="social-text">LinkedIn</span>
+              </a>
+              <a href="#" className="social-list-item">
+                <span className="footer-social-pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                </span>
+                <span className="social-text">X (Twitter)</span>
+              </a>
+              <a href="#" className="social-list-item">
+                <span className="footer-social-pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </span>
+                <span className="social-text">Facebook</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="footer-bottom">
+        <div className="footer-bottom" style={{ borderTopColor: 'rgba(0,0,0,0.1)' }}>
           <p>&copy; {new Date().getFullYear()} NUZAROX. All rights reserved. Engineered with precision.</p>
-          <div className="footer-social">
-            <a href="#" aria-label="Instagram">IG</a>
-            <a href="#" aria-label="LinkedIn">IN</a>
-            <a href="#" aria-label="Twitter">X</a>
-            <a href="#" aria-label="Dribbble">DR</a>
-          </div>
         </div>
       </div>
     </footer>

@@ -72,9 +72,9 @@ const projects = [
       'Nominated for top web design interactive honors',
       'Full dark theme aesthetic with custom typography'
     ],
-    image: '/ke19-showcase.jpg',
+    image: '/ke19-showcase.png',
     gallery: [
-      '/ke19-showcase.jpg'
+      '/ke19-showcase.png'
     ],
     link: 'https://ke19portfolio.netlify.app/'
   }
@@ -95,7 +95,10 @@ const AbstractRingsBackground = () => {
     // Only render when in viewport for performance
     let isVisible = true;
     const observer = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisible;
       isVisible = entry.isIntersecting;
+      // Restart the loop when becoming visible again
+      if (!wasVisible && isVisible) render();
     });
     observer.observe(canvas);
 
@@ -107,20 +110,16 @@ const AbstractRingsBackground = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    // 3D Wireframe Rings (adapted to light theme colors: Cyan & Purple)
+    // 3D Wireframe Rings — PERF: Reduced layers from 75 total to 24 total, step 0.12 instead of 0.05
     const rings = [
-      { cx: canvas.width * 0.15, cy: canvas.height * 0.4, radiusX: 350, radiusY: 140, color: 'rgba(0, 229, 255, 0.4)', speed: 0.002, rotation: 0.5, layers: 25 },
-      { cx: canvas.width * 0.85, cy: canvas.height * 0.3, radiusX: 450, radiusY: 180, color: 'rgba(112, 0, 255, 0.25)', speed: -0.0015, rotation: -0.3, layers: 20 },
-      { cx: canvas.width * 0.6, cy: canvas.height * 0.8, radiusX: 550, radiusY: 220, color: 'rgba(0, 229, 255, 0.2)', speed: 0.001, rotation: 0.1, layers: 30 },
+      { cx: canvas.width * 0.15, cy: canvas.height * 0.4, radiusX: 350, radiusY: 140, color: 'rgba(0, 229, 255, 0.4)', speed: 0.002, rotation: 0.5, layers: 8 },
+      { cx: canvas.width * 0.85, cy: canvas.height * 0.3, radiusX: 450, radiusY: 180, color: 'rgba(112, 0, 255, 0.25)', speed: -0.0015, rotation: -0.3, layers: 8 },
+      { cx: canvas.width * 0.6, cy: canvas.height * 0.8, radiusX: 550, radiusY: 220, color: 'rgba(0, 229, 255, 0.2)', speed: 0.001, rotation: 0.1, layers: 8 },
     ];
 
     const render = () => {
-      if (!isVisible) {
-        animationFrameId = requestAnimationFrame(render);
-        return;
-      }
+      if (!isVisible) return; // PERF: truly stop — don't re-schedule rAF
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Multiply blend mode makes the cyan/purple look like rich ink on the white background
       ctx.globalCompositeOperation = 'multiply'; 
       time += 1;
 
@@ -129,12 +128,11 @@ const AbstractRingsBackground = () => {
         ctx.translate(ring.cx, ring.cy);
         ctx.rotate(ring.rotation + time * ring.speed);
         
-        // Draw layers of dotted ellipses to create the 3D wireframe mesh look
         for (let j = 0; j < ring.layers; j++) {
-           const scale = 1 + (j * 0.015); // Spread them out like a 3D tube
+           const scale = 1 + (j * 0.015);
            const offset = j * 2.5;
            ctx.beginPath();
-           for (let i = 0; i <= Math.PI * 2; i += 0.05) {
+           for (let i = 0; i <= Math.PI * 2; i += 0.12) {
              const x = Math.cos(i) * ring.radiusX * scale;
              const y = Math.sin(i) * ring.radiusY * scale + offset;
              if (i === 0) ctx.moveTo(x, y);
@@ -142,7 +140,6 @@ const AbstractRingsBackground = () => {
            }
            ctx.strokeStyle = ring.color;
            ctx.lineWidth = 0.8;
-           // Creates the "dotted/particle" look from the reference image
            ctx.setLineDash([2, 8]); 
            ctx.stroke();
         }
@@ -163,9 +160,8 @@ const AbstractRingsBackground = () => {
 
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '120vh', zIndex: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-      <canvas ref={canvasRef} style={{ display: 'block' }} />
-      {/* Soft gradient mask to fade the rings out seamlessly at the bottom */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, #F9FAFB 100%)' }} />
+      {/* Background canvas removed in favor of unified SoftWavesBackground */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, #F1F4F9 100%)' }} />
     </div>
   );
 };
@@ -200,25 +196,34 @@ const Portfolio = () => {
       });
 
       if (slides.length > 1) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pinnedContainerRef.current,
-            start: "top top",
-            end: () => `+=${(slides.length - 1) * 100}%`,
-            pin: true,
-            scrub: 0.5,
-            refreshPriority: 1,
-            invalidateOnRefresh: true
-          }
-        });
-
-        slides.forEach((slide, i) => {
-          if (i === 0) return;
-          tl.to(slide, {
-            yPercent: 0,
-            ease: "none",
-            duration: 1
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 768px)", () => {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: pinnedContainerRef.current,
+              start: "top top",
+              end: () => `+=${(slides.length - 1) * 100}%`,
+              pin: true,
+              scrub: 0.5,
+              refreshPriority: 1,
+              invalidateOnRefresh: true
+            }
           });
+
+          slides.forEach((slide, i) => {
+            if (i === 0) return;
+            tl.to(slide, {
+              yPercent: 0,
+              ease: "none",
+              duration: 1
+            });
+          });
+        });
+        
+        mm.add("(max-width: 767px)", () => {
+          // On mobile, just make them flow normally
+          gsap.set(slides, { yPercent: 0, position: 'relative', height: 'auto', marginBottom: '2rem' });
+          gsap.set(pinnedContainerRef.current, { height: 'auto' });
         });
       }
     }, pinnedContainerRef);
@@ -272,7 +277,7 @@ const Portfolio = () => {
       <div className="metaskapes-container" style={{ position: 'relative', zIndex: 10 }}>
         
         {/* Section Header with exact preserved Title transition effect from Image 2 */}
-        <div className="metaskapes-header-wrapper">
+        <div className="metaskapes-header-wrapper" style={{ marginBottom: '1rem' }}>
           <div className="section-label reveal metaskapes-badge">
             Selected Work
           </div>
@@ -306,13 +311,6 @@ const Portfolio = () => {
               ref={(el) => { if (el) slideRefs.current[idx] = el; }}
               className="metaskapes-gsap-slide"
               style={{ zIndex: idx + 1 }}
-              onClick={() => {
-                if (project.link && project.link !== '#') {
-                  window.open(project.link, '_blank', 'noopener,noreferrer');
-                } else {
-                  openProjectModal(project);
-                }
-              }}
             >
               {/* Full-bleed 100vh bright image background */}
               <div className="metaskapes-sticky-bg-wrapper">
@@ -323,6 +321,16 @@ const Portfolio = () => {
                 />
                 {/* Subtle text contrast gradient mask only top-left */}
                 <div className="metaskapes-sticky-mask" />
+                {/* Seamless top edge fade to blend image into background */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100px',
+                  background: 'linear-gradient(to bottom, #F1F4F9 0%, transparent 100%)',
+                  pointerEvents: 'none'
+                }} />
               </div>
 
               {/* Unique Tech Category Indicator + Title & Location */}

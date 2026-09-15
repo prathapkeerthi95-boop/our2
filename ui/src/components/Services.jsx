@@ -25,9 +25,9 @@ const SERVICES_DATA = [
     centerSubtext: 'From idea to impact – we build platforms that scale with your vision.',
     keyPoints: ['Performance-first', 'Secure & scalable', 'Built for growth'],
     ctaText: 'See How We Work →',
-    accentColor: '#3282FF',
-    gradient: 'linear-gradient(135deg, #00E5FF 0%, #3282FF 50%, #7000FF 100%)',
-    glowColor: 'rgba(50, 130, 255, 0.45)',
+    accentColor: '#00E5FF',
+    gradient: 'linear-gradient(135deg, #00A896 0%, #00E5FF 100%)',
+    glowColor: 'rgba(0, 229, 255, 0.25)',
     animClass: 'svc-anim-glass-flip'
   },
   {
@@ -39,9 +39,9 @@ const SERVICES_DATA = [
     centerSubtext: 'Engineering mobile experiences with offline-first sync and flawless touch response.',
     keyPoints: ['iOS & Android Native', '60fps Micro-animations', 'Enterprise Security'],
     ctaText: 'See Mobile Showcase →',
-    accentColor: '#3282FF',
-    gradient: 'linear-gradient(135deg, #00E5FF 0%, #3282FF 50%, #7000FF 100%)',
-    glowColor: 'rgba(50, 130, 255, 0.45)',
+    accentColor: '#38BDF8',
+    gradient: 'linear-gradient(135deg, #0284C7 0%, #38BDF8 100%)',
+    glowColor: 'rgba(56, 189, 248, 0.25)',
     animClass: 'svc-anim-spring-drop'
   },
   {
@@ -53,9 +53,9 @@ const SERVICES_DATA = [
     centerSubtext: 'Crafting memory-commanding visual identities, typography, and comprehensive design guidelines.',
     keyPoints: ['Design Systems', 'Bespoke Typeface', 'Brand Guidelines'],
     ctaText: 'Explore Brand Systems →',
-    accentColor: '#3282FF',
-    gradient: 'linear-gradient(135deg, #00E5FF 0%, #3282FF 50%, #7000FF 100%)',
-    glowColor: 'rgba(50, 130, 255, 0.45)',
+    accentColor: '#00FFAD',
+    gradient: 'linear-gradient(135deg, #059669 0%, #00FFAD 100%)',
+    glowColor: 'rgba(0, 255, 173, 0.25)',
     animClass: 'svc-anim-studio-unfold'
   },
   {
@@ -67,9 +67,9 @@ const SERVICES_DATA = [
     centerSubtext: 'Optimizing full-funnel conversion with rapid A/B testing and precision analytics.',
     keyPoints: ['Conversion CRO', 'Performance Campaigns', 'Real-Time Analytics'],
     ctaText: 'View Growth Results →',
-    accentColor: '#3282FF',
-    gradient: 'linear-gradient(135deg, #00E5FF 0%, #3282FF 50%, #7000FF 100%)',
-    glowColor: 'rgba(50, 130, 255, 0.45)',
+    accentColor: '#2DD4BF',
+    gradient: 'linear-gradient(135deg, #0F766E 0%, #2DD4BF 100%)',
+    glowColor: 'rgba(45, 212, 191, 0.25)',
     animClass: 'svc-anim-chart-explosion'
   }
 ];
@@ -82,7 +82,7 @@ function WebPlatformsVisual({ webCardRef, webStats1Ref, webStats2Ref }) {
     <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
       <div style={{ position: 'absolute', width: 460, height: 24, bottom: '4%', background: 'radial-gradient(ellipse, rgba(0,0,0,0.22) 0%, transparent 70%)', filter: 'blur(16px)', pointerEvents: 'none' }} />
 
-      <div ref={webCardRef} style={{ position: 'relative', zIndex: 2, width: 500, height: 340, borderRadius: 24, background: 'rgba(255,255,255,0.88)', border: '1.5px solid rgba(255,255,255,0.95)', backdropFilter: 'blur(28px)', boxShadow: '0 38px 80px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.95)', overflow: 'hidden', transformStyle: 'preserve-3d' }}>
+      <div ref={webCardRef} style={{ position: 'relative', zIndex: 2, width: 'min(500px, 90vw)', height: 340, borderRadius: 24, background: 'rgba(255,255,255,0.88)', border: '1.5px solid rgba(255,255,255,0.95)', backdropFilter: 'blur(28px)', boxShadow: '0 38px 80px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.95)', overflow: 'hidden', transformStyle: 'preserve-3d' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 12, pointerEvents: 'none', background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.2) 48%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 52%, transparent 70%)', backgroundSize: '300% 100%', mixBlendMode: 'overlay', animation: 'svcGlareSweep 8s linear infinite' }} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '12px 18px', background: 'rgba(240,244,250,0.9)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
@@ -92,7 +92,7 @@ function WebPlatformsVisual({ webCardRef, webStats1Ref, webStats2Ref }) {
           </div>
         </div>
 
-        <div style={{ width: '100%', height: 'calc(100% - 46px)', background: '#0C0D12', padding: '18px 22px', color: '#fff', transformStyle: 'preserve-3d' }}>
+        <div style={{ width: '100%', height: 'calc(100% - 46px)', background: '#0A1929', padding: '18px 22px', color: '#fff', transformStyle: 'preserve-3d' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
             <div>
               <div style={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Total Revenue</div>
@@ -112,13 +112,13 @@ function WebPlatformsVisual({ webCardRef, webStats1Ref, webStats2Ref }) {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 14, transformStyle: 'preserve-3d' }}>
-            <div ref={webStats1Ref} style={{ background: '#16171F', borderRadius: 12, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.08)', transformStyle: 'preserve-3d' }}>
+            <div ref={webStats1Ref} style={{ background: '#0D2137', borderRadius: 12, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.08)', transformStyle: 'preserve-3d' }}>
               <div style={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 2 }}>Users</div>
               <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)' }}>12,482</div>
               <div style={{ fontSize: '0.52rem', color: '#3282FF', fontWeight: 700, marginTop: 2 }}>↑ 8.1% vs last month</div>
             </div>
 
-            <div ref={webStats2Ref} style={{ background: '#16171F', borderRadius: 12, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.08)', transformStyle: 'preserve-3d' }}>
+            <div ref={webStats2Ref} style={{ background: '#0D2137', borderRadius: 12, padding: '12px 14px', border: '1px solid rgba(255,255,255,0.08)', transformStyle: 'preserve-3d' }}>
               <div style={{ fontSize: '0.52rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 2 }}>Conversion</div>
               <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)' }}>+24.8%</div>
               <div style={{ fontSize: '0.52rem', color: '#7000FF', fontWeight: 700, marginTop: 2 }}>↑ 5.2% ROAS</div>
@@ -142,8 +142,8 @@ function MobileEngineeringVisual({ phoneCardRef, phonePillRef }) {
         </div>
       </div>
 
-      <div ref={phoneCardRef} style={{ position: 'relative', width: 255, height: 370, borderRadius: 42, border: '9px solid #0C0D12', background: '#0C0D12', zIndex: 5, overflow: 'hidden', boxShadow: '0 38px 75px rgba(0,0,0,0.32), 0 0 0 1px rgba(255,255,255,0.1)', transformStyle: 'preserve-3d' }}>
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 90, height: 22, background: '#0C0D12', borderRadius: '0 0 14px 14px', zIndex: 20 }} />
+      <div ref={phoneCardRef} style={{ position: 'relative', width: 255, height: 370, borderRadius: 42, border: '9px solid #0A1929', background: '#0A1929', zIndex: 5, overflow: 'hidden', boxShadow: '0 38px 75px rgba(0,0,0,0.32), 0 0 0 1px rgba(255,255,255,0.1)', transformStyle: 'preserve-3d' }}>
+        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 90, height: 22, background: '#0A1929', borderRadius: '0 0 14px 14px', zIndex: 20 }} />
 
         <div style={{ padding: '28px 18px 16px', color: '#fff', fontFamily: 'var(--font-body)', transformStyle: 'preserve-3d' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 800, fontFamily: 'var(--font-display)', marginBottom: 2 }}>Mobile Engine</div>
@@ -155,11 +155,11 @@ function MobileEngineeringVisual({ phoneCardRef, phonePillRef }) {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 14 }}>
-            <div style={{ background: '#16171F', borderRadius: 8, padding: '10px 10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ background: '#0D2137', borderRadius: 8, padding: '10px 10px', border: '1px solid rgba(255,255,255,0.08)' }}>
               <div style={{ fontSize: '0.44rem', color: 'rgba(255,255,255,0.4)' }}>USERS</div>
               <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#3282FF' }}>4,821</div>
             </div>
-            <div style={{ background: '#16171F', borderRadius: 8, padding: '10px 10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ background: '#0D2137', borderRadius: 8, padding: '10px 10px', border: '1px solid rgba(255,255,255,0.08)' }}>
               <div style={{ fontSize: '0.44rem', color: 'rgba(255,255,255,0.4)' }}>RATING</div>
               <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#7000FF' }}>4.9 ★</div>
             </div>
@@ -193,7 +193,7 @@ function BrandIdentityVisual({ card1Ref, card2Ref, badgeRef, laptopRef }) {
 
       <div ref={laptopRef} style={{ position: 'absolute', transform: 'translateX(-10px) translateY(20px) translateZ(-20px) rotateX(10deg) rotateY(-5deg)', zIndex: 1, transformStyle: 'preserve-3d' }}>
         <div style={{ width: 330, height: 205, borderRadius: '12px 12px 4px 4px', background: 'linear-gradient(180deg,#C8C9CA,#B8B9BA)', padding: '10px 10px 0', boxShadow: '0 28px 55px rgba(0,0,0,0.25)' }}>
-          <div style={{ width: '100%', height: '100%', borderRadius: '6px 6px 0 0', background: '#0A0A10', overflow: 'hidden', padding: '14px 16px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ width: '100%', height: '100%', borderRadius: '6px 6px 0 0', background: '#0A1929', overflow: 'hidden', padding: '14px 16px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
               <div style={{ width: 18, height: 18, borderRadius: 4, background: 'linear-gradient(135deg,#3282FF,#7000FF)' }} />
               <span style={{ fontSize: '0.52rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)', fontFamily: 'var(--font-display)', letterSpacing: '0.1em' }}>NUZAROX — BRAND SYSTEM</span>
@@ -236,7 +236,7 @@ function GrowthMarketingVisual({ cardLeftRef, cardCenterRef, cardRightRef, topWi
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
 
-      <div ref={topWidgetRef} style={{ position: 'absolute', top: '2%', left: '50%', transform: 'translateX(-50%) translateZ(60px)', width: 310, height: 72, borderRadius: 16, background: '#16171F', border: '1.5px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', boxShadow: '0 18px 40px rgba(0,0,0,0.25)', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14, zIndex: 6, transformStyle: 'preserve-3d' }}>
+      <div ref={topWidgetRef} style={{ position: 'absolute', top: '2%', left: '50%', transform: 'translateX(-50%) translateZ(60px)', width: 310, height: 72, borderRadius: 16, background: '#0D2137', border: '1.5px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', boxShadow: '0 18px 40px rgba(0,0,0,0.25)', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14, zIndex: 6, transformStyle: 'preserve-3d' }}>
         <div>
           <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Monthly Revenue</div>
           <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'var(--font-display)' }}>$48.2K</div>
@@ -251,7 +251,7 @@ function GrowthMarketingVisual({ cardLeftRef, cardCenterRef, cardRightRef, topWi
       </div>
 
       <div style={{ position: 'relative', width: 265, height: 285, transformStyle: 'preserve-3d', marginTop: 38 }}>
-        <div ref={cardLeftRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: '#16171F', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 22px 50px rgba(0,0,0,0.25)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'rotate(-9deg) translateX(-38px) translateZ(10px)', transformStyle: 'preserve-3d' }}>
+        <div ref={cardLeftRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: '#0D2137', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 22px 50px rgba(0,0,0,0.25)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'rotate(-9deg) translateX(-38px) translateZ(10px)', transformStyle: 'preserve-3d' }}>
           <div>
             <div style={{ fontSize: '0.56rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase' }}>Conversion Rate</div>
             <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'var(--font-display)', marginTop: '0.2rem' }}>+24.8%</div>
@@ -265,7 +265,7 @@ function GrowthMarketingVisual({ cardLeftRef, cardCenterRef, cardRightRef, topWi
           </div>
         </div>
 
-        <div ref={cardCenterRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: 'linear-gradient(145deg,#0C0D12,#16171F)', border: '1px solid rgba(50,130,255,0.3)', boxShadow: '0 30px 60px rgba(0,0,0,0.35)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'translateZ(40px)', transformStyle: 'preserve-3d' }}>
+        <div ref={cardCenterRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: 'linear-gradient(145deg,#0A1929,#0D2137)', border: '1px solid rgba(50,130,255,0.3)', boxShadow: '0 30px 60px rgba(0,0,0,0.35)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'translateZ(40px)', transformStyle: 'preserve-3d' }}>
           <div>
             <div style={{ fontSize: '0.56rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase' }}>Active Users</div>
             <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-display)', marginTop: '0.2rem' }}>12,482</div>
@@ -279,7 +279,7 @@ function GrowthMarketingVisual({ cardLeftRef, cardCenterRef, cardRightRef, topWi
           </div>
         </div>
 
-        <div ref={cardRightRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: '#16171F', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 22px 50px rgba(0,0,0,0.25)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'rotate(9deg) translateX(38px) translateZ(20px)', transformStyle: 'preserve-3d' }}>
+        <div ref={cardRightRef} style={{ position: 'absolute', inset: 0, borderRadius: 20, background: '#0D2137', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 22px 50px rgba(0,0,0,0.25)', padding: '1.4rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', transform: 'rotate(9deg) translateX(38px) translateZ(20px)', transformStyle: 'preserve-3d' }}>
           <div>
             <div style={{ fontSize: '0.56rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase' }}>Campaign ROI</div>
             <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'var(--font-display)', marginTop: '0.2rem' }}>8.4×</div>
@@ -951,8 +951,8 @@ export default function Services() {
         {/* Section Header — with unique scroll entrance effects */}
         <div ref={headerRef} style={{ marginBottom: '12px', perspective: '600px' }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span className="svc-hdr-line" style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #FF2A54, #7000FF)', borderRadius: 2, transformOrigin: 'left center', display: 'inline-block' }} />
-            <span className="svc-hdr-label" style={{ background: 'linear-gradient(90deg, #FF2A54 0%, #7000FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>
+            <span className="svc-hdr-line" style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #0A2E5C, #00A896)', borderRadius: 2, transformOrigin: 'left center', display: 'inline-block' }} />
+            <span className="svc-hdr-label" style={{ background: 'linear-gradient(90deg, #0A2E5C 0%, #00A896 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>
               WHAT WE DO
             </span>
           </div>
@@ -991,9 +991,9 @@ export default function Services() {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start',
-                    background: isActive ? svc.gradient : '#FFFFFF',
-                    color: isActive ? '#FFFFFF' : '#0A0A10',
-                    border: isActive ? 'none' : '1px solid rgba(0, 0, 0, 0.07)',
+                    background: isActive ? svc.gradient : 'rgba(0, 0, 0, 0.06)',
+                    color: isActive ? '#FAFAFA' : '#0A0A10',
+                    border: isActive ? 'none' : '1px solid rgba(0, 0, 0, 0.08)',
                     boxShadow: isActive ? `0 16px 36px ${svc.glowColor}, inset 0 1px 0 rgba(255, 255, 255, 0.3)` : '0 4px 14px rgba(0, 0, 0, 0.02)',
                     cursor: 'pointer',
                     transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -1004,7 +1004,7 @@ export default function Services() {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, height: '28px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <span style={{ fontSize: '1.05rem', fontWeight: 800, color: isActive ? '#FFFFFF' : 'rgba(10, 10, 16, 0.4)', fontFamily: 'var(--font-display)', transition: 'color 0.35s ease' }}>
+                      <span style={{ fontSize: '1.05rem', fontWeight: 800, color: isActive ? '#FFFFFF' : 'rgba(10, 10, 16, 0.35)', fontFamily: 'var(--font-display)', transition: 'color 0.35s ease' }}>
                         {svc.id}
                       </span>
                       <span style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em', transition: 'color 0.35s ease' }}>
@@ -1045,12 +1045,12 @@ export default function Services() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
               {currentService.keyPoints.map((point, i) => (
                 <div key={i} className="svc-key-point-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', animation: `svcBulletSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${0.12 + i * 0.08}s both` }}>
-                  <div style={{ width: 25, height: 25, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(255,42,84,0.15), rgba(112,0,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7000FF', flexShrink: 0 }}>
+                  <div style={{ width: 25, height: 25, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0, 168, 150, 0.15), rgba(0, 229, 255, 0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00A896', flexShrink: 0 }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="url(#checkGrad)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <defs>
                         <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#FF2A54" />
-                          <stop offset="100%" stopColor="#7000FF" />
+                          <stop offset="0%" stopColor="#00A896" />
+                          <stop offset="100%" stopColor="#00E5FF" />
                         </linearGradient>
                       </defs>
                       <polyline points="20 6 9 17 4 12" />
@@ -1065,7 +1065,7 @@ export default function Services() {
 
             <div>
               <a href="#contact" className="svc-cta-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: '1.02rem', fontWeight: 800, textDecoration: 'none', transition: 'gap 0.3s ease' }}>
-                <span style={{ background: 'linear-gradient(90deg, #FF2A54 0%, #7000FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <span style={{ background: 'linear-gradient(90deg, #0A2E5C 0%, #00A896 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   {currentService.ctaText}
                 </span>
               </a>
@@ -1073,7 +1073,7 @@ export default function Services() {
           </div>
 
           {/* RIGHT: ANIMATED 3D VISUAL SCENES WITH DYNAMIC CURSOR TILT & LOCALIZED BACKLIGHT SPILLAGE */}
-          <div ref={rightWrapperRef} className="svc-visual-container" style={{ position: 'relative', width: '100%', height: '440px', display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200 }}>
+          <div ref={rightWrapperRef} className="svc-visual-container" style={{ position: 'relative', width: '100%', height: '440px', display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200, background: 'linear-gradient(145deg, #0A2E5C 0%, #0C1A30 100%)', borderRadius: '40px', boxShadow: '0 10px 40px rgba(10, 46, 92, 0.35)' }}>
             
             {/* Live Water Drop Concentric Ripple Wave Canvas behind the cards */}
             <canvas
@@ -1247,6 +1247,14 @@ export default function Services() {
           }
         }
 
+        @media (max-width: 768px) {
+          #services .svc-visual-container {
+            transform: scale(0.65) !important;
+            transform-origin: center center;
+            height: 380px !important;
+          }
+        }
+
         @media (max-width: 680px) {
           #services {
             padding: 55px 4% 30px !important;
@@ -1257,7 +1265,7 @@ export default function Services() {
           }
           #services .svc-visual-container {
             grid-column: span 1;
-            height: 320px !important;
+            height: 350px !important;
           }
           #services .svc-selector-col {
             display: grid;
@@ -1273,6 +1281,10 @@ export default function Services() {
         @media (max-width: 480px) {
           #services .svc-selector-col {
             grid-template-columns: 1fr;
+          }
+          #services .svc-visual-container {
+            transform: scale(0.55) !important;
+            height: 320px !important;
           }
         }
       `}</style>

@@ -126,16 +126,7 @@ const ZoomHero = () => {
         carouselInterval = setInterval(rotateCarousel, 2800);
       }
 
-      gsap.to(glowRef.current, {
-        y: 150,
-        scale: 1.3,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
-      });
+      // Removed glowRef scroll scrub animation for performance (scrubbing a 60px blur kills GPU)
 
     }, containerRef);
 
@@ -169,15 +160,17 @@ const ZoomHero = () => {
       { yOffset: 0.8, frequency: 0.0015, amplitude: 220, speed: 0.8, color: 'rgba(112, 0, 255, 0.12)', layers: 3 }
     ];
 
-    // Only render when hero is visible
+    // Only render when hero is visible — PERF: truly stop rAF when off-screen
     let isVisible = true;
     const observer = new IntersectionObserver(([entry]) => {
+      const wasVisible = isVisible;
       isVisible = entry.isIntersecting;
+      if (!wasVisible && isVisible) render();
     }, { threshold: 0 });
     observer.observe(canvas);
 
     const render = () => {
-      if (!isVisible) { animationFrameId = requestAnimationFrame(render); return; }
+      if (!isVisible) return; // PERF: truly stop — don't re-schedule rAF
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = 'multiply';
 
@@ -219,6 +212,7 @@ const ZoomHero = () => {
   return (
     <section
       ref={containerRef}
+      className="zoom-hero-section"
       style={{
         position: 'relative', width: '100%',
         overflow: 'hidden', display: 'flex', alignItems: 'flex-start',
@@ -239,8 +233,8 @@ const ZoomHero = () => {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          width: '1000px',
-          height: '1000px',
+          width: 'min(1000px, 200vw)',
+          height: 'min(1000px, 200vw)',
           backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -269,9 +263,9 @@ const ZoomHero = () => {
         style={{
           position: 'absolute',
           top: '15%', left: '45%',
-          width: '700px', height: '700px',
+          width: 'min(700px, 150vw)', height: 'min(700px, 150vw)',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(112, 0, 255, 0.08) 0%, rgba(255, 42, 84, 0.05) 50%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(150, 150, 150, 0.02) 50%, transparent 70%)',
           filter: 'blur(60px)',
           zIndex: 1,
           opacity: 0,
@@ -292,7 +286,7 @@ const ZoomHero = () => {
           {/* Line 1 */}
           <div ref={line1Ref} style={{ overflow: 'hidden', paddingBottom: '0.1em' }}>
             <h1 style={{
-              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -305,9 +299,9 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 2 — UNIQUE VIBRANT GRADIENT TEXT */}
-          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
+          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
             <h1 className="hero-char" style={{
-              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -323,7 +317,7 @@ const ZoomHero = () => {
               Digital
             </h1>
             <h1 style={{
-              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -336,9 +330,9 @@ const ZoomHero = () => {
           </div>
 
           {/* Line 3 — with rotating word */}
-          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
+          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
             <h1 style={{
-              fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -370,7 +364,7 @@ const ZoomHero = () => {
                   style={{
                     gridArea: '1 / 1 / 2 / 2',
                     visibility: i === 0 ? 'visible' : 'hidden',
-                    fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+                    fontSize: 'clamp(2.4rem, 8vw, 8rem)',
                     fontWeight: '900',
                     fontFamily: 'var(--font-display)',
                     lineHeight: 1.1, 
@@ -417,7 +411,7 @@ const ZoomHero = () => {
             engineered to captivate your audience and deliver measurable growth.
           </p>
 
-          <div ref={ctaRef} style={{ display: 'flex', gap: '1rem', alignItems: 'center', opacity: 0 }}>
+          <div ref={ctaRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', opacity: 0 }}>
             <MagneticElement>
               <a href="#portfolio" className="btn-hero-gradient">
                 <span>See Our Work</span>
@@ -527,6 +521,14 @@ const ZoomHero = () => {
         @keyframes slowSpinBg {
           0% { transform: translate(-50%, -50%) rotate(0deg); }
           100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+          .zoom-hero-section { padding-top: 100px !important; padding-bottom: 2rem !important; }
+          .btn-hero-gradient, .btn-hero-glass {
+            padding: 0.65rem 1.3rem;
+            font-size: 0.78rem;
+          }
         }
       `}</style>
     </section>

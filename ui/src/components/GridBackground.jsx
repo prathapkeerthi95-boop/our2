@@ -43,7 +43,11 @@ const GridBackground = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    const observer = new IntersectionObserver(([entry]) => { isVisible = entry.isIntersecting; }, { threshold: 0 });
+    const observer = new IntersectionObserver(([entry]) => { 
+      const wasVisible = isVisible;
+      isVisible = entry.isIntersecting; 
+      if (!wasVisible && isVisible) draw();
+    }, { threshold: 0 });
     observer.observe(canvas);
 
     const handleMouseMove = (e) => {
@@ -54,7 +58,7 @@ const GridBackground = () => {
     window.addEventListener('mouseleave', () => { targetMouse.x = -1000; targetMouse.y = -1000; });
 
     const draw = () => {
-      if (!isVisible) { animationFrameId = requestAnimationFrame(draw); return; }
+      if (!isVisible) return; // PERF: truly stop — don't re-schedule rAF
       // Lerp mouse
       currentMouse.x += (targetMouse.x - currentMouse.x) * 0.1;
       currentMouse.y += (targetMouse.y - currentMouse.y) * 0.1;

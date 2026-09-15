@@ -28,7 +28,7 @@ export default function AnimatedHeading({ text, mode = 'mask', className = '', s
         scrollTrigger: {
           trigger: el,
           start: "top 88%",
-          toggleActions: "play none none none"
+          toggleActions: "restart none none reset"
         },
         delay: delay
       });

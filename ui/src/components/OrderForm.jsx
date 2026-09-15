@@ -155,8 +155,7 @@ const ContactForm = () => {
             }} />
 
             {/* Main Form Card Container (Opaque Frosted Slate Grey Glass Card) */}
-            <div className="glass-card reveal reveal-delay-3" style={{
-              padding: '2.5rem',
+            <div className="glass-card form-glass-card reveal reveal-delay-3" style={{
               position: 'relative',
               zIndex: 1,
               background: 'linear-gradient(145deg, rgba(230, 236, 244, 0.88) 0%, rgba(200, 208, 220, 0.92) 100%)',
@@ -167,7 +166,7 @@ const ContactForm = () => {
             }}>
               <h3 style={{ marginBottom: '1.5rem', color: '#0F172A', fontWeight: 800, fontSize: '1.75rem', fontFamily: 'var(--font-display)' }}>Start Your Project</h3>
               <form onSubmit={handleSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-grid-row" style={{ display: 'grid', gap: '1rem' }}>
                   <div className="form-group">
                     <input type="text" placeholder="Your Name" required
                       value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
@@ -180,7 +179,7 @@ const ContactForm = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-grid-row" style={{ display: 'grid', gap: '1rem' }}>
                   <div className="form-group">
                     <input type="tel" placeholder="Phone Number"
                       value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -236,6 +235,20 @@ const ContactForm = () => {
           </div>
 
           <style>{`
+            .form-grid-row {
+              grid-template-columns: 1fr 1fr;
+            }
+            .form-glass-card {
+              padding: 2.5rem;
+            }
+            @media (max-width: 680px) {
+              .form-grid-row {
+                grid-template-columns: 1fr;
+              }
+              .form-glass-card {
+                padding: 1.5rem;
+              }
+            }
             @keyframes subtlePinkGlow {
               0%, 100% { opacity: 0.6; transform: scale(0.98); }
               50% { opacity: 0.95; transform: scale(1.02); }

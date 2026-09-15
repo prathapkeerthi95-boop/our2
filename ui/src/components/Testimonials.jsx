@@ -90,28 +90,57 @@ const Testimonials = () => {
     if (!secRef.current || !r1Ref.current || !r2Ref.current) return;
 
     const ctx = gsap.context(() => {
-      // Row 1: Smoothly glides Left to Right
-      gsap.to(r1Ref.current, {
-        x: 450,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: secRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.5, // Increased scrub for buttery momentum feel
-        }
+      let mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px)", () => {
+        // Row 1: Smoothly glides Left to Right
+        gsap.to(r1Ref.current, {
+          x: 450,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: secRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+          }
+        });
+
+        // Row 2: Smoothly glides Right to Left
+        gsap.to(r2Ref.current, {
+          x: -450,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: secRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+          }
+        });
       });
 
-      // Row 2: Smoothly glides Right to Left
-      gsap.to(r2Ref.current, {
-        x: -450,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: secRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.5, // Increased scrub for buttery momentum feel
-        }
+      mm.add("(max-width: 767px)", () => {
+        // Mobile smaller scrub
+        gsap.to(r1Ref.current, {
+          x: 150,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: secRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+          }
+        });
+
+        gsap.to(r2Ref.current, {
+          x: -150,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: secRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5,
+          }
+        });
       });
     }, secRef);
 
@@ -209,9 +238,7 @@ const Testimonials = () => {
         }
 
         .rv-inner {
-          background: rgba(255, 255, 255, 0.8);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
+          background: rgba(255, 255, 255, 0.95);
           border: 1px solid rgba(255, 255, 255, 1);
           border-radius: 24px;
           padding: 24px;
@@ -284,6 +311,17 @@ const Testimonials = () => {
           margin: 0 !important;
           flex-grow: 1;
         }
+
+        @media (max-width: 768px) {
+          .rv-bg-orb {
+            display: none;
+          }
+          .rv-card {
+            min-width: 260px !important;
+            max-width: 300px !important;
+            padding: 1.25rem !important;
+          }
+        }
       `}</style>
 
       {/* Colorful background orbs */}
@@ -298,14 +336,14 @@ const Testimonials = () => {
 
       {/* Top Row */}
       <div className="rv-row">
-        <div ref={r1Ref} className="rv-track">
+        <div ref={r1Ref} className="rv-track" style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768 ? '-35%' : '-10%' }}>
           {r1Cards.map((r, i) => <Card key={`r1-${i}`} r={r} />)}
         </div>
       </div>
 
       {/* Bottom Row */}
       <div className="rv-row">
-        <div ref={r2Ref} className="rv-track">
+        <div ref={r2Ref} className="rv-track" style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768 ? '-35%' : '-10%' }}>
           {r2Cards.map((r, i) => <Card key={`r2-${i}`} r={r} />)}
         </div>
       </div>

@@ -375,7 +375,7 @@ const CircularMotionFrameBackground = () => {
               stroke="url(#mainOrbitalArcGrad)" 
               strokeWidth="38" 
               fill="none" 
-              style={{ filter: 'url(#orbitalGlow)' }}
+              opacity="0.85"
             />
             {/* Crisp Inner Highlighting Stroke */}
             <circle 
