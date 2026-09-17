@@ -58,9 +58,9 @@ const reviewsRow2 = [
   }
 ];
 
-// Duplicate loops for seamless horizontal scrolling feeling
-const r1Cards = [...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1];
-const r2Cards = [...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2];
+// Duplicate loops for seamless horizontal infinite circular scrolling
+const r1Cards = [...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1];
+const r2Cards = [...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2];
 
 const Card = ({ r }) => (
   <div className="rv-card">
@@ -81,70 +81,116 @@ const Card = ({ r }) => (
   </div>
 );
 
+const useDragScroll = () => {
+  const ref = useRef(null);
+  const isDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  const checkLoop = () => {
+    const el = ref.current;
+    if (!el || el.scrollWidth === 0) return;
+
+    // 1/3 of total scroll length (2 full sets out of 6)
+    const chunkWidth = el.scrollWidth / 3;
+
+    // Infinite teleport loop
+    if (el.scrollLeft < 150) {
+      el.scrollLeft += chunkWidth;
+    } else if (el.scrollLeft > el.scrollWidth - el.clientWidth - 150) {
+      el.scrollLeft -= chunkWidth;
+    }
+  };
+
+  const onMouseDown = (e) => {
+    isDown.current = true;
+    if (!ref.current) return;
+    ref.current.classList.add('active-dragging');
+    startX.current = e.pageX - ref.current.offsetLeft;
+    scrollLeft.current = ref.current.scrollLeft;
+  };
+
+  const onMouseLeave = () => {
+    isDown.current = false;
+    if (ref.current) ref.current.classList.remove('active-dragging');
+  };
+
+  const onMouseUp = () => {
+    isDown.current = false;
+    if (ref.current) ref.current.classList.remove('active-dragging');
+  };
+
+  const onMouseMove = (e) => {
+    if (!isDown.current || !ref.current) return;
+    e.preventDefault();
+    const x = e.pageX - ref.current.offsetLeft;
+    const walk = (x - startX.current) * 2;
+    ref.current.scrollLeft = scrollLeft.current - walk;
+    checkLoop();
+  };
+
+  const onScroll = () => {
+    checkLoop();
+  };
+
+  return { ref, onMouseDown, onMouseLeave, onMouseUp, onMouseMove, onScroll };
+};
+
 const Testimonials = () => {
   const secRef = useRef(null);
-  const r1Ref = useRef(null);
-  const r2Ref = useRef(null);
+  const row1TrackRef = useRef(null);
+  const row2TrackRef = useRef(null);
+
+  const row1Drag = useDragScroll();
+  const row2Drag = useDragScroll();
 
   useEffect(() => {
-    if (!secRef.current || !r1Ref.current || !r2Ref.current) return;
+    if (!secRef.current || !row1TrackRef.current || !row2TrackRef.current) return;
 
     const ctx = gsap.context(() => {
-      let mm = gsap.matchMedia();
-
-      mm.add("(min-width: 768px)", () => {
-        // Row 1: Smoothly glides Left to Right
-        gsap.to(r1Ref.current, {
-          x: 450,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: secRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-          }
-        });
-
-        // Row 2: Smoothly glides Right to Left
-        gsap.to(r2Ref.current, {
-          x: -450,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: secRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-          }
-        });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: secRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.8,
+          invalidateOnRefresh: true
+        }
       });
 
-      mm.add("(max-width: 767px)", () => {
-        // Mobile smaller scrub
-        gsap.to(r1Ref.current, {
-          x: 150,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: secRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-          }
-        });
+      // Top row scrolls LEFT when page scrolls DOWN (and RIGHT when page scrolls UP)
+      tl.to(row1TrackRef.current, {
+        x: -450,
+        ease: "none"
+      }, 0);
 
-        gsap.to(r2Ref.current, {
-          x: -150,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: secRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.5,
-          }
-        });
-      });
+      // Bottom row scrolls RIGHT when page scrolls DOWN (and LEFT when page scrolls UP)
+      tl.fromTo(row2TrackRef.current,
+        { x: -450 },
+        { x: 0, ease: "none" },
+        0
+      );
     }, secRef);
 
-    return () => ctx.revert();
+    const r1El = row1Drag.ref.current;
+    const r2El = row2Drag.ref.current;
+
+    const initScrollPositions = () => {
+      if (r1El && r1El.scrollWidth > 0) {
+        r1El.scrollLeft = r1El.scrollWidth * 0.33;
+      }
+      if (r2El && r2El.scrollWidth > 0) {
+        r2El.scrollLeft = r2El.scrollWidth * 0.45;
+      }
+    };
+
+    initScrollPositions();
+    const timer = setTimeout(initScrollPositions, 200);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -197,17 +243,28 @@ const Testimonials = () => {
         }
 
         .rv-row {
-          overflow: visible;
+          overflow-x: auto;
           margin-bottom: 2.5rem;
           position: relative;
           z-index: 2;
+          cursor: grab;
+          user-select: none;
+          -webkit-user-select: none;
+          scrollbar-width: none;
+        }
+
+        .rv-row::-webkit-scrollbar {
+          display: none;
+        }
+
+        .rv-row.active-dragging {
+          cursor: grabbing !important;
         }
 
         .rv-track {
           display: flex;
           width: max-content;
-          /* Offsets to make sure cards fill the screen edge-to-edge */
-          margin-left: -35%; 
+          margin-left: 0 !important;
         }
 
         .rv-card {
@@ -312,14 +369,126 @@ const Testimonials = () => {
           flex-grow: 1;
         }
 
-        @media (max-width: 768px) {
-          .rv-bg-orb {
-            display: none;
+        @media (max-width: 1024px) {
+          #testimonials {
+            padding: 4rem 0;
           }
           .rv-card {
+            width: 260px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          #testimonials {
+            padding: 3.5rem 0 !important;
+            background: #F2F4F7 !important;
+          }
+          .rv-bg-orb {
+            opacity: 0.25 !important;
+          }
+          .rv-head {
+            margin-bottom: 2rem !important;
+            padding: 0 1.2rem !important;
+          }
+          .rv-track {
+            margin-left: 0 !important;
+          }
+          .rv-card {
+            width: 270px !important;
+            min-width: 270px !important;
+            max-width: 270px !important;
+            margin: 0 10px !important;
+          }
+          .rv-inner {
+            padding: 20px !important;
+            border-radius: 20px !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04) !important;
+          }
+          .rv-avatar {
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 0.8rem !important;
+          }
+          .rv-name {
+            font-size: 0.98rem !important;
+          }
+          .rv-role {
+            font-size: 0.62rem !important;
+          }
+          .rv-quote {
+            font-size: 0.86rem !important;
+            line-height: 1.55 !important;
+            color: #222222 !important;
+          }
+          .rv-row {
+            margin-bottom: 1.8rem !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+          }
+          .rv-row::-webkit-scrollbar {
+            display: none !important;
+          }
+          .rv-mobile-swipe-hint {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            color: #475569 !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.04em !important;
+          }
+          .swipe-arrow-left {
+            color: #00A896 !important;
+            font-size: 1.05rem !important;
+            font-weight: 900 !important;
+            animation: pulseLeft 1.4s ease-in-out infinite alternate !important;
+          }
+          .swipe-arrow-right {
+            color: #00A896 !important;
+            font-size: 1.05rem !important;
+            font-weight: 900 !important;
+            animation: pulseRight 1.4s ease-in-out infinite alternate !important;
+          }
+          .rv-mobile-row-divider {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 0.3rem 0 1.2rem 0 !important;
+          }
+        }
+
+        .rv-mobile-swipe-hint, .rv-mobile-row-divider {
+          display: none;
+        }
+
+        @keyframes pulseLeft {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-4px); }
+        }
+        @keyframes pulseRight {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(4px); }
+        }
+
+        @media (max-width: 480px) {
+          #testimonials {
+            padding: 3rem 0 !important;
+          }
+          .rv-card {
+            width: 260px !important;
             min-width: 260px !important;
-            max-width: 300px !important;
-            padding: 1.25rem !important;
+            max-width: 260px !important;
+            margin: 0 8px !important;
+          }
+          .rv-inner {
+            padding: 18px !important;
           }
         }
       `}</style>
@@ -335,15 +504,40 @@ const Testimonials = () => {
       </div>
 
       {/* Top Row */}
-      <div className="rv-row">
-        <div ref={r1Ref} className="rv-track" style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768 ? '-35%' : '-10%' }}>
+      <div 
+        ref={row1Drag.ref}
+        className="rv-row"
+        onMouseDown={row1Drag.onMouseDown}
+        onMouseLeave={row1Drag.onMouseLeave}
+        onMouseUp={row1Drag.onMouseUp}
+        onMouseMove={row1Drag.onMouseMove}
+        onScroll={row1Drag.onScroll}
+      >
+        <div ref={row1TrackRef} className="rv-track">
           {r1Cards.map((r, i) => <Card key={`r1-${i}`} r={r} />)}
         </div>
       </div>
 
+      {/* Clean Text Swipe Hint on Mobile (Between Rows) */}
+      <div className="rv-mobile-row-divider">
+        <div className="rv-mobile-swipe-hint">
+          <span className="swipe-arrow-left">‹</span>
+          <span>Swipe to see reviews</span>
+          <span className="swipe-arrow-right">›</span>
+        </div>
+      </div>
+
       {/* Bottom Row */}
-      <div className="rv-row">
-        <div ref={r2Ref} className="rv-track" style={{ marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768 ? '-35%' : '-10%' }}>
+      <div 
+        ref={row2Drag.ref}
+        className="rv-row"
+        onMouseDown={row2Drag.onMouseDown}
+        onMouseLeave={row2Drag.onMouseLeave}
+        onMouseUp={row2Drag.onMouseUp}
+        onMouseMove={row2Drag.onMouseMove}
+        onScroll={row2Drag.onScroll}
+      >
+        <div ref={row2TrackRef} className="rv-track">
           {r2Cards.map((r, i) => <Card key={`r2-${i}`} r={r} />)}
         </div>
       </div>

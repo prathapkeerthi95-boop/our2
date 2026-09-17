@@ -48,7 +48,6 @@ const Navbar = () => {
           gsap.to(navInner, {
             backgroundColor: 'rgba(255, 255, 255, 0.75)', // Light translucent glass base
             backdropFilter: 'blur(32px) saturate(200%)',
-            webkitBackdropFilter: 'blur(32px) saturate(200%)',
             border: '1.5px solid rgba(0, 0, 0, 0.08)', 
             borderRadius: '50px',
             margin: '1.2rem auto 0',
@@ -77,7 +76,6 @@ const Navbar = () => {
           gsap.to(navInner, {
             backgroundColor: 'transparent',
             backdropFilter: 'none',
-            webkitBackdropFilter: 'none',
             border: '1px solid transparent',
             borderRadius: '0px',
             margin: '0 auto',
@@ -102,38 +100,9 @@ const Navbar = () => {
       }
     });
 
-    // Hover logic for the button
-    const handleBtnEnter = () => {
-      if (!btn) return;
-      gsap.to(btn, {
-        backgroundColor: '#11131A',
-        color: '#FAFAFA',
-        borderColor: '#11131A',
-        duration: 0.2
-      });
-    };
-    
-    const handleBtnLeave = () => {
-      if (!btn) return;
-      gsap.to(btn, {
-        backgroundColor: isPill ? 'rgba(255, 255, 255, 0.4)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 245, 255, 0.6) 100%)',
-        color: '#11131A',
-        borderColor: 'rgba(0, 0, 0, 0.15)',
-        duration: 0.2
-      });
-    };
-
-    if (btn) {
-      btn.addEventListener('mouseenter', handleBtnEnter);
-      btn.addEventListener('mouseleave', handleBtnLeave);
-    }
-
+    // Clean scroll trigger cleanup without mutating button background inline styles
     return () => {
       st.kill();
-      if (btn) {
-        btn.removeEventListener('mouseenter', handleBtnEnter);
-        btn.removeEventListener('mouseleave', handleBtnLeave);
-      }
     };
   }, []);
 
@@ -174,6 +143,15 @@ const Navbar = () => {
             display: flex !important;
           }
         }
+        @media (max-width: 480px) {
+          .nav-inner-container {
+            padding: 0 0.8rem !important;
+            height: 54px !important;
+          }
+          #mainNavbarLogo {
+            height: 36px !important;
+          }
+        }
         @keyframes smoothBounce {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-8px); }
@@ -181,6 +159,26 @@ const Navbar = () => {
         @keyframes mobileMenuSlideDown {
           from { opacity: 0; transform: translateY(-16px) scale(0.98); }
           to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .nav-start-btn {
+          padding: 0.55rem 1.35rem;
+          font-size: 0.82rem;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          color: #11131A;
+          border-radius: 50px;
+          font-weight: 700;
+          background-color: #FFFFFF;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+          text-decoration: none;
+          display: inline-block;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav-start-btn:hover {
+          background-color: #11131A !important;
+          color: #FFFFFF !important;
+          border-color: #11131A !important;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
+          transform: translateY(-1px);
         }
       `}</style>
 
@@ -267,25 +265,11 @@ const Navbar = () => {
           })}
           <li>
             <MagneticElement>
-                <a 
-                  href="#contact" 
-                  ref={btnRef}
-                  style={{ 
-                    padding: '0.5rem 1.15rem', 
-                    fontSize: '0.8rem', 
-                    border: '1px solid rgba(0, 0, 0, 0.15)', 
-                    color: '#11131A',
-                    borderRadius: '40px',
-                    fontWeight: '700',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 245, 255, 0.6) 100%)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    boxShadow: '0 4px 15px rgba(255,255,255,0.05), inset 0 1px 1px rgba(255,255,255,0.1)',
-                    textDecoration: 'none',
-                    display: 'inline-block',
-                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
-                  }}
-                >
+              <a 
+                href="#contact" 
+                ref={btnRef}
+                className="nav-start-btn"
+              >
                 Start a Project
               </a>
             </MagneticElement>

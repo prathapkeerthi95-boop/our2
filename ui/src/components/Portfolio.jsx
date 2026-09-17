@@ -174,68 +174,115 @@ const Portfolio = () => {
   const pinnedContainerRef = useRef(null);
   const slidesWrapperRef = useRef(null);
   const slideRefs = useRef([]);
+  const portMobilePinnedRef = useRef(null);
 
   const filteredProjects = activeFilter === 'All' 
     ? projects 
     : projects.filter(p => p.category === activeFilter);
 
-  // GSAP ScrollTrigger Pinned Overlapping Stack Animation
+  // Desktop GSAP ScrollTrigger Pinned Overlapping Stack Animation (>768px)
   useEffect(() => {
     if (!pinnedContainerRef.current) return;
+    if (window.innerWidth <= 768) return;
 
     const ctx = gsap.context(() => {
-      const slides = slideRefs.current.filter(Boolean);
+      const container = pinnedContainerRef.current;
+      if (!container) return;
+      const slides = Array.from(container.querySelectorAll('.metaskapes-gsap-slide'));
       if (slides.length === 0) return;
 
       slides.forEach((slide, i) => {
         if (i === 0) {
-          gsap.set(slide, { yPercent: 0 });
+          gsap.set(slide, { yPercent: 0, scale: 1, opacity: 1 });
         } else {
-          gsap.set(slide, { yPercent: 100 });
+          gsap.set(slide, { yPercent: 100, scale: 1, opacity: 1 });
         }
       });
 
       if (slides.length > 1) {
-        const mm = gsap.matchMedia();
-        mm.add("(min-width: 768px)", () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: pinnedContainerRef.current,
-              start: "top top",
-              end: () => `+=${(slides.length - 1) * 100}%`,
-              pin: true,
-              scrub: 0.5,
-              refreshPriority: 1,
-              invalidateOnRefresh: true
-            }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top+=70px",
+            end: () => `+=${slides.length * 85}%`,
+            pin: true,
+            scrub: 0.4,
+            refreshPriority: 1,
+            invalidateOnRefresh: true
+          }
+        });
+
+        slides.forEach((slide, i) => {
+          if (i === 0) return;
+
+          tl.to(slide, {
+            yPercent: 0,
+            ease: "none",
+            duration: 1
           });
 
-          slides.forEach((slide, i) => {
-            if (i === 0) return;
-            tl.to(slide, {
-              yPercent: 0,
-              ease: "none",
-              duration: 1
-            });
-          });
-        });
-        
-        mm.add("(max-width: 767px)", () => {
-          // On mobile, just make them flow normally
-          gsap.set(slides, { yPercent: 0, position: 'relative', height: 'auto', marginBottom: '2rem' });
-          gsap.set(pinnedContainerRef.current, { height: 'auto' });
+          tl.to({}, { duration: 0.4 });
         });
       }
     }, pinnedContainerRef);
 
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 150);
+    }, 200);
 
     return () => {
       ctx.revert();
       clearTimeout(timer);
     };
+  }, [activeFilter, filteredProjects.length]);
+
+  // Mobile GSAP ScrollTrigger Pinned Overlapping Stack Animation (<=768px)
+  useEffect(() => {
+    if (!portMobilePinnedRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const container = portMobilePinnedRef.current;
+      if (!container) return;
+      const slides = Array.from(container.querySelectorAll('.port-mobile-card'));
+      if (slides.length === 0) return;
+
+      slides.forEach((slide, i) => {
+        if (i === 0) {
+          gsap.set(slide, { yPercent: 0, opacity: 1 });
+        } else {
+          gsap.set(slide, { yPercent: 100, opacity: 1 });
+        }
+      });
+
+      const mm = gsap.matchMedia();
+      mm.add("(max-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top+=75px",
+            end: () => `+=${slides.length * 45}%`,
+            pin: true,
+            scrub: 0.3,
+            refreshPriority: 2,
+            invalidateOnRefresh: true
+          }
+        });
+
+        slides.forEach((slide, i) => {
+          if (i === 0) return;
+
+          tl.to(slide, {
+            yPercent: 0,
+            ease: "none",
+            duration: 1
+          });
+
+          tl.to({}, { duration: 0.35 });
+        });
+      });
+    }, portMobilePinnedRef);
+
+    return () => ctx.revert();
   }, [activeFilter, filteredProjects.length]);
 
   useEffect(() => {
@@ -310,7 +357,8 @@ const Portfolio = () => {
               key={project.id} 
               ref={(el) => { if (el) slideRefs.current[idx] = el; }}
               className="metaskapes-gsap-slide"
-              style={{ zIndex: idx + 1 }}
+              style={{ zIndex: idx + 1, cursor: 'pointer' }}
+              onClick={() => openProjectModal(project)}
             >
               {/* Full-bleed 100vh bright image background */}
               <div className="metaskapes-sticky-bg-wrapper">
@@ -334,7 +382,7 @@ const Portfolio = () => {
               </div>
 
               {/* Unique Tech Category Indicator + Title & Location */}
-              <div className="metaskapes-sticky-content">
+              <div className="metaskapes-sticky-content" style={{ pointerEvents: 'auto' }}>
                 <div className="metaskapes-sticky-brand" style={{ display: 'flex', alignItems: 'center' }}>
                   
                   {/* Replaced Giant Number with Unique Vertical Badge */}
@@ -365,6 +413,58 @@ const Portfolio = () => {
                     <h3 className="metaskapes-sticky-title">{project.title}</h3>
                     <p className="metaskapes-sticky-location">{project.location}</p>
                   </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── MOBILE PINNED OVERLAPPING CARDS (MOBILE VIEW ONLY <769px) ── */}
+      <div ref={portMobilePinnedRef} className="port-mobile-pinned-section">
+        <div className="port-mobile-header-box">
+          <div className="section-label reveal metaskapes-badge" style={{ marginBottom: '0.4rem', fontSize: '0.75rem', display: 'inline-block' }}>
+            Selected Work
+          </div>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#11131A', margin: '0 0 0.3rem', lineHeight: 1.15 }}>
+            Projects That Speak Volumes
+          </h2>
+          <p style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.6)', margin: 0, lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            Explore our curated portfolio of bespoke web applications, e-commerce platforms, luxury digital showcases, and mobile ecosystems.
+          </p>
+        </div>
+
+        <div className="port-mobile-slides-wrapper">
+          {filteredProjects.map((project, idx) => (
+            <div 
+              key={project.id} 
+              className="port-mobile-card" 
+              style={{ zIndex: idx + 1 }}
+              onClick={() => openProjectModal(project)}
+            >
+              <div className="port-mobile-card-header">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#00A896', letterSpacing: '0.1em' }}>
+                    {project.num} — {project.category}
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#666', fontWeight: 600 }}>{project.completion}</span>
+                </div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#11131A', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+                  {project.title}
+                </h3>
+              </div>
+
+              <div className="port-mobile-img-box">
+                <img src={project.image} alt={project.title} className="port-mobile-img" />
+              </div>
+
+              <div className="port-mobile-card-footer">
+                <p className="port-mobile-desc">{project.summary}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748B' }}>📍 {project.location}</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#00A896', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    View Case Study →
+                  </span>
                 </div>
               </div>
             </div>

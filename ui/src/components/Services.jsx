@@ -133,7 +133,7 @@ function WebPlatformsVisual({ webCardRef, webStats1Ref, webStats2Ref }) {
 /* 02: MOBILE ENGINEERING — KINETIC MARQUEE + 3D FLOATING PHONE UI */
 function MobileEngineeringVisual({ phoneCardRef, phonePillRef }) {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', opacity: 0.25, overflow: 'hidden' }}>
         <div style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'svcMarquee 14s linear infinite' }}>
           {[...Array(4)].map((_, i) => (
@@ -303,6 +303,15 @@ function GrowthMarketingVisual({ cardLeftRef, cardCenterRef, cardRightRef, topWi
 export default function Services() {
   const [activeIdx, setActiveIdx] = useState(0);
   const currentService = SERVICES_DATA[activeIdx];
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const sectionRef = useRef(null);
   const rightWrapperRef = useRef(null);
@@ -479,35 +488,29 @@ export default function Services() {
     const section = sectionRef.current;
     if (!section) return;
 
-    let mm = gsap.matchMedia();
+    let pinTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: "+=2200",
+      pin: true,
+      pinSpacing: true,
+      refreshPriority: 3,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        let newIdx = 0;
+        if (progress < 0.25) newIdx = 0;
+        else if (progress < 0.50) newIdx = 1;
+        else if (progress < 0.75) newIdx = 2;
+        else newIdx = 3;
 
-    mm.add("(min-width: 768px)", () => {
-      let pinTrigger = ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: "+=1800",
-        pin: true,
-        pinSpacing: true,
-        refreshPriority: 3,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          let newIdx = 0;
-          if (progress < 0.25) newIdx = 0;
-          else if (progress < 0.50) newIdx = 1;
-          else if (progress < 0.75) newIdx = 2;
-          else newIdx = 3;
-
-          setActiveIdx((prev) => (prev !== newIdx ? newIdx : prev));
-        }
-      });
-
-      return () => {
-        if (pinTrigger) pinTrigger.kill();
-      };
+        setActiveIdx((prev) => (prev !== newIdx ? newIdx : prev));
+      }
     });
 
-    return () => mm.revert();
+    return () => {
+      if (pinTrigger) pinTrigger.kill();
+    };
   }, []);
 
   /* ── REPEATABLE SCROLL ENTRANCE ANIMATION (Header & Selector Cards) ── */
@@ -949,7 +952,7 @@ export default function Services() {
       <div style={{ maxWidth: '1440px', width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
         {/* Section Header — with unique scroll entrance effects */}
-        <div ref={headerRef} style={{ marginBottom: '12px', perspective: '600px' }}>
+        <div ref={headerRef} className="svc-section-header" style={{ marginBottom: isMobile ? 0 : '12px', perspective: '600px', display: isMobile ? 'none' : 'block' }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: 10 }}>
             <span className="svc-hdr-line" style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #0A2E5C, #00A896)', borderRadius: 2, transformOrigin: 'left center', display: 'inline-block' }} />
             <span className="svc-hdr-label" style={{ background: 'linear-gradient(90deg, #0A2E5C 0%, #00A896 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>
@@ -1002,17 +1005,17 @@ export default function Services() {
                     overflow: 'hidden'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, height: '28px' }}>
+                  <div className="svc-card-top-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, height: '28px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <span style={{ fontSize: '1.05rem', fontWeight: 800, color: isActive ? '#FFFFFF' : 'rgba(10, 10, 16, 0.35)', fontFamily: 'var(--font-display)', transition: 'color 0.35s ease' }}>
+                      <span className="svc-card-num" style={{ fontSize: '1.05rem', fontWeight: 800, color: isActive ? '#FFFFFF' : 'rgba(10, 10, 16, 0.35)', fontFamily: 'var(--font-display)', transition: 'color 0.35s ease' }}>
                         {svc.id}
                       </span>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em', transition: 'color 0.35s ease' }}>
+                      <span className="svc-card-title" style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em', transition: 'color 0.35s ease' }}>
                         {svc.shortTitle}
                       </span>
                     </div>
 
-                    <div style={{ width: isActive ? 34 : 28, height: isActive ? 34 : 28, borderRadius: '50%', background: isActive ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#FFFFFF' : '#0A0A10', transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)', flexShrink: 0, transform: isActive ? 'rotate(0deg) scale(1.05)' : 'rotate(-45deg) scale(0.9)' }}>
+                    <div className="svc-arrow-icon" style={{ width: isActive ? 34 : 28, height: isActive ? 34 : 28, borderRadius: '50%', background: isActive ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#FFFFFF' : '#0A0A10', transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)', flexShrink: 0, transform: isActive ? 'rotate(0deg) scale(1.05)' : 'rotate(-45deg) scale(0.9)' }}>
                       <svg width={isActive ? "15" : "14"} height={isActive ? "15" : "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />
@@ -1021,7 +1024,7 @@ export default function Services() {
                   </div>
 
                   {isActive && (
-                    <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.2)', animation: 'svcFadeSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+                    <div className="svc-card-tagline" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.2)', animation: 'svcFadeSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1)' }}>
                       <p style={{ margin: 0, fontSize: '0.88rem', lineHeight: 1.42, color: 'rgba(255, 255, 255, 0.94)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {svc.tagline}
                       </p>
@@ -1033,16 +1036,16 @@ export default function Services() {
           </div>
 
           {/* CENTER: SELECTED SERVICE CONTENT */}
-          <div ref={centerRef} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px' }}>
-            <h3 style={{ fontSize: 'clamp(1.35rem, 2vw, 1.8rem)', fontWeight: 800, fontFamily: 'var(--font-display)', lineHeight: 1.25, color: '#0A0A10', letterSpacing: '-0.015em', margin: '0 0 14px 0' }}>
+          <div ref={centerRef} className="svc-center-col" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px' }}>
+            <h3 className="svc-center-heading" style={{ fontSize: 'clamp(1.35rem, 2vw, 1.8rem)', fontWeight: 800, fontFamily: 'var(--font-display)', lineHeight: 1.25, color: '#0A0A10', letterSpacing: '-0.015em', margin: '0 0 14px 0' }}>
               {currentService.centerHeading}
             </h3>
 
-            <p style={{ fontSize: '1.05rem', lineHeight: 1.62, color: 'rgba(10, 10, 16, 0.68)', margin: '0 0 22px 0', fontFamily: 'var(--font-body)' }}>
+            <p className="svc-subtext-para" style={{ fontSize: '1.05rem', lineHeight: 1.62, color: 'rgba(10, 10, 16, 0.68)', margin: '0 0 22px 0', fontFamily: 'var(--font-body)' }}>
               {currentService.centerSubtext}
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+            <div className="svc-key-point-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
               {currentService.keyPoints.map((point, i) => (
                 <div key={i} className="svc-key-point-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', animation: `svcBulletSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${0.12 + i * 0.08}s both` }}>
                   <div style={{ width: 25, height: 25, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0, 168, 150, 0.15), rgba(0, 229, 255, 0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00A896', flexShrink: 0 }}>
@@ -1230,61 +1233,262 @@ export default function Services() {
         @keyframes svcMarquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes svcFloatObj { 0%{transform:translateY(0) rotate(0deg)} 100%{transform:translateY(-12px) rotate(2deg)} }
 
-        @media (max-width: 1100px) {
+        /* ═══════════════════════════════════════════════════════════════════
+           TABLET & SMALL LAPTOPS (769px - 1200px)
+           ═══════════════════════════════════════════════════════════════════ */
+        @media (min-width: 769px) and (max-width: 1200px) {
           #services {
-            height: auto !important;
-            min-height: auto !important;
-            padding: 60px 4% 35px !important;
+            padding: 50px 3% 24px !important;
           }
           #services .services-grid-container {
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-          }
-          #services .svc-visual-container {
-            grid-column: span 2;
-            height: 400px !important;
-            margin-top: 10px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          #services .svc-visual-container {
-            transform: scale(0.65) !important;
-            transform-origin: center center;
-            height: 380px !important;
-          }
-        }
-
-        @media (max-width: 680px) {
-          #services {
-            padding: 55px 4% 30px !important;
-          }
-          #services .services-grid-container {
-            grid-template-columns: 1fr;
-            gap: 24px;
-          }
-          #services .svc-visual-container {
-            grid-column: span 1;
-            height: 350px !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1.05fr 1.15fr !important;
+            gap: clamp(12px, 1.6vw, 24px) !important;
+            align-items: center !important;
           }
           #services .svc-selector-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            order: initial !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
           }
           #services .svc-selector-card {
-            height: auto !important;
-            padding: 10px 12px !important;
+            display: flex !important;
+            padding: 10px 14px !important;
+          }
+          #services .svc-center-col {
+            order: initial !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            padding: 0 4px !important;
+          }
+          #services .svc-center-heading {
+            order: initial !important;
+            display: block !important;
+            font-size: clamp(1.15rem, 1.5vw, 1.5rem) !important;
+            margin-bottom: 8px !important;
+          }
+          #services .svc-subtext-para {
+            display: block !important;
+            font-size: 0.9rem !important;
+            margin-bottom: 14px !important;
+          }
+          #services .svc-key-point-list {
+            order: initial !important;
+          }
+          #services .svc-key-point-item span {
+            font-size: 0.88rem !important;
+          }
+          #services .svc-cta-link {
+            display: inline-flex !important;
+          }
+          #services .svc-visual-container {
+            order: initial !important;
+            grid-column: span 1 !important;
+            height: 380px !important;
+            margin-top: 0 !important;
+          }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           MOBILE (< 768px) — STEP-BY-STEP SCROLL PINNING VIEWPORT
+           Order:
+           1. Top: Only 1 Active Selector Card Pill (01, 02, 03, or 04)
+           2. Middle: 3D Visual Scene Container
+           3. Bottom: Heading -> Subtext Paragraph -> 3 Bullet Points -> CTA Link
+           ═══════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+          #services {
+            padding: 72px 14px 18px !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            max-height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-around !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+          }
+
+          #services .svc-section-header {
+            display: none !important;
+          }
+
+          #services .services-grid-container {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-around !important;
+            width: 100% !important;
+            height: 100% !important;
+          }
+
+          /* 1. TOP: ONLY 1 ACTIVE SELECTOR PILL CARD SHOWS */
+          #services .svc-selector-col {
+            order: 1 !important;
+            display: block !important;
+            width: 100% !important;
+            margin-bottom: 8px !important;
+          }
+
+          #services .svc-selector-card:not(.is-active) {
+            display: none !important;
+          }
+
+          #services .svc-selector-card.is-active {
+            display: flex !important;
+            height: 48px !important;
+            padding: 10px 16px !important;
+            border-radius: 14px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            transform: none !important;
+            box-shadow: 0 6px 20px rgba(0, 168, 150, 0.25) !important;
+          }
+
+          #services .svc-card-tagline {
+            display: none !important;
+          }
+
+          #services .svc-card-top-row {
+            height: 100% !important;
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+          }
+
+          #services .svc-card-num {
+            font-size: 1.05rem !important;
+            font-weight: 900 !important;
+          }
+
+          #services .svc-card-title {
+            font-size: 1.05rem !important;
+            font-weight: 800 !important;
+            white-space: nowrap !important;
+          }
+
+          #services .svc-arrow-icon {
+            width: 30px !important;
+            height: 30px !important;
+          }
+
+          /* 2. MIDDLE: 3D VISUAL SCENE CONTAINER — UNCLIPPED & FULLY VISIBLE */
+          #services .svc-visual-container {
+            order: 2 !important;
+            height: 230px !important;
+            width: 100% !important;
+            margin: 8px 0 12px 0 !important;
+            border-radius: 24px !important;
+            overflow: visible !important;
+            transform: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+          }
+
+          #services .svc-visual-container > div {
+            transform: scale(0.56) !important;
+            transform-origin: center center !important;
+          }
+
+          /* 3. BOTTOM: HEADING -> SUBTEXT -> 3 BULLET POINTS -> CTA LINK */
+          #services .svc-center-col {
+            order: 3 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-around !important;
+            padding: 0 !important;
+            flex: 1 !important;
+          }
+
+          #services .svc-center-heading {
+            display: block !important;
+            font-size: 1.25rem !important;
+            line-height: 1.32 !important;
+            font-weight: 800 !important;
+            color: #0A0A10 !important;
+            margin: 0 0 8px 0 !important;
+            letter-spacing: -0.015em !important;
+          }
+
+          #services .svc-subtext-para {
+            display: block !important;
+            font-size: 0.95rem !important;
+            line-height: 1.5 !important;
+            color: rgba(10, 10, 16, 0.75) !important;
+            margin: 0 0 12px 0 !important;
+          }
+
+          #services .svc-key-point-list {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            margin: 0 0 10px 0 !important;
+          }
+
+          #services .svc-key-point-item {
+            gap: 12px !important;
+            margin: 0 !important;
+          }
+
+          #services .svc-key-point-item span {
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+          }
+
+          /* SERVICE CTA LINK HIDDEN ONLY ON MOBILE VIEW */
+          #services .svc-cta-wrapper,
+          #services .svc-cta-link {
+            display: none !important;
           }
         }
 
         @media (max-width: 480px) {
-          #services .svc-selector-col {
-            grid-template-columns: 1fr;
+          #services {
+            padding: 70px 12px 14px !important;
+          }
+          #services .svc-selector-card.is-active {
+            height: 44px !important;
+            padding: 8px 14px !important;
+          }
+          #services .svc-card-num,
+          #services .svc-card-title {
+            font-size: 1.0rem !important;
           }
           #services .svc-visual-container {
-            transform: scale(0.55) !important;
-            height: 320px !important;
+            height: 220px !important;
+            margin: 6px 0 10px 0 !important;
+          }
+          #services .svc-visual-container > div {
+            transform: scale(0.58) !important;
+          }
+          #services .svc-center-heading {
+            font-size: 1.18rem !important;
+            line-height: 1.3 !important;
+            margin: 0 0 6px 0 !important;
+          }
+          #services .svc-subtext-para {
+            font-size: 0.90rem !important;
+            line-height: 1.45 !important;
+            margin: 0 0 8px 0 !important;
+          }
+          #services .svc-key-point-list {
+            gap: 8px !important;
+            margin: 0 !important;
+          }
+          #services .svc-key-point-item {
+            gap: 10px !important;
+          }
+          #services .svc-key-point-item span {
+            font-size: 0.90rem !important;
+          }
+          #services .svc-cta-wrapper,
+          #services .svc-cta-link {
+            display: none !important;
           }
         }
       `}</style>

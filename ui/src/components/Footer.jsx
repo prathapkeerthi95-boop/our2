@@ -85,31 +85,30 @@ const Footer = () => {
       />
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-        <div className="footer-grid">
+        <div className="footer-grid" style={{ textAlign: 'center' }}>
           {/* Brand */}
-          <div className="footer-brand">
-            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1.2rem' }}>
+          <div className="footer-brand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '1.2rem' }}>
               <img 
                 src="/nuzarox-full-logo.png" 
                 alt="Nuzarox Company Logo" 
                 style={{
-                  height: '80px',
+                  height: '58px',
                   width: 'auto',
-                  objectFit: 'contain',
-                  mixBlendMode: 'multiply' /* This removes the white background against the off-white footer! */
+                  objectFit: 'contain'
                 }}
               />
             </div>
-            <p style={{ color: '#475569' }}>
+            <p style={{ color: '#475569', textAlign: 'center', margin: '0 auto' }}>
               An elite digital agency engineering next-generation websites, mobile apps,
               brand identities, and growth strategies for ambitious businesses.
             </p>
           </div>
 
           {/* Services */}
-          <div className="footer-col">
-            <h4 className="footer-unique-heading">Services</h4>
-            <ul>
+          <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Services</h4>
+            <ul style={{ padding: 0, margin: 0, textAlign: 'center' }}>
               <li><a href="#services" style={{ color: '#475569' }}>Web Development</a></li>
               <li><a href="#services" style={{ color: '#475569' }}>Mobile Apps</a></li>
               <li><a href="#services" style={{ color: '#475569' }}>Digital Marketing</a></li>
@@ -119,9 +118,9 @@ const Footer = () => {
           </div>
 
           {/* Company */}
-          <div className="footer-col">
-            <h4 className="footer-unique-heading">Company</h4>
-            <ul>
+          <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Company</h4>
+            <ul style={{ padding: 0, margin: 0, textAlign: 'center' }}>
               <li><a href="#about" style={{ color: '#475569' }}>About Us</a></li>
               <li><a href="#portfolio" style={{ color: '#475569' }}>Our Work</a></li>
               <li><a href="#process" style={{ color: '#475569' }}>Process</a></li>
@@ -131,38 +130,34 @@ const Footer = () => {
           </div>
 
           {/* Follow Us (Replaces Contact) */}
-          <div className="footer-col">
-            <h4 className="footer-unique-heading">Follow Us</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-              <a href="https://www.instagram.com/nuza_rox?stkn=MTB1eWNtZnpsYmdiOA==" target="_blank" rel="noopener noreferrer" className="social-list-item">
+          <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Follow Us</h4>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem', marginTop: '0.8rem', justifyContent: 'center', alignItems: 'center' }}>
+              <a href="https://www.instagram.com/nuza_rox?stkn=MTB1eWNtZnpsYmdiOA==" target="_blank" rel="noopener noreferrer" className="social-list-item" aria-label="Instagram">
                 <span className="footer-social-pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 </span>
-                <span className="social-text">Instagram</span>
               </a>
-              <a href="https://www.linkedin.com/in/nuzarox-techies-b504b5429/" target="_blank" rel="noopener noreferrer" className="social-list-item">
+              <a href="https://www.linkedin.com/in/nuzarox-techies-b504b5429/" target="_blank" rel="noopener noreferrer" className="social-list-item" aria-label="LinkedIn">
                 <span className="footer-social-pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                 </span>
-                <span className="social-text">LinkedIn</span>
               </a>
-              <a href="#" className="social-list-item">
+              <a href="#" className="social-list-item" aria-label="X (Twitter)">
                 <span className="footer-social-pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
                 </span>
-                <span className="social-text">X (Twitter)</span>
               </a>
-              <a href="#" className="social-list-item">
+              <a href="#" className="social-list-item" aria-label="Facebook">
                 <span className="footer-social-pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                 </span>
-                <span className="social-text">Facebook</span>
               </a>
             </div>
           </div>
         </div>
 
-        <div className="footer-bottom" style={{ borderTopColor: 'rgba(0,0,0,0.1)' }}>
+        <div className="footer-bottom" style={{ borderTopColor: 'rgba(0,0,0,0.1)', justifyContent: 'center', textAlign: 'center' }}>
           <p>&copy; {new Date().getFullYear()} NUZAROX. All rights reserved. Engineered with precision.</p>
         </div>
       </div>

@@ -39,6 +39,23 @@ const CTABanner = () => {
           50% { transform: scale(1.08) translate(-15px, 10px); opacity: 0.95; }
           100% { transform: scale(1.03) translate(15px, -10px); opacity: 0.75; }
         }
+        @media (max-width: 768px) {
+          .cta-banner {
+            padding: 3.5rem 0 3rem !important;
+          }
+          .cta-banner .container {
+            padding: 0 1.2rem !important;
+          }
+          .cta-banner .btn-primary {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .cta-banner {
+            padding: 2.5rem 0 2rem !important;
+          }
+        }
       `}</style>
 
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>

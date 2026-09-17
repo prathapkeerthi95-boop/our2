@@ -282,11 +282,11 @@ const ZoomHero = () => {
           padding: '0 2rem'
         }}
       >
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="zoom-hero-title-box" style={{ marginBottom: '1.5rem' }}>
           {/* Line 1 */}
-          <div ref={line1Ref} style={{ overflow: 'hidden', paddingBottom: '0.1em' }}>
+          <div ref={line1Ref} className="hero-line-1" style={{ overflow: 'hidden', paddingBottom: '0.1em' }}>
             <h1 style={{
-              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
+              fontSize: 'clamp(2.8rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -294,14 +294,14 @@ const ZoomHero = () => {
               color: '#11131A',
               margin: 0
             }}>
-              {splitChars('Our Craft')}
+              <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>{splitChars('Our Craft')}</span>
             </h1>
           </div>
 
           {/* Line 2 — UNIQUE VIBRANT GRADIENT TEXT */}
-          <div ref={line2Ref} style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
+          <div ref={line2Ref} className="hero-line-2" style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.35em', paddingBottom: '0.15em' }}>
             <h1 className="hero-char" style={{
-              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
+              fontSize: 'clamp(2.8rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -317,7 +317,7 @@ const ZoomHero = () => {
               Digital
             </h1>
             <h1 style={{
-              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
+              fontSize: 'clamp(2.8rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -325,14 +325,14 @@ const ZoomHero = () => {
               color: '#11131A',
               margin: 0
             }}>
-              {splitChars('Ecosystems')}
+              <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>{splitChars('Ecosystems')}</span>
             </h1>
           </div>
 
           {/* Line 3 — with rotating word */}
-          <div ref={line3Ref} style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
+          <div ref={line3Ref} className="hero-line-3" style={{ overflow: 'hidden', display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '0.3em', paddingBottom: '0.15em' }}>
             <h1 style={{
-              fontSize: 'clamp(2.4rem, 8vw, 8rem)',
+              fontSize: 'clamp(2.8rem, 8vw, 8rem)',
               fontWeight: '900',
               fontFamily: 'var(--font-display)',
               lineHeight: 1.1,
@@ -341,7 +341,7 @@ const ZoomHero = () => {
               margin: 0,
               marginRight: '0.32em'
             }}>
-              {splitChars('That')}
+              <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>{splitChars('That')}</span>
             </h1>
 
             {/* ROTATING CAROUSEL WORD */}
@@ -364,7 +364,7 @@ const ZoomHero = () => {
                   style={{
                     gridArea: '1 / 1 / 2 / 2',
                     visibility: i === 0 ? 'visible' : 'hidden',
-                    fontSize: 'clamp(2.4rem, 8vw, 8rem)',
+                    fontSize: 'clamp(2.8rem, 8vw, 8rem)',
                     fontWeight: '900',
                     fontFamily: 'var(--font-display)',
                     lineHeight: 1.1, 
@@ -395,9 +395,9 @@ const ZoomHero = () => {
         />
 
         {/* BOTTOM ROW — Subtitle + CTA */}
-        <div style={{
+        <div className="hero-bottom-row" style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-          flexWrap: 'wrap', gap: '2rem'
+          flexWrap: 'wrap', gap: '1.5rem'
         }}>
           <p
             ref={subtitleRef}
@@ -523,11 +523,87 @@ const ZoomHero = () => {
           100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
+        @media (max-width: 1024px) {
+          .zoom-hero-section { padding-top: 120px !important; padding-bottom: 2rem !important; }
+        }
+
         @media (max-width: 768px) {
-          .zoom-hero-section { padding-top: 100px !important; padding-bottom: 2rem !important; }
+          .zoom-hero-section {
+            min-height: 100dvh !important;
+            height: auto !important;
+            padding-top: 85px !important;
+            padding-bottom: 2.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+          }
+          .zoom-hero-section .container {
+            padding: 0 1.2rem !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+          }
+          .zoom-hero-title-box {
+            margin-bottom: 1.8rem !important;
+          }
+          .hero-line-1, .hero-line-2, .hero-line-3 {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: baseline !important;
+          }
+          .zoom-hero-section h1,
+          .zoom-hero-section .carousel-word {
+            font-size: clamp(2.6rem, 11vw, 4.2rem) !important;
+            line-height: 1.08 !important;
+            letter-spacing: -0.04em !important;
+          }
+          .hero-line-2 h1 {
+            margin-right: 0.22em !important;
+          }
+          .hero-line-3 h1 {
+            margin-right: 0.25em !important;
+          }
+          .hero-bottom-row {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.2rem !important;
+          }
+          .hero-bottom-row p {
+            font-size: 0.95rem !important;
+            line-height: 1.55 !important;
+            max-width: 100% !important;
+            color: rgba(17, 19, 26, 0.7) !important;
+          }
           .btn-hero-gradient, .btn-hero-glass {
-            padding: 0.65rem 1.3rem;
-            font-size: 0.78rem;
+            padding: 0.8rem 1.5rem !important;
+            font-size: 0.85rem !important;
+            flex: 1 !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .zoom-hero-section {
+            padding-top: 80px !important;
+            padding-bottom: 2rem !important;
+          }
+          .hero-line-1, .hero-line-2, .hero-line-3 {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: baseline !important;
+          }
+          .zoom-hero-section h1,
+          .zoom-hero-section .carousel-word {
+            font-size: clamp(2.5rem, 10.5vw, 3.8rem) !important;
+          }
+          .hero-bottom-row p {
+            font-size: 0.9rem !important;
+          }
+          .btn-hero-gradient, .btn-hero-glass {
+            padding: 0.75rem 1.3rem !important;
+            font-size: 0.8rem !important;
           }
         }
       `}</style>

@@ -1116,6 +1116,22 @@ select option { background: #fff; color: var(--text-black); }
   letter-spacing: 0.18em;
   color: #022B5D; /* Nuzarox deep navy brand color */
   margin-bottom: 1.25rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.footer-unique-heading::after, .footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2.5px;
+  background-color: #00E5FF;
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
 }
 
 .footer-col ul { list-style: none; }
@@ -2795,11 +2811,16 @@ html.lenis, html.lenis body { height: auto; }
   pointer-events: none;
 }
 
+.port-mobile-pinned-section {
+  display: none;
+}
+
 /* GSAP ScrollTrigger Pinned Overlapping Stack Container */
 .metaskapes-pinned-section {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 84px);
+  min-height: 560px;
   overflow: hidden;
 }
 
@@ -2817,13 +2838,299 @@ html.lenis, html.lenis body { height: auto; }
   width: 100%;
   height: 100%;
   overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.08); /* Soft shadow for light theme */
+  border-radius: 28px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -15px 45px rgba(0, 0, 0, 0.12), 0 20px 50px rgba(0, 0, 0, 0.06);
   will-change: transform;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Portfolio Responsive */
+@media (max-width: 1024px) {
+  .metaskapes-projects-section {
+    padding: 4rem 0 0;
+  }
+  .metaskapes-container {
+    padding: 0 1.5rem;
+  }
+  .metaskapes-card-image-wrapper {
+    height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Zoom Hero Title Size Boost on Mobile - Fill Screen Box */
+  .zoom-hero-title-box h1,
+  .zoom-hero-title-box .carousel-word {
+    font-size: clamp(3.5rem, 13.5vw, 5.5rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.04em !important;
+  }
+
+  /* Portfolio Section Background - Match Desktop Light Theme Header */
+  .metaskapes-projects-section {
+    padding: 2.5rem 0 2rem 0 !important;
+    background: transparent !important;
+  }
+  .metaskapes-container {
+    padding: 0 1.2rem !important;
+  }
+  .metaskapes-header-wrapper {
+    display: none !important;
+  }
+  .metaskapes-pinned-section {
+    display: none !important;
+  }
+
+  .port-mobile-pinned-section {
+    display: flex !important;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 150px);
+    margin: 0 auto 2.5rem;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: transparent !important;
+  }
+
+  .port-mobile-header-box {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 0.2rem 1rem 0.6rem;
+    background: transparent !important;
+  }
+
+  .port-mobile-slides-wrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .port-mobile-card {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 0.85rem 0.95rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .port-mobile-card-header {
+    flex-shrink: 0;
+  }
+
+  .port-mobile-img-box {
+    flex: 1;
+    min-height: 85px;
+    max-height: 140px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 4px 0;
+    position: relative;
+    background: #F8FAFC;
+  }
+
+  .port-mobile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .port-mobile-card-footer {
+    flex-shrink: 0;
+  }
+
+  .port-mobile-desc {
+    font-size: 0.74rem;
+    line-height: 1.35;
+    color: #475569;
+    font-weight: 500;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Image Box inside Mobile Card */
+  .metaskapes-sticky-bg-wrapper {
+    position: relative !important;
+    width: 100% !important;
+    height: 220px !important;
+    min-height: 220px !important;
+    overflow: hidden !important;
+    background: #F1F5F9 !important;
+    border-radius: 24px 24px 0 0 !important;
+  }
+
+  .metaskapes-sticky-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  .metaskapes-sticky-image.is-gagner {
+    object-fit: cover !important;
+    object-position: center 20% !important;
+    background: transparent !important;
+  }
+
+  /* Remove dark vignette mask on light mobile cards */
+  .metaskapes-sticky-mask {
+    display: none !important;
+  }
+
+  /* Card Content Padding & Light Typography */
+  .metaskapes-sticky-content {
+    position: relative !important;
+    height: auto !important;
+    padding: 1.25rem !important;
+    background: #FFFFFF !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+  }
+  
+  .metaskapes-sticky-card-box {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .metaskapes-tag-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    background: rgba(0, 229, 255, 0.1) !important;
+    border: 1px solid rgba(0, 168, 150, 0.25) !important;
+    color: #00A896 !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 2px !important;
+  }
+  .metaskapes-tag-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: #00A896 !important;
+    box-shadow: none !important;
+  }
+
+  .metaskapes-sticky-title {
+    font-size: 1.45rem !important;
+    line-height: 1.2 !important;
+    margin: 4px 0 2px 0 !important;
+    color: #11131A !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+    text-shadow: none !important;
+  }
+
+  .metaskapes-sticky-location {
+    font-size: 0.82rem !important;
+    color: #00A896 !important;
+    font-weight: 700 !important;
+    margin: 0 0 6px 0 !important;
+    text-shadow: none !important;
+  }
+
+  .metaskapes-sticky-summary {
+    font-size: 0.88rem !important;
+    line-height: 1.5 !important;
+    color: #475569 !important;
+    margin: 0 0 14px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .metaskapes-explore-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 24px !important;
+    border-radius: 30px !important;
+    background: #11131A !important;
+    color: #FFFFFF !important;
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+  }
+  /* Modal responsive */
+  .metaskapes-modal-content {
+    width: 95vw !important;
+    max-height: 92vh !important;
+    padding: 1.5rem !important;
+    border-radius: 18px !important;
+  }
+  .metaskapes-meta-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.8rem !important;
+  }
+  .metaskapes-modal-footer {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .metaskapes-projects-section {
+    padding: 2rem 0 0;
+  }
+  .metaskapes-card-image-wrapper {
+    height: 200px;
+  }
+  .metaskapes-card-title {
+    font-size: 1.2rem;
+  }
+  .metaskapes-pinned-section {
+    height: 60vh;
+  }
+  .metaskapes-modal-content {
+    padding: 1rem !important;
+    border-radius: 14px !important;
+  }
+  .metaskapes-meta-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
 /* ============================================
    RESPONSIVE OVERRIDES FOR MOBILE & TABLET SCREENS
+   Zero desktop changes — all rules within @media only
    ============================================ */
 
 /* TABLET & SMALL LAPTOPS (max-width: 1024px) */
@@ -2831,16 +3138,29 @@ html.lenis, html.lenis body { height: auto; }
   .container {
     padding: 0 1.5rem !important;
   }
-  .services-grid-new {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1.5rem !important;
-  }
+
+  /* About */
   .about-grid {
     grid-template-columns: 1fr !important;
-    gap: 3rem !important;
+    gap: 2.5rem !important;
   }
-  .video-grid {
+
+  /* About features 2-col stays on tablet */
+  .about-features {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Contact */
+  .contact-grid {
     grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
   }
 }
 
@@ -2851,103 +3171,102 @@ html.lenis, html.lenis body { height: auto; }
   }
 
   .container {
-    padding: 0 1.2rem !important;
+    padding: 0 1rem !important;
   }
 
-  h1 { font-size: clamp(2.2rem, 8vw, 3.8rem) !important; }
-  h2 { font-size: clamp(1.8rem, 6.5vw, 2.8rem) !important; }
-  h3 { font-size: clamp(1.3rem, 5vw, 2rem) !important; }
-  p { font-size: 0.95rem !important; line-height: 1.65 !important; }
+  /* ── TYPOGRAPHY SCALING ── */
+  h1 { font-size: clamp(2rem, 8vw, 3.5rem) !important; }
+  h2 { font-size: clamp(1.7rem, 6.5vw, 2.6rem) !important; }
+  h3 { font-size: clamp(1.2rem, 5vw, 1.8rem) !important; }
+  p { font-size: 0.92rem !important; line-height: 1.6 !important; }
 
-  /* Navbar Adjustments */
-  .navbar-links {
-    gap: 1.2rem !important;
-  }
-  .navbar-links a {
-    font-size: 0.78rem !important;
-  }
-
-  /* Services Section */
-  .services-section {
-    padding: 4rem 0 !important;
-  }
-  .services-grid-new {
-    grid-template-columns: 1fr !important;
-    gap: 1.25rem !important;
-    margin-top: 2rem !important;
-  }
-  .service-card-new {
-    padding: 1.75rem !important;
-  }
-  .service-card-new .service-num {
-    font-size: 4rem !important;
-    top: -0.2rem !important;
-    right: 1rem !important;
-  }
-
-  /* About Section Features */
+  /* ── ABOUT SECTION ── */
   .about-section {
-    padding: 3rem 0 1rem !important;
+    padding: 2.5rem 0 1rem !important;
+  }
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
   }
   .about-features {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.8rem !important;
+  }
+  .about-feature {
+    padding: 1.2rem !important;
+  }
+  .about-video-wrapper {
+    border-radius: 24px !important;
+    aspect-ratio: 16/9 !important;
+    min-height: auto !important;
+    background: transparent !important;
+  }
+  .about-video-wrapper img {
+    object-fit: cover !important;
+    object-position: center !important;
+    background: transparent !important;
+  }
+  .about-video-overlay {
+    padding: 1.2rem !important;
+  }
+  .about-video-overlay h3 {
+    font-size: 1.2rem !important;
   }
 
-  /* Process Horizontal Cards on Mobile */
-  .proc-step-item {
-    width: 90vw !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    padding: 2rem 1.2rem !important;
-    gap: 1.5rem !important;
+  /* ── FOOTER ── */
+  .footer {
+    padding: 3rem 0 1.5rem !important;
   }
-  .proc-step-left {
-    width: 100% !important;
-    flex: none !important;
-  }
-  .proc-step-right {
-    width: 100% !important;
-    height: 250px !important;
-    flex: none !important;
-  }
-
-  /* Testimonials Marquee Cards */
-  .testimonial-card {
-    min-width: 290px !important;
-    max-width: 320px !important;
-    padding: 1.5rem !important;
-  }
-
-  /* Contact Form Grid */
-  .contact-form-card {
-    padding: 2rem 1.2rem !important;
-  }
-  .contact-grid-2col {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Footer */
   .footer-grid {
     grid-template-columns: 1fr !important;
     gap: 2rem !important;
+    margin-bottom: 2rem !important;
+  }
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 0.8rem !important;
+    text-align: center !important;
+  }
+  .footer-bottom p {
+    font-size: 0.75rem !important;
+  }
+  .footer-unique-heading,
+  .footer-col h4 {
+    font-size: 1rem !important;
+  }
+
+  /* ── CONTACT SECTION ── */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.15em !important;
+    margin-bottom: 0.8rem !important;
   }
 }
 
 /* COMPACT MOBILE SCREENS (max-width: 480px) */
 @media (max-width: 480px) {
-  .navbar-links {
-    display: none !important;
+  .container {
+    padding: 0 0.8rem !important;
   }
-  .hero-badge {
-    font-size: 0.68rem !important;
-    padding: 0.35rem 0.9rem !important;
-  }
+
+  h1 { font-size: clamp(1.8rem, 8vw, 2.8rem) !important; }
+  h2 { font-size: clamp(1.5rem, 7vw, 2.2rem) !important; }
+
   .btn-primary, .btn-premium, .btn-outline {
-    padding: 0.85rem 1.8rem !important;
-    font-size: 0.85rem !important;
+    padding: 0.8rem 1.5rem !important;
+    font-size: 0.82rem !important;
     width: 100% !important;
     justify-content: center !important;
+  }
+
+  .about-features {
+    gap: 0.6rem !important;
   }
 }
 

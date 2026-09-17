@@ -233,7 +233,7 @@ function App() {
       </div>
 
       {/* UNIFIED CIRCULAR MOTION FRAME SYSTEM FOR PORTFOLIO */}
-      <div style={{ position: 'relative', zIndex: 10, backgroundColor: '#F1F4F9', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', zIndex: 15, backgroundColor: '#F1F4F9' }}>
         <SoftWavesBackground />
         <Portfolio />
       </div>
@@ -241,7 +241,7 @@ function App() {
       {/* PROCESS + TESTIMONIALS */}
       <div style={{ 
         position: 'relative', 
-        zIndex: 10, 
+        zIndex: 20, 
         backgroundColor: '#FFFFFF' 
       }}>
         <Process />

@@ -357,23 +357,31 @@ const Stats = () => {
           background: var(--card-accent);
         }
 
+        /* Tablet Adjustments */
+        @media (max-width: 1024px) {
+          .stats-section {
+            height: auto;
+            min-height: auto;
+          }
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 768px) {
           .stats-section {
             height: auto;
-            min-height: 100vh;
-            padding: 6rem 0;
+            min-height: auto;
+            padding: 4rem 0;
             overflow-x: hidden;
             overflow-y: auto;
           }
           
           .stats-bg-text {
-            font-size: 8rem;
+            font-size: 6rem;
             flex-direction: column;
             text-align: center;
             top: 10%;
             transform: none;
-            gap: 2rem;
+            gap: 1rem;
           }
 
           .stats-track {
@@ -382,15 +390,12 @@ const Stats = () => {
             height: auto;
             flex-direction: column;
             align-items: center;
-            gap: 4rem;
-            padding-bottom: 4rem;
+            gap: 2.5rem;
+            padding-bottom: 2rem;
           }
 
           .stats-pill-badge {
-            position: relative;
-            top: 0;
-            left: 0;
-            margin-bottom: 3rem;
+            display: none !important;
           }
 
           .stat-card {
@@ -399,6 +404,9 @@ const Stats = () => {
             top: 0 !important;
             transform: none !important;
             width: 85vw;
+            max-width: 340px;
+            height: auto;
+            min-height: 180px;
           }
 
           .stat-card .stat-content-main {
@@ -408,6 +416,28 @@ const Stats = () => {
           .stat-card .stat-badge {
             opacity: 1;
             transform: translateY(0);
+          }
+          .stat-value {
+            font-size: 2.8rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stats-section {
+            padding: 3rem 0;
+          }
+          .stats-bg-text {
+            font-size: 4rem;
+          }
+          .stat-card {
+            width: 90vw;
+            padding: 18px;
+          }
+          .stat-value {
+            font-size: 2.4rem;
+          }
+          .stat-label {
+            font-size: 0.7rem;
           }
         }
       `}</style>

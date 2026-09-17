@@ -10,6 +10,7 @@ const WhatsAppBubbleWidget = () => {
 
   return (
     <div
+      className="whatsapp-widget-container"
       style={{
         position: 'fixed',
         bottom: '2.2rem',
@@ -47,7 +48,7 @@ const WhatsAppBubbleWidget = () => {
         Chat with Us
       </div>
 
-      {/* ── LIQUID FROSTED GLASS BUBBLE BUTTON ── */}
+      {/* ── SOLID CLEAN WHATSAPP BUBBLE BUTTON ── */}
       <a
         href={whatsappUrl}
         target="_blank"
@@ -58,38 +59,22 @@ const WhatsAppBubbleWidget = () => {
         className="liquid-whatsapp-bubble"
         style={{
           position: 'relative',
-          width: '64px',
-          height: '64px',
+          width: '56px',
+          height: '56px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.98), rgba(240, 253, 244, 0.9) 60%, rgba(220, 252, 231, 0.8))',
-          backdropFilter: 'blur(20px) saturate(190%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(190%)',
+          background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
           border: 'none',
           outline: 'none',
-          boxShadow: '0 14px 35px rgba(37, 211, 102, 0.35), inset 0 2px 4px rgba(255, 255, 255, 1)',
+          boxShadow: '0 8px 24px rgba(37, 211, 102, 0.35)',
           cursor: 'pointer',
           textDecoration: 'none',
           WebkitTapHighlightColor: 'transparent',
-          transition: 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease',
-          animation: 'liquidBubbleFloat 4s ease-in-out infinite'
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease'
         }}
       >
-        {/* LIQUID WAVE RIPPLE AURA */}
-        <span
-          style={{
-            position: 'absolute',
-            inset: '-6px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(37, 211, 102, 0.35) 0%, transparent 70%)',
-            zIndex: -1,
-            animation: 'liquidPulseGlow 2.5s ease-in-out infinite alternate',
-            pointerEvents: 'none'
-          }}
-        />
-
         {/* WHATSAPP HIGH-RES SOLID GREEN & WHITE SVG ICON */}
         <svg
           viewBox="0 0 32 32"
@@ -141,6 +126,35 @@ const WhatsAppBubbleWidget = () => {
         }
         .liquid-whatsapp-bubble:active {
           transform: scale(0.95) !important;
+        }
+        @media (max-width: 768px) {
+          .whatsapp-widget-container {
+            bottom: 1.2rem !important;
+            right: 1.2rem !important;
+            gap: 0.5rem !important;
+          }
+          .liquid-whatsapp-bubble {
+            width: 52px !important;
+            height: 52px !important;
+          }
+          .liquid-whatsapp-bubble svg {
+            width: 30px !important;
+            height: 30px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .whatsapp-widget-container {
+            bottom: 1rem !important;
+            right: 1rem !important;
+          }
+          .liquid-whatsapp-bubble {
+            width: 46px !important;
+            height: 46px !important;
+          }
+          .liquid-whatsapp-bubble svg {
+            width: 26px !important;
+            height: 26px !important;
+          }
         }
       `}</style>
     </div>

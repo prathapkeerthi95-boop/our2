@@ -141,69 +141,64 @@ const Process = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
+  const mobilePinnedRef = useRef(null);
 
   useEffect(() => {
-    if (!headerRef.current) return;
+    if (!mobilePinnedRef.current) return;
 
-    const headerCtx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: 'top 95%',
-          end: 'bottom 40%',
-          scrub: 1.5,
+    const ctx = gsap.context(() => {
+      const container = mobilePinnedRef.current;
+      if (!container) return;
+      const slides = Array.from(container.querySelectorAll('.proc-mobile-card'));
+      if (slides.length === 0) return;
+
+      slides.forEach((slide, i) => {
+        if (i === 0) {
+          gsap.set(slide, { yPercent: 0, opacity: 1 });
+        } else {
+          gsap.set(slide, { yPercent: 100, opacity: 1 });
         }
       });
 
-      tl.fromTo('.proc-hdr-line',
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 1, ease: 'power2.out' }
-      );
-      
-      tl.fromTo('.proc-hdr-label',
-        { y: 50, opacity: 0, filter: 'blur(20px)', scale: 0.5 },
-        { y: 0, opacity: 1, filter: 'blur(0px)', scale: 1, duration: 1, ease: 'power3.out' },
-        '<0.2'
-      );
+      const mm = gsap.matchMedia();
+      mm.add("(max-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top+=75px",
+            end: () => `+=${slides.length * 45}%`,
+            pin: true,
+            scrub: 0.3,
+            refreshPriority: 2,
+            invalidateOnRefresh: true
+          }
+        });
 
-      tl.fromTo('.proc-hdr-word',
-        { 
-          y: 180, opacity: 0, rotateX: 90, rotateY: 20, rotateZ: -15, scale: 0.3,
-          filter: 'blur(25px) drop-shadow(0px 20px 30px rgba(0, 168, 150, 0.8))'
-        },
-        { 
-          y: 0, opacity: 1, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1, 
-          filter: 'blur(0px) drop-shadow(0px 0px 0px rgba(0, 168, 150, 0))',
-          duration: 2, stagger: 0.25, ease: 'power4.out' 
-        },
-        '<0.3'
-      );
-    }, headerRef);
+        slides.forEach((slide, i) => {
+          if (i === 0) return;
 
-    const accordionCtx = gsap.context(() => {
-      gsap.fromTo('.proc-accordion',
-        { y: 60, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.proc-accordion', start: 'top 85%' }
-        }
-      );
-    }, sectionRef);
+          tl.to(slide, {
+            yPercent: 0,
+            ease: "none",
+            duration: 1
+          });
 
-    return () => {
-      headerCtx.revert();
-      accordionCtx.revert();
-    };
+          tl.to({}, { duration: 0.35 });
+        });
+      });
+    }, mobilePinnedRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <section id="process" ref={sectionRef} className="process-section">
 
-      {/* 1. TOP ANIMATED VECTOR WAVES */}
+      {/* TOP ANIMATED VECTOR WAVES */}
       <VectorWavesBackground />
 
       {/* ── HEADER ── */}
-      <div ref={headerRef} style={{ position: 'relative', zIndex: 10, maxWidth: '1300px', margin: '0 auto', padding: '8rem 5% 4rem', textAlign: 'center' }}>
+      <div ref={headerRef} className="proc-header-container">
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', overflow: 'hidden' }}>
           <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
           <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.2em', color: '#00A896', textTransform: 'uppercase' }}>
@@ -213,15 +208,15 @@ const Process = () => {
         </div>
         
         <h2 style={{ 
-          fontSize: 'clamp(3rem, 6vw, 5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
+          fontSize: 'clamp(2.5rem, 5vw, 5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
           color: '#11131A', letterSpacing: '-0.03em', margin: 0, lineHeight: 1.1,
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px'
         }}>
           <span className="proc-hdr-word" style={{ display: 'inline-block' }}>How</span>
           <span className="proc-hdr-word" style={{ display: 'inline-block' }}>We</span>
           <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Build</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block', color: 'transparent', WebkitTextStroke: '2px rgba(0, 0, 0, 0.08)' }}>Digital</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block', color: 'transparent', WebkitTextStroke: '2px rgba(0, 0, 0, 0.08)' }}>Dominance</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block', color: 'transparent', WebkitTextStroke: '2px rgba(17, 19, 26, 0.55)' }}>Digital</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block', color: 'transparent', WebkitTextStroke: '2px rgba(17, 19, 26, 0.55)' }}>Dominance</span>
         </h2>
       </div>
 
@@ -229,44 +224,78 @@ const Process = () => {
       <div style={{ position: 'relative' }}>
         <SpinningTechOrbitsBackground />
 
-      {/* ── BUZZWORTHY ACCORDION ── */}
-      <div className="proc-accordion">
-        {steps.map((step, i) => (
-          <div
-            key={i}
-            className={`proc-strip ${activeIndex === i ? 'active' : ''}`}
-            onMouseEnter={() => setActiveIndex(i)}
-          >
-            {/* Top: Dot + Number */}
-            <div className="strip-top">
-              <span className="strip-dot" />
-              <span className="strip-num">{step.num}</span>
-            </div>
-
-            {/* Expanded Content (only visible when active) */}
-            <div className="strip-expanded-content">
-              <div className="strip-text-side">
-                <h3 className="strip-title">
-                  {step.title.split('\n').map((line, li) => (
-                    <span key={li}>{line}<br/></span>
-                  ))}
-                </h3>
-                <p className="strip-desc">{step.desc}</p>
+        {/* ── BUZZWORTHY ACCORDION (DESKTOP VIEW) ── */}
+        <div className="proc-accordion">
+          {steps.map((step, i) => (
+            <div
+              key={i}
+              className={`proc-strip ${activeIndex === i ? 'active' : ''}`}
+              onMouseEnter={() => setActiveIndex(i)}
+            >
+              {/* Top: Dot + Number */}
+              <div className="strip-top">
+                <span className="strip-dot" />
+                <span className="strip-num">{step.num}</span>
               </div>
-              <div className="strip-image-side">
-                <img src={step.image} alt={step.title.replace('\n', ' ')} className="strip-img" />
+
+              {/* Expanded Content (only visible when active) */}
+              <div className="strip-expanded-content">
+                <div className="strip-text-side">
+                  <h3 className="strip-title">
+                    {step.title.split('\n').map((line, li) => (
+                      <span key={li}>{line}<br/></span>
+                    ))}
+                  </h3>
+                  <p className="strip-desc">{step.desc}</p>
+                </div>
+                <div className="strip-image-side">
+                  <img src={step.image} alt={step.title.replace('\n', ' ')} className="strip-img" />
+                </div>
+              </div>
+
+              {/* Rotated Title (only visible when NOT active) */}
+              <div className="strip-rotated">
+                <span className="strip-rotated-text">
+                  {step.title.replace('\n', ' ')}
+                </span>
               </div>
             </div>
+          ))}
+        </div>
 
-            {/* Rotated Title (only visible when NOT active) */}
-            <div className="strip-rotated">
-              <span className="strip-rotated-text">
-                {step.title.replace('\n', ' ')}
+        {/* ── MOBILE PINNED OVERLAPPING CARDS (MOBILE VIEW ONLY) ── */}
+        <div ref={mobilePinnedRef} className="proc-mobile-pinned-section">
+          <div className="proc-mobile-header-box">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '0.4rem' }}>
+              <span className="proc-hdr-line" style={{ width: '30px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)' }} />
+              <span className="proc-hdr-label" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.15em', color: '#00A896', textTransform: 'uppercase' }}>
+                Our Process
               </span>
+              <span className="proc-hdr-line" style={{ width: '30px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)' }} />
             </div>
+            <h2 style={{ fontSize: '1.45rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#11131A', margin: 0, lineHeight: 1.15 }}>
+              How We Build <span style={{ color: 'transparent', WebkitTextStroke: '1.5px rgba(17, 19, 26, 0.55)' }}>Digital Dominance</span>
+            </h2>
           </div>
-        ))}
-      </div>
+
+          <div className="proc-mobile-slides-wrapper">
+            {steps.map((step, idx) => (
+              <div key={idx} className="proc-mobile-card" style={{ zIndex: idx + 1 }}>
+                <div className="proc-mobile-card-header">
+                  <div className="proc-mobile-num-badge">
+                    <span className="proc-mobile-dot" />
+                    <span className="proc-mobile-num">{step.num}</span>
+                  </div>
+                  <h3 className="proc-mobile-title">{step.title.replace('\n', ' ')}</h3>
+                </div>
+                <div className="proc-mobile-img-box">
+                  <img src={step.image} alt={step.title.replace('\n', ' ')} className="proc-mobile-img" />
+                </div>
+                <p className="proc-mobile-desc">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <style>{`
@@ -278,10 +307,12 @@ const Process = () => {
           overflow: hidden;
         }
 
-        .process-header {
+        .proc-header-container {
+          position: relative;
+          z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding-bottom: 4rem;
+          padding: 8rem 5% 4rem;
           text-align: center;
         }
 
@@ -306,11 +337,11 @@ const Process = () => {
 
         .proc-outline {
           color: transparent;
-          -webkit-text-stroke: 2px rgba(0, 0, 0, 0.08);
+          -webkit-text-stroke: 2px rgba(17, 19, 26, 0.55);
         }
 
         /* ═══════════════════════════════════════
-           BUZZWORTHY ACCORDION
+           BUZZWORTHY ACCORDION (DESKTOP)
            ═══════════════════════════════════════ */
         .proc-accordion {
           display: flex;
@@ -456,70 +487,140 @@ const Process = () => {
           text-transform: uppercase;
         }
 
+        .proc-mobile-pinned-section {
+          display: none;
+        }
+
         /* ═══════════════════════════════════════
-           MOBILE
+           MOBILE PINNED CARDS STACK (<769px)
            ═══════════════════════════════════════ */
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
           .process-section {
-            padding: 5rem 5% 4rem;
+            padding: 1rem 4% 2.5rem !important;
+            background: transparent !important;
+            position: relative !important;
+            z-index: 5 !important;
+          }
+
+          .proc-header-container {
+            display: none !important;
           }
 
           .proc-accordion {
+            display: none !important;
+          }
+
+          .proc-mobile-pinned-section {
+            display: flex !important;
             flex-direction: column;
-            height: auto;
-            border-radius: 16px;
-          }
-
-          .proc-strip {
-            flex: none !important;
-            border-right: none;
-            border-bottom: 1px solid #E8EBF0;
-            padding: 1.2rem 1.5rem !important;
-            min-height: 55px;
-            transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-
-          .proc-strip:last-child {
-            border-bottom: none;
-          }
-
-          .proc-strip.active {
-            min-height: 380px;
-          }
-
-          .strip-expanded-content {
-            flex-direction: column;
-            gap: 1.5rem;
-          }
-
-          .strip-image-side {
-            height: 180px;
-            flex: none;
-          }
-
-          .strip-rotated {
             position: relative;
-            top: auto;
-            left: auto;
-            transform: none;
+            width: 100%;
+            height: calc(100vh - 150px);
+            margin: 0 auto 2.5rem;
+            overflow: hidden;
+            box-sizing: border-box;
+            background: transparent !important;
           }
 
-          .proc-strip.active .strip-rotated {
-            opacity: 0;
-            height: 0;
+          .proc-mobile-header-box {
+            flex-shrink: 0;
+            text-align: center;
+            padding-bottom: 0.8rem;
+            background: transparent !important;
+          }
+
+          .proc-mobile-slides-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+          }
+
+          .proc-mobile-card {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 1rem 1.1rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
             overflow: hidden;
           }
 
-          .strip-top {
-            margin-bottom: 0;
+          .proc-mobile-card-header {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
           }
 
-          .proc-strip.active .strip-top {
-            margin-bottom: 1.5rem;
+          .proc-mobile-num-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
           }
 
-          .strip-title {
-            font-size: 1.6rem;
+          .proc-mobile-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00E5FF;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+          }
+
+          .proc-mobile-num {
+            font-size: 0.85rem;
+            font-weight: 800;
+            font-family: var(--font-display);
+            color: #11131A;
+          }
+
+          .proc-mobile-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            font-family: var(--font-display);
+            color: #11131A;
+            letter-spacing: -0.02em;
+            margin: 0;
+            text-transform: uppercase;
+          }
+
+          .proc-mobile-img-box {
+            flex: 1;
+            min-height: 110px;
+            max-height: 180px;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 8px 0;
+            position: relative;
+            background: #F1F5F9;
+          }
+
+          .proc-mobile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          .proc-mobile-desc {
+            flex-shrink: 0;
+            font-size: 0.78rem;
+            line-height: 1.4;
+            color: #555555;
+            font-weight: 500;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
         }
       `}</style>

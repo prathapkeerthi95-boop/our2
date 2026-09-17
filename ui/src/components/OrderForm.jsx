@@ -140,54 +140,43 @@ const ContactForm = () => {
             </div>
           </div>
 
-          {/* Right — Form Wrapper with Subtle Pink Gradient Glow */}
+          {/* Right — Form Wrapper */}
           <div style={{ position: 'relative' }}>
-            {/* Subtle Volumetric Pink Gradient Backlight Aura */}
-            <div style={{
-              position: 'absolute',
-              inset: '-25px',
-              borderRadius: '32px',
-              background: 'radial-gradient(ellipse at 50% 50%, rgba(255, 0, 122, 0.22) 0%, rgba(255, 42, 84, 0.08) 55%, transparent 80%)',
-              filter: 'blur(35px)',
-              pointerEvents: 'none',
-              zIndex: 0,
-              animation: 'subtlePinkGlow 5s ease-in-out infinite alternate'
-            }} />
-
-            {/* Main Form Card Container (Opaque Frosted Slate Grey Glass Card) */}
+            {/* Main Form Card Container (Liquid Glass & Glassmorphism Card) */}
             <div className="glass-card form-glass-card reveal reveal-delay-3" style={{
               position: 'relative',
               zIndex: 1,
-              background: 'linear-gradient(145deg, rgba(230, 236, 244, 0.88) 0%, rgba(200, 208, 220, 0.92) 100%)',
-              borderRadius: '28px',
-              backdropFilter: 'blur(32px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-              boxShadow: '0 32px 80px rgba(15, 23, 42, 0.2), inset 0 1.5px 0 rgba(255, 255, 255, 0.95)'
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 100%)',
+              borderRadius: '32px',
+              backdropFilter: 'blur(40px) saturate(200%)',
+              WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+              border: '1.5px solid rgba(255, 255, 255, 0.25)',
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1.5px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.15)'
             }}>
-              <h3 style={{ marginBottom: '1.5rem', color: '#0F172A', fontWeight: 800, fontSize: '1.75rem', fontFamily: 'var(--font-display)' }}>Start Your Project</h3>
+              <h3 style={{ marginBottom: '1.5rem', color: '#FFFFFF', fontWeight: 800, fontSize: '1.8rem', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>Start Your Project</h3>
               <form onSubmit={handleSubmit}>
-                <div className="form-grid-row" style={{ display: 'grid', gap: '1rem' }}>
+                <div className="form-grid-row" style={{ display: 'grid', gap: '1.1rem' }}>
                   <div className="form-group">
                     <input type="text" placeholder="Your Name" required
                       value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600 }} />
+                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
                   </div>
                   <div className="form-group">
                     <input type="email" placeholder="Email Address" required
                       value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600 }} />
+                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
                   </div>
                 </div>
 
-                <div className="form-grid-row" style={{ display: 'grid', gap: '1rem' }}>
+                <div className="form-grid-row" style={{ display: 'grid', gap: '1.1rem', marginTop: '1.1rem' }}>
                   <div className="form-group">
                     <input type="tel" placeholder="Phone Number"
                       value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600 }} />
+                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
                   </div>
                   <div className="form-group">
                     <select value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600 }}>
+                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                       <option value="Next-Gen Web Design">Next-Gen Web Design</option>
                       <option value="Mobile App Engineering">Mobile App Engineering</option>
                       <option value="Performance Marketing">Performance Marketing</option>
@@ -197,9 +186,9 @@ const ContactForm = () => {
                   </div>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" style={{ marginTop: '1.1rem' }}>
                   <select value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})}
-                    style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600 }}>
+                    style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                     <option value="" disabled>Select Budget Range</option>
                     <option value="₹25K - ₹50K">₹25K - ₹50K</option>
                     <option value="₹50K - ₹1L">₹50K - ₹1 Lakh</option>
@@ -208,20 +197,20 @@ const ContactForm = () => {
                   </select>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group" style={{ marginTop: '1.1rem' }}>
                   <textarea placeholder="Tell us about your project..." rows="4" required
                     value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}
-                    style={{ background: 'rgba(255, 255, 255, 0.88)', border: '1.5px solid rgba(15, 23, 42, 0.12)', borderRadius: '12px', padding: '12px 16px', fontSize: '0.95rem', width: '100%', fontWeight: 600, resize: 'vertical' }}></textarea>
+                    style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', resize: 'vertical' }}></textarea>
                 </div>
 
-                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #FF2A54 0%, #7000FF 100%)', color: '#FFFFFF', padding: '14px', borderRadius: '14px', fontWeight: 700, fontSize: '1rem', border: 'none', cursor: 'pointer', boxShadow: '0 10px 25px rgba(255, 42, 84, 0.35)' }}
+                <button type="submit" className="glass-submit-btn" style={{ width: '100%', marginTop: '1.4rem', justifyContent: 'center', background: 'linear-gradient(135deg, #00E5FF 0%, #7000FF 100%)', color: '#FFFFFF', padding: '16px', borderRadius: '16px', fontWeight: 800, fontSize: '1.02rem', border: 'none', cursor: 'pointer', boxShadow: '0 12px 30px rgba(0, 229, 255, 0.35)', display: 'flex', alignItems: 'center', transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
                   disabled={status === 'sending'}>
                   <span>{status === 'sending' ? 'Transmitting...' : 'Submit Project Brief'}</span>
-                  <Send size={16} style={{ position: 'relative', zIndex: 1, marginLeft: '8px' }} />
+                  <Send size={18} style={{ position: 'relative', zIndex: 1, marginLeft: '10px' }} />
                 </button>
 
                 {status === 'success' && (
-                  <p style={{ color: '#00B8D9', textAlign: 'center', marginTop: '1rem', fontWeight: 700 }}>
+                  <p style={{ color: '#00E5FF', textAlign: 'center', marginTop: '1rem', fontWeight: 700 }}>
                     ✓ Project brief received. We'll contact you within 24 hours.
                   </p>
                 )}
@@ -241,12 +230,44 @@ const ContactForm = () => {
             .form-glass-card {
               padding: 2.5rem;
             }
+            @media (max-width: 1024px) {
+              #contact {
+                padding: 60px 0 !important;
+              }
+            }
             @media (max-width: 680px) {
               .form-grid-row {
                 grid-template-columns: 1fr;
               }
               .form-glass-card {
                 padding: 1.5rem;
+                border-radius: 24px !important;
+              }
+              #contact {
+                padding: 40px 0 !important;
+              }
+              #contact .contact-info-item .icon-box {
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 10px !important;
+              }
+              #contact h4 {
+                font-size: 0.95rem !important;
+              }
+              #contact .contact-info-item p {
+                font-size: 0.85rem !important;
+              }
+            }
+            @media (max-width: 480px) {
+              #contact {
+                padding: 30px 0 !important;
+              }
+              .form-glass-card {
+                padding: 1.25rem;
+                border-radius: 20px !important;
+              }
+              .form-glass-card h3 {
+                font-size: 1.5rem !important;
               }
             }
             @keyframes subtlePinkGlow {
@@ -254,44 +275,42 @@ const ContactForm = () => {
               50% { opacity: 0.95; transform: scale(1.02); }
             }
             #contact input, #contact select, #contact textarea {
-              color: #0F172A;
-              caret-color: #0F172A;
-              transition: all 0.2s ease;
+              color: #FFFFFF !important;
+              caret-color: #00E5FF !important;
+              transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
             #contact input::placeholder, #contact textarea::placeholder {
-              color: #475569 !important;
-              opacity: 0.9;
+              color: rgba(255, 255, 255, 0.6) !important;
+              opacity: 1 !important;
             }
             #contact input:hover, #contact select:hover, #contact textarea:hover {
-              color: #FFFFFF !important;
-              caret-color: #FFFFFF !important;
-              background: #0F172A !important;
-              border-color: #3282FF !important;
-            }
-            #contact input:hover::placeholder, #contact textarea:hover::placeholder {
-              color: #FFFFFF !important;
-              opacity: 0.95 !important;
+              background: rgba(255, 255, 255, 0.14) !important;
+              border-color: rgba(0, 229, 255, 0.5) !important;
+              box-shadow: 0 0 20px rgba(0, 229, 255, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
             }
             #contact input:focus, #contact select:focus, #contact textarea:focus,
             #contact input:active, #contact select:active, #contact textarea:active {
-              color: #FFFFFF !important;
-              caret-color: #FFFFFF !important;
-              background: #0F172A !important;
-              border-color: #3282FF !important;
-              outline: none;
-              box-shadow: 0 0 0 4px rgba(50, 130, 255, 0.35) !important;
-            }
-            #contact input:focus::placeholder, #contact textarea:focus::placeholder {
-              color: #FFFFFF !important;
-              opacity: 0.95 !important;
+              background: rgba(255, 255, 255, 0.18) !important;
+              border-color: #00E5FF !important;
+              outline: none !important;
+              box-shadow: 0 0 25px rgba(0, 229, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
             }
             #contact select option {
-              background: #0F172A !important;
+              background: #0D111A !important;
               color: #FFFFFF !important;
+              padding: 10px !important;
             }
             #contact input::selection, #contact textarea::selection, #contact select::selection {
-              background: #3282FF !important;
-              color: #FFFFFF !important;
+              background: #00E5FF !important;
+              color: #000000 !important;
+            }
+            .glass-submit-btn:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 16px 40px rgba(0, 229, 255, 0.55) !important;
+              filter: brightness(1.1);
+            }
+            .glass-submit-btn:active {
+              transform: translateY(0);
             }
           `}</style>
         </div>

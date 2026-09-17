@@ -4,28 +4,32 @@ const SoftWavesBackground = () => {
   return (
     <div style={{ 
       position: 'absolute', 
-      inset: 0, 
+      top: 0,
+      left: 0, 
+      width: '100%',
+      height: '350px', 
       zIndex: 0, 
       pointerEvents: 'none', 
+      overflow: 'hidden',
       background: '#F1F4F9'
     }}>
       <div style={{
-        position: 'sticky',
+        position: 'absolute',
         top: 0,
+        left: 0,
         width: '100%',
-        height: '100vh',
+        height: '100%',
         overflow: 'hidden'
       }}>
         <svg 
-          viewBox="0 0 1440 800" 
-          preserveAspectRatio="xMaxYMax slice" 
+          viewBox="0 0 1440 350" 
+          preserveAspectRatio="none" 
           style={{ 
             position: 'absolute',
-            bottom: 0,
-            right: 0,
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
-            minWidth: '1000px',
           }}
         >
         <defs>
@@ -51,21 +55,21 @@ const SoftWavesBackground = () => {
 
         {/* Deepest Wave */}
         <path 
-          d="M 1440 300 C 1100 250 1000 600 650 650 C 350 690 100 900 0 900 L 0 1000 L 1440 1000 Z" 
+          d="M 0 0 L 1440 0 L 1440 220 C 1100 280 900 150 550 280 C 300 350 0 250 0 250 Z" 
           fill="url(#waveGrad3)" 
           filter="url(#softShadow2)"
         />
         
         {/* Middle Wave */}
         <path 
-          d="M 1440 400 C 1200 350 950 700 700 700 C 450 700 200 950 0 950 L 0 1000 L 1440 1000 Z" 
+          d="M 0 0 L 1440 0 L 1440 160 C 1150 220 850 110 450 220 C 200 280 0 180 0 180 Z" 
           fill="url(#waveGrad2)" 
           filter="url(#softShadow1)"
         />
 
         {/* Front Wave */}
         <path 
-          d="M 1440 500 C 1250 450 1050 800 800 800 C 500 800 250 1000 0 1000 L 0 1000 L 1440 1000 Z" 
+          d="M 0 0 L 1440 0 L 1440 100 C 1200 160 800 70 400 150 C 150 200 0 110 0 110 Z" 
           fill="url(#waveGrad1)" 
           filter="url(#softShadow1)"
         />
