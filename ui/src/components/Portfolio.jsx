@@ -358,7 +358,13 @@ const Portfolio = () => {
               ref={(el) => { if (el) slideRefs.current[idx] = el; }}
               className="metaskapes-gsap-slide"
               style={{ zIndex: idx + 1, cursor: 'pointer' }}
-              onClick={() => openProjectModal(project)}
+              onClick={() => {
+                if (project.link && project.link !== '#') {
+                  window.open(project.link, '_blank');
+                } else {
+                  openProjectModal(project);
+                }
+              }}
             >
               {/* Full-bleed 100vh bright image background */}
               <div className="metaskapes-sticky-bg-wrapper">
@@ -440,7 +446,13 @@ const Portfolio = () => {
               key={project.id} 
               className="port-mobile-card" 
               style={{ zIndex: idx + 1 }}
-              onClick={() => openProjectModal(project)}
+              onClick={() => {
+                if (project.link && project.link !== '#') {
+                  window.open(project.link, '_blank');
+                } else {
+                  openProjectModal(project);
+                }
+              }}
             >
               <div className="port-mobile-card-header">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>

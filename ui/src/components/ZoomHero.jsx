@@ -531,17 +531,18 @@ const ZoomHero = ({ preloaderFinished }) => {
           .zoom-hero-section {
             min-height: 100vh !important;
             padding-top: 80px !important;
-            padding-bottom: 40px !important;
+            padding-bottom: 20px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             box-sizing: border-box !important;
           }
           .zoom-hero-section .container {
-            padding: 0 1.2rem !important;
+            padding: 0 1rem !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;
+            width: 100% !important;
           }
           .zoom-hero-title-box {
             margin-bottom: 2rem !important;
@@ -553,9 +554,9 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(3.2rem, 11vw, 4.5rem) !important;
-            line-height: 1.1 !important;
-            letter-spacing: -0.03em !important;
+            font-size: clamp(3rem, 13vw, 5rem) !important;
+            line-height: 1.05 !important;
+            letter-spacing: -0.04em !important;
           }
           .hero-line-2 h1 {
             margin-right: 0.22em !important;
@@ -569,13 +570,13 @@ const ZoomHero = ({ preloaderFinished }) => {
             gap: 1.5rem !important;
           }
           .hero-bottom-row p {
-            font-size: 1.05rem !important;
-            line-height: 1.6 !important;
+            font-size: 1.1rem !important;
+            line-height: 1.5 !important;
             max-width: 100% !important;
-            color: rgba(17, 19, 26, 0.7) !important;
+            color: rgba(17, 19, 26, 0.75) !important;
           }
           .btn-hero-gradient, .btn-hero-glass {
-            padding: 1rem 1.8rem !important;
+            padding: 1.1rem 1.8rem !important;
             font-size: 0.95rem !important;
             flex: 1 !important;
             justify-content: center !important;
@@ -587,7 +588,7 @@ const ZoomHero = ({ preloaderFinished }) => {
           .zoom-hero-section {
             min-height: 100vh !important;
             padding-top: 80px !important;
-            padding-bottom: 40px !important;
+            padding-bottom: 20px !important;
           }
           .hero-line-1, .hero-line-2, .hero-line-3 {
             display: flex !important;
@@ -596,14 +597,14 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(3rem, 13vw, 4rem) !important;
+            font-size: clamp(3.2rem, 15vw, 4.2rem) !important;
           }
           .hero-bottom-row p {
-            font-size: 1rem !important;
+            font-size: 1.05rem !important;
           }
           .btn-hero-gradient, .btn-hero-glass {
-            padding: 0.95rem 1.6rem !important;
-            font-size: 0.9rem !important;
+            padding: 1.1rem 1.6rem !important;
+            font-size: 0.95rem !important;
           }
         }
       `}</style>
