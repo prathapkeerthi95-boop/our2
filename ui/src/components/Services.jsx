@@ -952,7 +952,7 @@ export default function Services() {
       <div style={{ maxWidth: '1440px', width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         
         {/* Section Header — with unique scroll entrance effects */}
-        <div ref={headerRef} className="svc-section-header" style={{ marginBottom: isMobile ? 0 : '12px', perspective: '600px', display: isMobile ? 'none' : 'block' }}>
+        <div ref={headerRef} className="svc-section-header" style={{ marginBottom: isMobile ? '16px' : '12px', perspective: '600px' }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: 10 }}>
             <span className="svc-hdr-line" style={{ width: 22, height: 2.5, background: 'linear-gradient(90deg, #0A2E5C, #00A896)', borderRadius: 2, transformOrigin: 'left center', display: 'inline-block' }} />
             <span className="svc-hdr-label" style={{ background: 'linear-gradient(90deg, #0A2E5C 0%, #00A896 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>
