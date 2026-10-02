@@ -160,7 +160,7 @@ function App() {
   }, [preloaderFinished]);
 
   return (
-    <>
+    <div style={{ position: 'relative', width: '100%', overflowX: 'hidden' }}>
       <Preloader onComplete={() => setPreloaderFinished(true)} />
       <CustomCursor />
       
@@ -226,7 +226,7 @@ function App() {
       <Footer />
       <SocialWidget />
       <BackToTop />
-    </>
+    </div>
   );
 }
 

@@ -477,8 +477,8 @@ section {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120vw;
-  height: 120vh;
+  width: 120%;
+  height: 120%;
   z-index: 1;
   pointer-events: none;
   opacity: 0.15;

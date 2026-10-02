@@ -56,10 +56,9 @@ const BackToTop = () => {
 
   return (
     <div
+      className="btt-wrapper"
       style={{
         position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
         zIndex: 9999,
         opacity: showWidget ? 1 : 0,
         transform: showWidget ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.8)',
@@ -69,13 +68,12 @@ const BackToTop = () => {
     >
       <MagneticElement>
         <div
+          className="btt-btn"
           onClick={scrollToTop}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
             position: 'relative',
-            width: '60px',
-            height: '60px',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -90,6 +88,7 @@ const BackToTop = () => {
         >
           {/* SVG Scroll Progress Ring */}
           <svg
+            className="btt-ring"
             width="60"
             height="60"
             style={{
@@ -133,6 +132,7 @@ const BackToTop = () => {
           <ArrowUp 
             size={22} 
             strokeWidth={isHovered ? 2.5 : 2} 
+            className="btt-icon"
             style={{ 
               transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
               transition: 'transform 0.3s ease'
@@ -140,6 +140,39 @@ const BackToTop = () => {
           />
         </div>
       </MagneticElement>
+      <style>{`
+        .btt-wrapper {
+          bottom: 2rem;
+          right: 2rem;
+        }
+        .btt-btn {
+          width: 60px;
+          height: 60px;
+        }
+        @media (max-width: 768px) {
+          .btt-wrapper {
+            bottom: 1rem !important;
+            right: 1rem !important;
+          }
+          .btt-btn {
+            width: 46px !important;
+            height: 46px !important;
+          }
+          .btt-btn svg.btt-ring {
+            width: 46px !important;
+            height: 46px !important;
+          }
+          .btt-btn svg.btt-ring circle {
+            cx: 23 !important;
+            cy: 23 !important;
+            r: 18 !important;
+          }
+          .btt-icon {
+            width: 18px !important;
+            height: 18px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -85,13 +85,40 @@ const SocialWidget = () => {
           opacity: 1;
           transform: translateX(0);
         }
+
+        .social-widget-wrapper {
+          bottom: 2rem;
+          left: 1.5rem;
+        }
+        .social-fab-trigger {
+          width: 48px;
+          height: 48px;
+        }
+        .social-fab-item {
+          width: 42px !important;
+          height: 42px !important;
+        }
+        
+        @media (max-width: 768px) {
+          .social-widget-wrapper {
+            bottom: 1rem !important;
+            left: 1rem !important;
+          }
+          .social-fab-trigger {
+            width: 44px !important;
+            height: 44px !important;
+          }
+          .social-fab-item {
+            width: 36px !important;
+            height: 36px !important;
+          }
+        }
       `}</style>
 
       <div
+        className="social-widget-wrapper"
         style={{
           position: 'fixed',
-          bottom: '2rem',
-          left: '1.5rem',
           zIndex: 99999,
           opacity: isNearFooter ? 0 : 1,
           transform: isNearFooter ? 'translateY(40px) scale(0.5)' : 'translateY(0) scale(1)',
@@ -105,7 +132,7 @@ const SocialWidget = () => {
             key={item.label}
             style={{
               position: 'absolute',
-              bottom: isOpen ? `${(i + 1) * 58}px` : '0px',
+              bottom: isOpen ? `calc(${(i + 1) * 52}px)` : '0px',
               left: '3px',
               display: 'flex',
               alignItems: 'center',
@@ -122,8 +149,6 @@ const SocialWidget = () => {
               rel="noopener noreferrer"
               className="social-fab-item"
               style={{
-                width: '42px',
-                height: '42px',
                 borderRadius: '50%',
                 backgroundColor: item.color,
                 display: 'flex',
@@ -169,8 +194,6 @@ const SocialWidget = () => {
           className="social-fab-trigger"
           style={{
             position: 'relative',
-            width: '48px',
-            height: '48px',
             borderRadius: '50%',
             background: 'linear-gradient(135deg, #7000FF 0%, #00E5FF 100%)',
             display: 'flex',

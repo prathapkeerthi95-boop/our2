@@ -233,8 +233,8 @@ const ZoomHero = ({ preloaderFinished }) => {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          width: 'min(1000px, 200vw)',
-          height: 'min(1000px, 200vw)',
+          width: 'min(1000px, 200%)',
+          height: 'min(1000px, 200%)',
           backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -263,7 +263,7 @@ const ZoomHero = ({ preloaderFinished }) => {
         style={{
           position: 'absolute',
           top: '15%', left: '45%',
-          width: 'min(700px, 150vw)', height: 'min(700px, 150vw)',
+          width: 'min(700px, 150%)', height: 'min(700px, 150%)',
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(150, 150, 150, 0.02) 50%, transparent 70%)',
           filter: 'blur(60px)',
@@ -529,20 +529,20 @@ const ZoomHero = ({ preloaderFinished }) => {
 
         @media (max-width: 768px) {
           .zoom-hero-section {
-            min-height: 100dvh !important;
+            min-height: auto !important;
             height: auto !important;
-            padding-top: 85px !important;
-            padding-bottom: 2.5rem !important;
+            padding-top: 130px !important;
+            padding-bottom: 60px !important;
             display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
             box-sizing: border-box !important;
           }
           .zoom-hero-section .container {
             padding: 0 1.2rem !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: center !important;
+            justify-content: flex-start !important;
           }
           .zoom-hero-title-box {
             margin-bottom: 1.8rem !important;
@@ -554,9 +554,9 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(2.6rem, 11vw, 4.2rem) !important;
-            line-height: 1.08 !important;
-            letter-spacing: -0.04em !important;
+            font-size: clamp(2.2rem, 8vw, 3.5rem) !important;
+            line-height: 1.1 !important;
+            letter-spacing: -0.03em !important;
           }
           .hero-line-2 h1 {
             margin-right: 0.22em !important;
@@ -586,8 +586,8 @@ const ZoomHero = ({ preloaderFinished }) => {
 
         @media (max-width: 480px) {
           .zoom-hero-section {
-            padding-top: 80px !important;
-            padding-bottom: 2rem !important;
+            padding-top: 110px !important;
+            padding-bottom: 50px !important;
           }
           .hero-line-1, .hero-line-2, .hero-line-3 {
             display: flex !important;
@@ -596,7 +596,7 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(2.5rem, 10.5vw, 3.8rem) !important;
+            font-size: clamp(1.8rem, 9.5vw, 2.4rem) !important;
           }
           .hero-bottom-row p {
             font-size: 0.9rem !important;

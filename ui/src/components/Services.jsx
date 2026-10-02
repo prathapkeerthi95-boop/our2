@@ -1300,28 +1300,30 @@ export default function Services() {
            ═══════════════════════════════════════════════════════════════════ */
         @media (max-width: 768px) {
           #services {
-            padding: 72px 14px 18px !important;
-            width: 100vw !important;
-            height: 100vh !important;
+            padding: 30px 14px 40px !important;
+            width: 100% !important;
+            height: auto !important;
             min-height: 100vh !important;
-            max-height: 100vh !important;
+            max-height: none !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: space-around !important;
             box-sizing: border-box !important;
             overflow: hidden !important;
           }
 
           #services .svc-section-header {
-            display: none !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            margin-bottom: 24px !important;
           }
 
           #services .services-grid-container {
             display: flex !important;
             flex-direction: column !important;
-            justify-content: space-around !important;
             width: 100% !important;
-            height: 100% !important;
+            gap: 16px !important;
           }
 
           /* 1. TOP: ONLY 1 ACTIVE SELECTOR PILL CARD SHOWS */
