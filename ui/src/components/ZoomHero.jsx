@@ -5,7 +5,7 @@ import MagneticElement from './MagneticElement';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ZoomHero = () => {
+const ZoomHero = ({ preloaderFinished }) => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const canvasRef = useRef(null);
@@ -39,9 +39,11 @@ const ZoomHero = () => {
   };
 
   useEffect(() => {
+    if (!preloaderFinished) return; // Wait for preloader to lift before animating!
+
     let carouselInterval;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.4 }); 
+      const tl = gsap.timeline({ delay: 0.1 }); 
 
       tl.fromTo(glowRef.current,
         { scale: 0.3, opacity: 0 },
@@ -58,7 +60,7 @@ const ZoomHero = () => {
       tl.fromTo(chars1,
         { yPercent: 140, rotateX: -95, rotateY: 20, scale: 0.55, opacity: 0, filter: 'blur(12px)' },
         { yPercent: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.15, stagger: 0.028, ease: "back.out(1.9)" },
-        "-=1.5"
+        "-=0.8"
       );
 
       const chars2 = line2Ref.current.querySelectorAll('.hero-char');
@@ -126,15 +128,13 @@ const ZoomHero = () => {
         carouselInterval = setInterval(rotateCarousel, 2800);
       }
 
-      // Removed glowRef scroll scrub animation for performance (scrubbing a 60px blur kills GPU)
-
     }, containerRef);
 
     return () => {
       ctx.revert();
       if (carouselInterval) clearInterval(carouselInterval);
     };
-  }, []);
+  }, [preloaderFinished]);
 
   // CANVAS BACKGROUND: Premium Multiply Abstract Waves
   useEffect(() => {

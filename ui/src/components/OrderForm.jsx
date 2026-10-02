@@ -1,17 +1,44 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Send, ShieldCheck } from 'lucide-react';
 import AnimatedHeading from './AnimatedHeading';
 import LiveSmokyCanvas from './LiveSmokyCanvas';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', service: 'Next-Gen Web Design', budget: '', message: ''
+    name: '', email: '', phone: '', message: ''
   });
   const [status, setStatus] = useState('');
+  
+  // Simple Math Captcha
+  const [captchaVal1, setCaptchaVal1] = useState(0);
+  const [captchaVal2, setCaptchaVal2] = useState(0);
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [captchaError, setCaptchaError] = useState(false);
+
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+
+  const generateCaptcha = () => {
+    setCaptchaVal1(Math.floor(Math.random() * 10) + 1);
+    setCaptchaVal2(Math.floor(Math.random() * 10) + 1);
+    setCaptchaAnswer('');
+    setCaptchaError(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate Captcha
+    if (parseInt(captchaAnswer) !== captchaVal1 + captchaVal2) {
+      setCaptchaError(true);
+      return;
+    }
+
     setStatus('sending');
+
     try {
       const response = await fetch('http://localhost:5001/api/order', {
         method: 'POST',
@@ -21,7 +48,8 @@ const ContactForm = () => {
       const data = await response.json();
       if (data.success) {
         setStatus('success');
-        setFormData({ name: '', email: '', phone: '', service: 'Next-Gen Web Design', budget: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        generateCaptcha();
       } else {
         setStatus('error');
       }
@@ -98,16 +126,8 @@ const ContactForm = () => {
               mode="blur" 
               style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)', fontWeight: 900, color: '#FFFFFF' }} 
               wordStyles={{
-                'Build': {
-                  color: '#00B8D9',
-                  WebkitTextFillColor: '#00B8D9',
-                  display: 'inline-block'
-                },
-                'Legendary': {
-                  color: '#00B8D9',
-                  WebkitTextFillColor: '#00B8D9',
-                  display: 'inline-block'
-                }
+                'Build': { color: '#00B8D9', WebkitTextFillColor: '#00B8D9', display: 'inline-block' },
+                'Legendary': { color: '#00B8D9', WebkitTextFillColor: '#00B8D9', display: 'inline-block' }
               }}
             />
             <p className="reveal reveal-delay-2" style={{ marginTop: '1rem', marginBottom: '3rem', color: '#FFFFFF', fontSize: '1.1rem', lineHeight: '1.6', fontWeight: 600, textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
@@ -142,76 +162,86 @@ const ContactForm = () => {
 
           {/* Right — Form Wrapper */}
           <div style={{ position: 'relative' }}>
-            {/* Main Form Card Container (Liquid Glass & Glassmorphism Card) */}
             <div className="glass-card form-glass-card reveal reveal-delay-3" style={{
               position: 'relative',
               zIndex: 1,
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 100%)',
+              background: '#FFFFFF',
               borderRadius: '32px',
-              backdropFilter: 'blur(40px) saturate(200%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-              border: '1.5px solid rgba(255, 255, 255, 0.25)',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.45), inset 0 1.5px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.15)'
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)'
             }}>
-              <h3 style={{ marginBottom: '1.5rem', color: '#FFFFFF', fontWeight: 800, fontSize: '1.8rem', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>Start Your Project</h3>
+              <h3 style={{ marginBottom: '1.5rem', color: '#0F172A', fontWeight: 800, fontSize: '1.8rem', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>Start Your Project</h3>
               <form onSubmit={handleSubmit}>
                 <div className="form-grid-row" style={{ display: 'grid', gap: '1.1rem' }}>
                   <div className="form-group">
                     <input type="text" placeholder="Your Name" required
                       value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
+                      style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#0F172A' }} />
                   </div>
                   <div className="form-group">
                     <input type="email" placeholder="Email Address" required
                       value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
+                      style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#0F172A' }} />
                   </div>
                 </div>
 
-                <div className="form-grid-row" style={{ display: 'grid', gap: '1.1rem', marginTop: '1.1rem' }}>
-                  <div className="form-group">
-                    <input type="tel" placeholder="Phone Number"
-                      value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }} />
-                  </div>
-                  <div className="form-group">
-                    <select value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}
-                      style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-                      <option value="Next-Gen Web Design">Next-Gen Web Design</option>
-                      <option value="Mobile App Engineering">Mobile App Engineering</option>
-                      <option value="Performance Marketing">Performance Marketing</option>
-                      <option value="Brand Identity & Logo">Brand Identity & Logo</option>
-                      <option value="Full Digital Package">Full Digital Package</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-group" style={{ marginTop: '1.1rem' }}>
-                  <select value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})}
-                    style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-                    <option value="" disabled>Select Budget Range</option>
-                    <option value="₹25K - ₹50K">₹25K - ₹50K</option>
-                    <option value="₹50K - ₹1L">₹50K - ₹1 Lakh</option>
-                    <option value="₹1L - ₹5L">₹1 Lakh - ₹5 Lakhs</option>
-                    <option value="₹5L+">₹5 Lakhs+</option>
-                  </select>
+                <div className="form-group custom-phone-input" style={{ marginTop: '1.1rem' }}>
+                  <PhoneInput
+                    international
+                    defaultCountry="IN"
+                    value={formData.phone}
+                    onChange={phone => setFormData(prev => ({...prev, phone: phone || ''}))}
+                    placeholder="Phone Number"
+                  />
                 </div>
 
                 <div className="form-group" style={{ marginTop: '1.1rem' }}>
                   <textarea placeholder="Tell us about your project..." rows="4" required
                     value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}
-                    style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#FFFFFF', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', resize: 'vertical' }}></textarea>
+                    style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '14px 18px', fontSize: '0.95rem', width: '100%', fontWeight: 500, color: '#0F172A', resize: 'vertical' }}></textarea>
                 </div>
+
+                {/* Captcha Section */}
+                <div style={{ marginTop: '1.1rem', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
+                    <ShieldCheck size={20} color="#00E5FF" />
+                    <span>Security Check: {captchaVal1} + {captchaVal2} = ?</span>
+                  </div>
+                  <input 
+                    type="number" 
+                    placeholder="Answer" 
+                    required
+                    value={captchaAnswer} 
+                    onChange={e => {
+                      setCaptchaAnswer(e.target.value);
+                      setCaptchaError(false);
+                    }}
+                    style={{ 
+                      background: '#FFFFFF', 
+                      border: captchaError ? '1px solid #FF2A54' : '1px solid #E2E8F0', 
+                      borderRadius: '12px', 
+                      padding: '10px 14px', 
+                      fontSize: '0.95rem', 
+                      width: '120px', 
+                      fontWeight: 600, 
+                      color: '#0F172A',
+                      textAlign: 'center'
+                    }} 
+                  />
+                </div>
+                {captchaError && (
+                  <p style={{ color: '#FF2A54', fontSize: '0.85rem', marginTop: '0.5rem', fontWeight: 600 }}>Incorrect answer, please try again.</p>
+                )}
 
                 <button type="submit" className="glass-submit-btn" style={{ width: '100%', marginTop: '1.4rem', justifyContent: 'center', background: 'linear-gradient(135deg, #00E5FF 0%, #7000FF 100%)', color: '#FFFFFF', padding: '16px', borderRadius: '16px', fontWeight: 800, fontSize: '1.02rem', border: 'none', cursor: 'pointer', boxShadow: '0 12px 30px rgba(0, 229, 255, 0.35)', display: 'flex', alignItems: 'center', transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
                   disabled={status === 'sending'}>
-                  <span>{status === 'sending' ? 'Transmitting...' : 'Submit Project Brief'}</span>
+                  <span>{status === 'sending' ? 'Transmitting...' : 'Submit'}</span>
                   <Send size={18} style={{ position: 'relative', zIndex: 1, marginLeft: '10px' }} />
                 </button>
 
                 {status === 'success' && (
-                  <p style={{ color: '#00E5FF', textAlign: 'center', marginTop: '1rem', fontWeight: 700 }}>
-                    ✓ Project brief received. We'll contact you within 24 hours.
+                  <p style={{ color: '#7000FF', textAlign: 'center', marginTop: '1rem', fontWeight: 700 }}>
+                    ✓ Message received. We'll contact you shortly.
                   </p>
                 )}
                 {status === 'error' && (
@@ -270,35 +300,26 @@ const ContactForm = () => {
                 font-size: 1.5rem !important;
               }
             }
-            @keyframes subtlePinkGlow {
-              0%, 100% { opacity: 0.6; transform: scale(0.98); }
-              50% { opacity: 0.95; transform: scale(1.02); }
-            }
             #contact input, #contact select, #contact textarea {
-              color: #FFFFFF !important;
+              color: #0F172A !important;
               caret-color: #00E5FF !important;
               transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             }
             #contact input::placeholder, #contact textarea::placeholder {
-              color: rgba(255, 255, 255, 0.6) !important;
+              color: #94A3B8 !important;
               opacity: 1 !important;
             }
             #contact input:hover, #contact select:hover, #contact textarea:hover {
-              background: rgba(255, 255, 255, 0.14) !important;
+              background: #FFFFFF !important;
               border-color: rgba(0, 229, 255, 0.5) !important;
-              box-shadow: 0 0 20px rgba(0, 229, 255, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+              box-shadow: 0 0 10px rgba(0, 229, 255, 0.1) !important;
             }
             #contact input:focus, #contact select:focus, #contact textarea:focus,
             #contact input:active, #contact select:active, #contact textarea:active {
-              background: rgba(255, 255, 255, 0.18) !important;
+              background: #FFFFFF !important;
               border-color: #00E5FF !important;
               outline: none !important;
-              box-shadow: 0 0 25px rgba(0, 229, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-            }
-            #contact select option {
-              background: #0D111A !important;
-              color: #FFFFFF !important;
-              padding: 10px !important;
+              box-shadow: 0 0 15px rgba(0, 229, 255, 0.2) !important;
             }
             #contact input::selection, #contact textarea::selection, #contact select::selection {
               background: #00E5FF !important;
@@ -311,6 +332,41 @@ const ContactForm = () => {
             }
             .glass-submit-btn:active {
               transform: translateY(0);
+            }
+            /* react-phone-number-input custom styles */
+            .custom-phone-input .PhoneInput {
+              background: #F8FAFC;
+              border: 1px solid #E2E8F0;
+              border-radius: 16px;
+              height: 50px;
+              padding: 0 14px;
+              display: flex;
+              align-items: center;
+              transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .custom-phone-input .PhoneInput:focus-within {
+              background: #FFFFFF;
+              border-color: #00E5FF;
+              box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            }
+            .custom-phone-input .PhoneInputCountry {
+              margin-right: 12px;
+              padding-right: 12px;
+              border-right: 1px solid #E2E8F0;
+            }
+            .custom-phone-input .PhoneInputInput {
+              border: none !important;
+              background: transparent !important;
+              font-size: 0.95rem;
+              font-weight: 500;
+              color: #0F172A !important;
+              height: 100%;
+              outline: none !important;
+              padding: 0 !important;
+              box-shadow: none !important;
+            }
+            .custom-phone-input .PhoneInputInput::placeholder {
+              color: #94A3B8 !important;
             }
           `}</style>
         </div>

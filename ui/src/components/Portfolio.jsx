@@ -24,9 +24,9 @@ const projects = [
       'Integrated multi-currency localized checkout system',
       'Headless architecture powered by Next.js & Shopify Plus'
     ],
-    image: '/gagner-sports-showcase.jpg',
+    image: '/gagner-showcase-new.jpg',
     gallery: [
-      '/gagner-sports-showcase.jpg'
+      '/gagner-showcase-new.jpg'
     ],
     link: 'https://gagnersports.com/'
   },
@@ -72,9 +72,9 @@ const projects = [
       'Nominated for top web design interactive honors',
       'Full dark theme aesthetic with custom typography'
     ],
-    image: '/ke19-showcase.png',
+    image: '/ke19-showcase-new.jpg',
     gallery: [
-      '/ke19-showcase.png'
+      '/ke19-showcase-new.jpg'
     ],
     link: 'https://ke19portfolio.netlify.app/'
   }

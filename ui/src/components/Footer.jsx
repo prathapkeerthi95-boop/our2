@@ -71,7 +71,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="footer" style={{ position: 'relative', overflow: 'hidden', background: '#F8F9FA' }}>
+    <footer className="footer" style={{ position: 'relative', overflow: 'hidden', background: '#D4D9DF' }}>
       <canvas 
         ref={canvasRef}
         style={{
@@ -132,7 +132,7 @@ const Footer = () => {
           {/* Follow Us (Replaces Contact) */}
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Follow Us</h4>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem', marginTop: '0.8rem', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '0.8rem', justifyContent: 'center', alignItems: 'center' }}>
               <a href="https://www.instagram.com/nuza_rox?stkn=MTB1eWNtZnpsYmdiOA==" target="_blank" rel="noopener noreferrer" className="social-list-item" aria-label="Instagram">
                 <span className="footer-social-pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
