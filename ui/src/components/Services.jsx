@@ -488,28 +488,33 @@ export default function Services() {
     const section = sectionRef.current;
     if (!section) return;
 
-    let pinTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: "+=2200",
-      pin: true,
-      pinSpacing: true,
-      refreshPriority: 3,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        let newIdx = 0;
-        if (progress < 0.25) newIdx = 0;
-        else if (progress < 0.50) newIdx = 1;
-        else if (progress < 0.75) newIdx = 2;
-        else newIdx = 3;
+    const mm = gsap.matchMedia();
 
-        setActiveIdx((prev) => (prev !== newIdx ? newIdx : prev));
-      }
+    // Only pin on desktop — mobile gets natural scroll
+    mm.add("(min-width: 769px)", () => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=2200",
+        pin: true,
+        pinSpacing: true,
+        refreshPriority: 3,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          let newIdx = 0;
+          if (progress < 0.25) newIdx = 0;
+          else if (progress < 0.50) newIdx = 1;
+          else if (progress < 0.75) newIdx = 2;
+          else newIdx = 3;
+
+          setActiveIdx((prev) => (prev !== newIdx ? newIdx : prev));
+        }
+      });
     });
 
     return () => {
-      if (pinTrigger) pinTrigger.kill();
+      mm.revert();
     };
   }, []);
 
