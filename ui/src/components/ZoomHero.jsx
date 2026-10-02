@@ -529,23 +529,22 @@ const ZoomHero = ({ preloaderFinished }) => {
 
         @media (max-width: 768px) {
           .zoom-hero-section {
-            min-height: auto !important;
-            height: auto !important;
-            padding-top: 130px !important;
-            padding-bottom: 60px !important;
+            min-height: 100vh !important;
+            padding-top: 80px !important;
+            padding-bottom: 40px !important;
             display: flex !important;
-            align-items: flex-start !important;
-            justify-content: flex-start !important;
+            align-items: center !important;
+            justify-content: center !important;
             box-sizing: border-box !important;
           }
           .zoom-hero-section .container {
             padding: 0 1.2rem !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: flex-start !important;
+            justify-content: center !important;
           }
           .zoom-hero-title-box {
-            margin-bottom: 1.8rem !important;
+            margin-bottom: 2rem !important;
           }
           .hero-line-1, .hero-line-2, .hero-line-3 {
             display: flex !important;
@@ -554,7 +553,7 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(2.2rem, 8vw, 3.5rem) !important;
+            font-size: clamp(3.2rem, 11vw, 4.5rem) !important;
             line-height: 1.1 !important;
             letter-spacing: -0.03em !important;
           }
@@ -567,17 +566,17 @@ const ZoomHero = ({ preloaderFinished }) => {
           .hero-bottom-row {
             display: flex !important;
             flex-direction: column !important;
-            gap: 1.2rem !important;
+            gap: 1.5rem !important;
           }
           .hero-bottom-row p {
-            font-size: 0.95rem !important;
-            line-height: 1.55 !important;
+            font-size: 1.05rem !important;
+            line-height: 1.6 !important;
             max-width: 100% !important;
             color: rgba(17, 19, 26, 0.7) !important;
           }
           .btn-hero-gradient, .btn-hero-glass {
-            padding: 0.8rem 1.5rem !important;
-            font-size: 0.85rem !important;
+            padding: 1rem 1.8rem !important;
+            font-size: 0.95rem !important;
             flex: 1 !important;
             justify-content: center !important;
             text-align: center !important;
@@ -586,8 +585,9 @@ const ZoomHero = ({ preloaderFinished }) => {
 
         @media (max-width: 480px) {
           .zoom-hero-section {
-            padding-top: 110px !important;
-            padding-bottom: 50px !important;
+            min-height: 100vh !important;
+            padding-top: 80px !important;
+            padding-bottom: 40px !important;
           }
           .hero-line-1, .hero-line-2, .hero-line-3 {
             display: flex !important;
@@ -596,14 +596,14 @@ const ZoomHero = ({ preloaderFinished }) => {
           }
           .zoom-hero-section h1,
           .zoom-hero-section .carousel-word {
-            font-size: clamp(1.8rem, 9.5vw, 2.4rem) !important;
+            font-size: clamp(3rem, 13vw, 4rem) !important;
           }
           .hero-bottom-row p {
-            font-size: 0.9rem !important;
+            font-size: 1rem !important;
           }
           .btn-hero-gradient, .btn-hero-glass {
-            padding: 0.75rem 1.3rem !important;
-            font-size: 0.8rem !important;
+            padding: 0.95rem 1.6rem !important;
+            font-size: 0.9rem !important;
           }
         }
       `}</style>

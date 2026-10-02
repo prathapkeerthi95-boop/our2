@@ -1339,27 +1339,32 @@ export default function Services() {
             margin-bottom: 8px !important;
           }
 
-          #services .svc-selector-card:not(.is-active) {
-            display: none !important;
-          }
-
-          #services .svc-selector-card.is-active {
+          /* We want all cards visible on mobile so they can be tapped! */
+          #services .svc-selector-card {
+            margin-bottom: 8px;
             display: flex !important;
-            height: 48px !important;
+            height: auto !important;
             padding: 10px 16px !important;
             border-radius: 14px !important;
             width: 100% !important;
             box-sizing: border-box !important;
             transform: none !important;
+          }
+
+          #services .svc-selector-card.is-active {
             box-shadow: 0 6px 20px rgba(0, 168, 150, 0.25) !important;
+            padding-bottom: 14px !important;
           }
 
           #services .svc-card-tagline {
-            display: none !important;
+            /* Restoring tagline visibility on mobile */
+            display: block !important;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
           }
 
           #services .svc-card-top-row {
-            height: 100% !important;
             width: 100% !important;
             display: flex !important;
             align-items: center !important;
@@ -1458,9 +1463,12 @@ export default function Services() {
           #services {
             padding: 70px 12px 14px !important;
           }
-          #services .svc-selector-card.is-active {
-            height: 44px !important;
+          #services .svc-selector-card {
+            height: auto !important;
             padding: 8px 14px !important;
+          }
+          #services .svc-selector-card.is-active {
+            padding-bottom: 12px !important;
           }
           #services .svc-card-num,
           #services .svc-card-title {

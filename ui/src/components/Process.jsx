@@ -168,7 +168,7 @@ const Process = () => {
             start: "top top+=75px",
             end: () => `+=${slides.length * 45}%`,
             pin: true,
-            scrub: 0.3,
+            scrub: true,
             refreshPriority: 2,
             invalidateOnRefresh: true
           }
@@ -551,6 +551,7 @@ const Process = () => {
             justify-content: space-between;
             box-sizing: border-box;
             overflow: hidden;
+            will-change: transform;
           }
 
           .proc-mobile-card-header {

@@ -2922,6 +2922,7 @@ html.lenis, html.lenis body { height: auto; }
     box-sizing: border-box;
     overflow: hidden;
     cursor: pointer;
+    will-change: transform;
   }
 
   .port-mobile-card-header {
