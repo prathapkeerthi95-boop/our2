@@ -140,6 +140,14 @@ const ZoomHero = ({ preloaderFinished }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // PERF: Skip canvas animation entirely on mobile — massive lag source
+    const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (isMobile) {
+      canvas.style.display = 'none';
+      return;
+    }
+
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let time = 0;

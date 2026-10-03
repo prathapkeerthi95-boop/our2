@@ -33,29 +33,35 @@ function App() {
 
 
 
-    // Initialize Lenis Smooth Scrolling
-    const lenis = new Lenis({
-      duration: 0.8,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1.15,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    });
+    // Initialize Lenis Smooth Scrolling ONLY on Desktop
+    // Mobile browsers have hardware-accelerated momentum scrolling natively. Lenis interferes with this.
+    const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    let lenis;
+    let handleRefresh;
+    let updateLenis;
+    
+    if (!isMobile) {
+      lenis = new Lenis({
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1.15,
+        infinite: false,
+      });
 
-    lenis.on('scroll', ScrollTrigger.update);
+      lenis.on('scroll', ScrollTrigger.update);
 
-    const handleRefresh = () => lenis.resize();
-    ScrollTrigger.addEventListener("refresh", handleRefresh);
+      handleRefresh = () => lenis.resize();
+      ScrollTrigger.addEventListener("refresh", handleRefresh);
 
-    const updateLenis = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+      updateLenis = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     /* ═════════════════════════════════════════════════════════════════════
        METASKAPES-STYLE DIVERSE & HYPER-FAST BI-DIRECTIONAL TRANSITION ENGINE
@@ -73,9 +79,11 @@ function App() {
       // Exclude Hero headings because ZoomHero has its own custom entrance animation
       if (el.closest('#hero') || el.closest('#services') || el.closest('#process') || el.closest('.metaskapes-gsap-slide') || el.closest('#preloader') || el.closest('.anim-word') || el.closest('.preloader-container')) return;
       
+      const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+      
       const mode = idx % 5;
-      let fromVars = { opacity: 0, y: 30, filter: 'blur(10px)' };
-      let toVars = { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.48, ease: 'power4.out' };
+      let fromVars = { opacity: 0, y: 30, filter: isMobile ? 'none' : 'blur(10px)' };
+      let toVars = { opacity: 1, y: 0, filter: isMobile ? 'none' : 'blur(0px)', duration: 0.48, ease: 'power4.out' };
 
       if (mode === 1) {
         fromVars = { opacity: 0, rotateX: -65, y: 25, transformOrigin: '50% 100%' };
@@ -119,13 +127,14 @@ function App() {
       // Exclude Hero paragraphs
       if (el.closest('#hero') || el.closest('#services') || el.closest('#process') || el.closest('.metaskapes-gsap-slide') || el.closest('#preloader') || el.closest('.preloader-container')) return;
       
+      const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
       const pMode = idx % 3;
-      let pFrom = { opacity: 0, y: 22, filter: 'blur(6px)' };
-      let pTo = { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.45, ease: 'power3.out' };
+      let pFrom = { opacity: 0, y: 22, filter: isMobile ? 'none' : 'blur(6px)' };
+      let pTo = { opacity: 1, y: 0, filter: isMobile ? 'none' : 'blur(0px)', duration: 0.45, ease: 'power3.out' };
 
       if (pMode === 1) {
-        pFrom = { opacity: 0, x: -25, filter: 'blur(4px)' };
-        pTo = { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.48, ease: 'power2.out' };
+        pFrom = { opacity: 0, x: -25, filter: isMobile ? 'none' : 'blur(4px)' };
+        pTo = { opacity: 1, x: 0, filter: isMobile ? 'none' : 'blur(0px)', duration: 0.48, ease: 'power2.out' };
       } else if (pMode === 2) {
         pFrom = { opacity: 0, y: 18, scale: 0.97 };
         pTo = { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: 'expo.out' };
@@ -146,16 +155,20 @@ function App() {
       if (el.classList.contains('reveal-delay-2')) delay = 0.1;
       if (el.classList.contains('reveal-delay-3')) delay = 0.15;
 
+      const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
       gsap.fromTo(el, 
-        { opacity: 0, y: 35, rotateX: 12, rotateZ: (idx % 2 !== 0) ? 1 : -1, scale: 0.94, filter: 'blur(6px)' },
-        { opacity: 1, y: 0, rotateX: 0, rotateZ: 0, scale: 1, filter: 'blur(0px)', duration: 0.48, delay, ease: "back.out(1.5)", scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "restart none none reset" } }
+        { opacity: 0, y: 35, rotateX: 12, rotateZ: (idx % 2 !== 0) ? 1 : -1, scale: 0.94, filter: isMobile ? 'none' : 'blur(6px)' },
+        { opacity: 1, y: 0, rotateX: 0, rotateZ: 0, scale: 1, filter: isMobile ? 'none' : 'blur(0px)', duration: 0.48, delay, ease: "back.out(1.5)", scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "restart none none reset" } }
       );
     });
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(updateLenis);
-      ScrollTrigger.removeEventListener("refresh", handleRefresh);
+      if (lenis) {
+        lenis.destroy();
+        gsap.ticker.remove(updateLenis);
+        ScrollTrigger.removeEventListener("refresh", handleRefresh);
+      }
     };
   }, [preloaderFinished]);
 

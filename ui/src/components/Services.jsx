@@ -345,6 +345,14 @@ export default function Services() {
   useEffect(() => {
     const canvas = cardWaterCanvasRef.current;
     if (!canvas) return;
+
+    // PERF: Skip water ripple canvas entirely on mobile
+    const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (isMobile) {
+      canvas.style.display = 'none';
+      return;
+    }
+
     const ctx = canvas.getContext('2d');
     let animationFrameId;
 

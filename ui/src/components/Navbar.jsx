@@ -44,10 +44,12 @@ const Navbar = () => {
         if (window.scrollY > heroHeight && !isPill) {
           isPill = true;
           
+          const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+          
           // Animate to Pill (Light Glass Mode)
           gsap.to(navInner, {
-            backgroundColor: 'rgba(255, 255, 255, 0.75)', // Light translucent glass base
-            backdropFilter: 'blur(32px) saturate(200%)',
+            backgroundColor: isMobile ? 'rgba(255, 255, 255, 0.97)' : 'rgba(255, 255, 255, 0.75)',
+            backdropFilter: isMobile ? 'none' : 'blur(32px) saturate(200%)',
             border: '1.5px solid rgba(0, 0, 0, 0.08)', 
             borderRadius: '50px',
             margin: '1.2rem auto 0',
@@ -289,9 +291,9 @@ const Navbar = () => {
             height: '42px',
             borderRadius: '12px',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            backgroundColor: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+            backgroundColor: 'rgba(255, 255, 255, 0.97)',
+            backdropFilter: 'none',
+            WebkitBackdropFilter: 'none',
             boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
             cursor: 'pointer',
             padding: 0,

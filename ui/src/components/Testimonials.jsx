@@ -203,18 +203,17 @@ const Testimonials = () => {
           position: relative;
         }
 
-        /* Ambient blurred orbs in background for frosted glass effect */
+        /* Ambient blurred orbs in background for frosted glass effect - uses radial gradients instead of expensive CSS blur */
         .rv-bg-orb {
           position: absolute;
           border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.4;
+          opacity: 0.5;
           z-index: 0;
           pointer-events: none;
         }
-        .orb-1 { width: 400px; height: 400px; background: #00E5FF; top: -100px; left: -100px; }
-        .orb-2 { width: 500px; height: 500px; background: #A855F7; bottom: -200px; right: -100px; }
-        .orb-3 { width: 300px; height: 300px; background: #10B981; top: 30%; left: 50%; transform: translateX(-50%); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,229,255,0.7) 0%, rgba(0,229,255,0) 70%); top: -150px; left: -150px; }
+        .orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(168,85,247,0.7) 0%, rgba(168,85,247,0) 70%); bottom: -250px; right: -150px; }
+        .orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(16,185,129,0.5) 0%, rgba(16,185,129,0) 70%); top: 30%; left: 50%; transform: translateX(-50%); }
 
         .rv-head {
           text-align: center;
@@ -382,9 +381,6 @@ const Testimonials = () => {
           #testimonials {
             padding: 3.5rem 0 !important;
             background: #F2F4F7 !important;
-          }
-          .rv-bg-orb {
-            opacity: 0.25 !important;
           }
           .rv-head {
             margin-bottom: 2rem !important;

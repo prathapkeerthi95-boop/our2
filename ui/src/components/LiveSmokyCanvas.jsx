@@ -6,6 +6,14 @@ export default function LiveSmokyCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // PERF: Skip smoke canvas entirely on mobile — 60 radial gradients per frame kills performance
+    const isMobile = window.innerWidth <= 768 || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    if (isMobile) {
+      canvas.style.display = 'none';
+      return;
+    }
+
     const ctx = canvas.getContext('2d');
     let animationFrameId;
 
