@@ -59,8 +59,14 @@ const reviewsRow2 = [
 ];
 
 // Duplicate loops for seamless horizontal infinite circular scrolling
-const r1Cards = [...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1];
-const r2Cards = [...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2];
+// PERF: Massively reduce the number of duplicated DOM nodes on mobile to prevent layout thrashing
+const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+const r1Cards = isMobile 
+  ? [...reviewsRow1, ...reviewsRow1] 
+  : [...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1, ...reviewsRow1];
+const r2Cards = isMobile 
+  ? [...reviewsRow2, ...reviewsRow2] 
+  : [...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2];
 
 const Card = ({ r }) => (
   <div className="rv-card">
@@ -126,11 +132,11 @@ const useDragScroll = () => {
     const x = e.pageX - ref.current.offsetLeft;
     const walk = (x - startX.current) * 2;
     ref.current.scrollLeft = scrollLeft.current - walk;
-    checkLoop();
+    if (!isMobile) checkLoop();
   };
 
   const onScroll = () => {
-    checkLoop();
+    if (!isMobile) checkLoop();
   };
 
   return { ref, onMouseDown, onMouseLeave, onMouseUp, onMouseMove, onScroll };
@@ -148,28 +154,31 @@ const Testimonials = () => {
     if (!secRef.current || !row1TrackRef.current || !row2TrackRef.current) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: secRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true
-        }
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: secRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true
+          }
+        });
+
+        // Top row scrolls LEFT when page scrolls DOWN (and RIGHT when page scrolls UP)
+        tl.to(row1TrackRef.current, {
+          x: -450,
+          ease: "none"
+        }, 0);
+
+        // Bottom row scrolls RIGHT when page scrolls DOWN (and LEFT when page scrolls UP)
+        tl.fromTo(row2TrackRef.current,
+          { x: -450 },
+          { x: 0, ease: "none" },
+          0
+        );
       });
-
-      // Top row scrolls LEFT when page scrolls DOWN (and RIGHT when page scrolls UP)
-      tl.to(row1TrackRef.current, {
-        x: -450,
-        ease: "none"
-      }, 0);
-
-      // Bottom row scrolls RIGHT when page scrolls DOWN (and LEFT when page scrolls UP)
-      tl.fromTo(row2TrackRef.current,
-        { x: -450 },
-        { x: 0, ease: "none" },
-        0
-      );
     }, secRef);
 
     const r1El = row1Drag.ref.current;
@@ -250,6 +259,8 @@ const Testimonials = () => {
           user-select: none;
           -webkit-user-select: none;
           scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          will-change: scroll-position;
         }
 
         .rv-row::-webkit-scrollbar {
@@ -264,6 +275,7 @@ const Testimonials = () => {
           display: flex;
           width: max-content;
           margin-left: 0 !important;
+          will-change: transform;
         }
 
         .rv-card {
