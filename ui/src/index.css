@@ -1206,7 +1206,7 @@ select option { background: #fff; color: var(--text-black); }
 }
 
 @media (max-width: 768px) {
-  .about-grid { grid-template-columns: 1fr; }
+  .about-grid { display: flex; flex-direction: column-reverse; gap: 2.5rem; }
   .portfolio-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .process-steps { grid-template-columns: 1fr; }
@@ -3182,7 +3182,8 @@ html.lenis, html.lenis body { height: auto; }
     padding: 2.5rem 0 1rem !important;
   }
   .about-grid {
-    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column-reverse !important;
     gap: 2rem !important;
   }
   .about-features {

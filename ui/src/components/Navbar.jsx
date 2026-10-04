@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagneticElement from './MagneticElement';
@@ -242,12 +243,12 @@ const Navbar = () => {
             alignItems: 'center'
           }}
         >
-          {['Services', 'About', 'Portfolio', 'Process', 'Clients'].map((item, index) => {
-            const href = item === 'Clients' ? '#testimonials' : `#${item.toLowerCase()}`;
+          {['About', 'Services', 'Portfolio', 'Process', 'Clients'].map((item, index) => {
+            const hash = item === 'Clients' ? 'testimonials' : item.toLowerCase();
             return (
               <li key={item}>
                 <a 
-                  href={href} 
+                  href={`/#${hash}`} 
                   ref={el => linksRef.current[index] = el}
                   style={{ 
                     color: '#11131A', 
@@ -266,9 +267,26 @@ const Navbar = () => {
             );
           })}
           <li>
+            <Link 
+              to="/careers" 
+              style={{ 
+                color: '#11131A', 
+                textDecoration: 'none', 
+                fontSize: '0.85rem', 
+                fontWeight: 600,
+                opacity: 0.8,
+                transition: 'opacity 0.2s, color 0.3s',
+                position: 'relative',
+                letterSpacing: '0.02em'
+              }}
+            >
+              Careers
+            </Link>
+          </li>
+          <li>
             <MagneticElement>
               <a 
-                href="#contact" 
+                  href="/#contact" 
                 ref={btnRef}
                 className="nav-start-btn"
               >
@@ -358,12 +376,12 @@ const Navbar = () => {
             }}
           >
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              {['Services', 'About', 'Portfolio', 'Process', 'Clients'].map((item) => {
-                const href = item === 'Clients' ? '#testimonials' : `#${item.toLowerCase()}`;
+              {['About', 'Services', 'Portfolio', 'Process', 'Clients'].map((item) => {
+                const hash = item === 'Clients' ? 'testimonials' : item.toLowerCase();
                 return (
                   <li key={item}>
                     <a
-                      href={href}
+                      href={`/#${hash}`}
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
                         display: 'block',
@@ -385,9 +403,29 @@ const Navbar = () => {
                   </li>
                 );
               })}
+              <li>
+                <Link
+                  to="/careers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    display: 'block',
+                    padding: '0.8rem 1.1rem',
+                    color: '#111827',
+                    textDecoration: 'none',
+                    fontSize: '1.05rem',
+                    fontWeight: 700,
+                    borderRadius: '14px',
+                    backgroundColor: 'transparent',
+                    transition: 'all 0.2s ease',
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  Careers
+                </Link>
+              </li>
               <li style={{ marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                 <a
-                  href="#contact"
+                    href="/#contact"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     display: 'block',

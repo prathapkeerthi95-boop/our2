@@ -6,26 +6,30 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reviewsRow1 = [
   {
-    name: 'Rajesh Kumar', role: 'CEO, TechNova', avatar: 'RK',
-    quote: 'Traffic increased by 420%. Absolutely transformed our digital presence and scaled our business overnight.',
+    name: 'Balaji', role: 'Founder, Gagner Sports', avatar: 'B',
+    quote: 'Excellent work by Nuzarox. They understood our requirements clearly and delivered a professional, user-friendly platform that has made our event management much easier.',
+    stars: 5,
     color: '#00E5FF',
     accent: 'linear-gradient(135deg, #00E5FF, #0077B6)'
   },
   {
-    name: 'Priya Venkat', role: 'Founder, FitPulse', avatar: 'PV',
-    quote: 'The mobile app is flawless. Every stage was handled with extreme precision and amazing design.',
+    name: 'Siva', role: 'Marketing, Gagner Sports', avatar: 'S',
+    quote: 'Nuzarox made the entire process smooth and simple. The website looks professional, works seamlessly, and has helped us present Gagner Sports much better online.',
+    stars: 4.5,
     color: '#A855F7',
     accent: 'linear-gradient(135deg, #A855F7, #6D28D9)'
   },
   {
-    name: 'Arjun Mehta', role: 'Director, Vertex', avatar: 'AM',
-    quote: 'They built an entire identity ecosystem for our brand. It\'s not just a website, it\'s an experience.',
+    name: 'Keerthieswaran', role: 'Student', avatar: 'K',
+    quote: 'KE19 Portfolio gave me a clear and professional way to showcase my skills and projects. The design is clean, modern, and easy to explore.',
+    stars: 5,
     color: '#10B981',
     accent: 'linear-gradient(135deg, #10B981, #047857)'
   },
   {
-    name: 'Sarah Johnson', role: 'CMO, Lumina', avatar: 'SJ',
-    quote: 'Best agency we\'ve partnered with. True WebGL visionaries that pushed our web presence to the future.',
+    name: 'Ruthra', role: 'Student', avatar: 'R',
+    quote: 'The portfolio looks simple, creative, and professional. It helped me present my projects and skills in a much better way.',
+    stars: 5,
     color: '#F59E0B',
     accent: 'linear-gradient(135deg, #F59E0B, #D97706)'
   }
@@ -33,26 +37,23 @@ const reviewsRow1 = [
 
 const reviewsRow2 = [
   {
-    name: 'Deepak Sharma', role: 'CTO, CloudSync', avatar: 'DS',
-    quote: 'Complex microservices architecture delivered flawlessly. Unmatched technical depth and execution speed.',
+    name: 'Mani', role: 'President, Apartment', avatar: 'M',
+    quote: 'The apartment management process has become much easier and more organized. The platform helps us manage residents, updates, and day-to-day activities efficiently.',
+    stars: 4.5,
     color: '#EF4444',
     accent: 'linear-gradient(135deg, #EF4444, #991B1B)'
   },
   {
-    name: 'Anika Roy', role: 'Design Lead, Modo', avatar: 'AR',
-    quote: 'The UI/UX is breathtaking. User engagement jumped 300% in the first month alone. Absolutely stunning work.',
+    name: 'Lokesh', role: 'Vice President, Apartment', avatar: 'L',
+    quote: 'Everything is well organized and easy to manage. It has made communication and apartment operations much more convenient for our residents.',
+    stars: 4,
     color: '#3B82F6',
     accent: 'linear-gradient(135deg, #3B82F6, #1D4ED8)'
   },
   {
-    name: 'Marcus Lee', role: 'CEO, NexGen Labs', avatar: 'ML',
-    quote: 'Concept to launch in 8 weeks. They move fast without compromising quality. The results speak for themselves.',
-    color: '#EC4899',
-    accent: 'linear-gradient(135deg, #EC4899, #9D174D)'
-  },
-  {
-    name: 'Kavitha Rajan', role: 'Founder, StyleHive', avatar: 'KR',
-    quote: 'Our e-commerce platform handles 10x traffic with zero downtime. Game-changing partnership for our growth.',
+    name: 'Nimmi', role: 'Digital Marketing', avatar: 'N',
+    quote: 'The website has a clean and professional look, making it easy for residents to access important information. A simple and effective digital solution for apartment management.',
+    stars: 4.5,
     color: '#14B8A6',
     accent: 'linear-gradient(135deg, #14B8A6, #0F766E)'
   }
@@ -68,6 +69,17 @@ const r2Cards = isMobile
   ? [...reviewsRow2, ...reviewsRow2] 
   : [...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2, ...reviewsRow2];
 
+// Render stars with half-star support
+const renderStars = (count) => {
+  const stars = [];
+  const full = Math.floor(count);
+  const hasHalf = count % 1 !== 0;
+  for (let i = 0; i < full; i++) stars.push(<span key={`f${i}`}>★</span>);
+  if (hasHalf) stars.push(<span key="half" style={{ position: 'relative', display: 'inline-block', width: '0.85em' }}><span style={{ position: 'absolute', overflow: 'hidden', width: '50%', color: '#FFB800' }}>★</span><span style={{ color: '#D1D5DB' }}>★</span></span>);
+  for (let i = full + (hasHalf ? 1 : 0); i < 5; i++) stars.push(<span key={`e${i}`} style={{ color: '#D1D5DB' }}>★</span>);
+  return stars;
+};
+
 const Card = ({ r }) => (
   <div className="rv-card">
     <div className="rv-glow" style={{ background: r.accent }}></div>
@@ -80,7 +92,7 @@ const Card = ({ r }) => (
         </div>
       </div>
       <div className="rv-stars">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        {renderStars(r.stars)}
       </div>
       <p className="rv-quote">{r.quote}</p>
     </div>

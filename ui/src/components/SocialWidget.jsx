@@ -61,7 +61,7 @@ const SocialWidget = () => {
 
   const socials = [
     { href: 'https://wa.me/YOUR_NUMBER', icon: <WhatsAppIcon />, color: '#25D366', label: 'WhatsApp' },
-    { href: 'https://linkedin.com', icon: <LinkedInIcon />, color: '#0077b5', label: 'LinkedIn' },
+    { href: 'https://www.linkedin.com/company/nuzarox-technology/posts/?viewAsMember=true', icon: <LinkedInIcon />, color: '#0077b5', label: 'LinkedIn' },
     { href: 'https://instagram.com', icon: <InstagramIcon />, color: '#E1306C', label: 'Instagram' },
   ];
 

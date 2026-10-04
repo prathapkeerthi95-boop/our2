@@ -40,12 +40,25 @@ const ContactForm = () => {
     setStatus('sending');
 
     try {
-      const response = await fetch('http://localhost:5001/api/order', {
+      // FormSubmit.co — free email API, works instantly, no signup needed
+      const response = await fetch('https://formsubmit.co/ajax/keerthiprathap19@gmail.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || 'Not provided',
+          message: formData.message,
+          _subject: `New Project Brief from ${formData.name}`,
+          _template: 'table'
+        })
       });
+
       const data = await response.json();
+      
       if (data.success) {
         setStatus('success');
         setFormData({ name: '', email: '', phone: '', message: '' });
@@ -53,7 +66,8 @@ const ContactForm = () => {
       } else {
         setStatus('error');
       }
-    } catch {
+    } catch (err) {
+      console.error('Form submission error:', err);
       setStatus('error');
     }
   };
@@ -233,15 +247,15 @@ const ContactForm = () => {
                   <p style={{ color: '#FF2A54', fontSize: '0.85rem', marginTop: '0.5rem', fontWeight: 600 }}>Incorrect answer, please try again.</p>
                 )}
 
-                <button type="submit" className="glass-submit-btn" style={{ width: '100%', marginTop: '1.4rem', justifyContent: 'center', background: 'linear-gradient(135deg, #00E5FF 0%, #7000FF 100%)', color: '#FFFFFF', padding: '16px', borderRadius: '16px', fontWeight: 800, fontSize: '1.02rem', border: 'none', cursor: 'pointer', boxShadow: '0 12px 30px rgba(0, 229, 255, 0.35)', display: 'flex', alignItems: 'center', transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
+                <button type="submit" className="glass-submit-btn" style={{ width: '100%', marginTop: '1.4rem', justifyContent: 'center', background: 'linear-gradient(135deg, #0B3D6F 0%, #1A8F8F 50%, #2AA18A 100%)', color: '#FFFFFF', padding: '16px', borderRadius: '16px', fontWeight: 800, fontSize: '1.02rem', border: 'none', cursor: 'pointer', boxShadow: '0 12px 30px rgba(26, 143, 143, 0.35)', display: 'flex', alignItems: 'center', transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
                   disabled={status === 'sending'}>
                   <span>{status === 'sending' ? 'Transmitting...' : 'Submit'}</span>
                   <Send size={18} style={{ position: 'relative', zIndex: 1, marginLeft: '10px' }} />
                 </button>
 
                 {status === 'success' && (
-                  <p style={{ color: '#7000FF', textAlign: 'center', marginTop: '1rem', fontWeight: 700 }}>
-                    ✓ Message received. We'll contact you shortly.
+                  <p style={{ color: '#10B981', textAlign: 'center', marginTop: '1rem', fontWeight: 700, fontSize: '1.05rem' }}>
+                    ✓ Thank you for submitting! We will reach you soon.
                   </p>
                 )}
                 {status === 'error' && (

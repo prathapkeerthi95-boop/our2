@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from '@studio-freight/lenis';
@@ -18,6 +19,7 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import SocialWidget from './components/SocialWidget';
 import BackToTop from './components/BackToTop';
+import Careers from './components/Careers';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -179,62 +181,72 @@ function App() {
       
       <Navbar />
 
-      {/* HERO SECTION */}
-      <section id="hero" style={{ 
-        position: 'relative', 
-        zIndex: 10,
-        background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
-      }}>
-        <ZoomHero preloaderFinished={preloaderFinished} />
-      </section>
+      <Routes>
+        {/* HOME PAGE */}
+        <Route path="/" element={
+          <>
+            {/* HERO SECTION */}
+            <section id="hero" style={{ 
+              position: 'relative', 
+              zIndex: 10,
+              background: 'linear-gradient(to bottom, #FAFAFA, #F3F6FA)'
+            }}>
+              <ZoomHero preloaderFinished={preloaderFinished} />
+            </section>
 
-      {/* SERVICES SECTION */}
-      <section id="services-wrapper" style={{ 
-        position: 'relative', 
-        zIndex: 10,
-        backgroundColor: '#F5F3EF',
-        overflow: 'hidden'
-      }}>
-        <Services />
-      </section>
+            {/* ABOUT SECTION */}
+            <div style={{ 
+              position: 'relative', 
+              zIndex: 10, 
+              backgroundColor: '#F5F3EF' 
+            }}>
+              <About />
+            </div>
 
-      {/* ABOUT SECTION */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10, 
-        backgroundColor: '#F5F3EF' 
-      }}>
-        <About />
-      </div>
+            {/* SERVICES SECTION */}
+            <section id="services-wrapper" style={{ 
+              position: 'relative', 
+              zIndex: 10,
+              backgroundColor: '#F5F3EF',
+              overflow: 'hidden'
+            }}>
+              <Services />
+            </section>
 
-      {/* UNIFIED CIRCULAR MOTION FRAME SYSTEM FOR PORTFOLIO */}
-      <div style={{ position: 'relative', zIndex: 15, backgroundColor: '#F1F4F9' }}>
-        <SoftWavesBackground />
-        <Portfolio />
-      </div>
+            {/* UNIFIED CIRCULAR MOTION FRAME SYSTEM FOR PORTFOLIO */}
+            <div style={{ position: 'relative', zIndex: 15, backgroundColor: '#F1F4F9' }}>
+              <SoftWavesBackground />
+              <Portfolio />
+            </div>
 
-      {/* PROCESS + TESTIMONIALS */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 20, 
-        backgroundColor: '#FFFFFF' 
-      }}>
-        <Process />
-        <Testimonials />
-      </div>
+            {/* PROCESS + TESTIMONIALS */}
+            <div style={{ 
+              position: 'relative', 
+              zIndex: 20, 
+              backgroundColor: '#FFFFFF' 
+            }}>
+              <Process />
+              <Testimonials />
+            </div>
 
-      {/* STATS (Floating Cards like Buzzworthy Awards) */}
-      <div style={{ position: 'relative', zIndex: 10 }}>
-        <Stats />
-      </div>
+            {/* STATS (Floating Cards like Buzzworthy Awards) */}
+            <div style={{ position: 'relative', zIndex: 10 }}>
+              <Stats />
+            </div>
 
-      {/* CONTACT */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10
-      }}>
-        <ContactForm />
-      </div>
+            {/* CONTACT */}
+            <div style={{ 
+              position: 'relative', 
+              zIndex: 10
+            }}>
+              <ContactForm />
+            </div>
+          </>
+        } />
+
+        {/* CAREERS PAGE */}
+        <Route path="/careers" element={<Careers />} />
+      </Routes>
 
       <Footer />
       <SocialWidget />
