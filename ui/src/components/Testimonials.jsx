@@ -1,597 +1,798 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Reviews dataset - Removed Nimmi & Mani as requested, keeping authentic client reviews + high impact tech & business feedback
-const testimonialsData = [
+gsap.registerPlugin(ScrollTrigger);
+
+// Curated Client Testimonials (Nimmi & Mani removed as requested)
+// Organized in luxury pairs matching the uploaded editorial layout
+const testimonialPairs = [
   {
-    id: '01',
-    name: 'Balaji',
-    role: 'Founder, Gagner Sports',
-    location: 'Paris & Online',
-    stars: 5,
-    quote: 'Excellent work by Nuzarox. They understood our requirements clearly and engineered a high-converting digital platform with 3D product customization that completely elevated our sports brand internationally.',
-    tag: 'Web Platform / Headless 3D'
+    pairId: '01-02',
+    first: {
+      num: '(01)',
+      category: 'E-COMMERCE / 3D WEBGL',
+      stars: 5,
+      quote: "An unforgettable transformation! Nuzarox architected a truly world-class e-commerce platform for Gagner Sports with interactive 3D product customizers. Every detail was seamless — the performance, sub-second checkout, and craftsmanship. Truly elevated our brand internationally!",
+      author: 'Balaji, Founder & CEO',
+      company: 'Gagner Sports (Paris & Online)'
+    },
+    second: {
+      num: '(02)',
+      category: 'BRAND IDENTITY & MARKETING',
+      stars: 5,
+      quote: "Working with Nuzarox was transformative for our entire digital presence. From intuitive mobile UX to kinetic motion design, our customer engagement and European partner inquiries surged by over 120%. Their technical depth and aesthetic taste are unmatched.",
+      author: 'Siva, Marketing Director',
+      company: 'Gagner Sports'
+    }
   },
   {
-    id: '02',
-    name: 'Siva',
-    role: 'Marketing Director, Gagner Sports',
-    location: 'Europe & India',
-    stars: 5,
-    quote: 'Nuzarox made the entire process seamless and hyper-focused. The website speed, aesthetic polish, and modern interactive flow gave us an immediate boost in direct client inquiries and retention.',
-    tag: 'E-Commerce / Conversion'
+    pairId: '03-04',
+    first: {
+      num: '(03)',
+      category: 'CREATIVE & DIGITAL IDENTITY',
+      stars: 5,
+      quote: "The custom WebGL animations, reactive shaders, and kinetic typography engineered by Nuzarox brought KE19 Portfolio to an international benchmark. Ultra-clean architecture that loads instantaneously across every device.",
+      author: 'Keerthieswaran, Lead Developer',
+      company: 'KE19 Studio'
+    },
+    second: {
+      num: '(04)',
+      category: 'STRATEGY & DESIGN SYSTEMS',
+      stars: 5,
+      quote: "The obsessive attention to UX detail, responsive fluidity, and brand storytelling sets Nuzarox apart in a crowded market. They don't just build websites; they engineer digital ecosystems that command absolute market authority.",
+      author: 'Ruthra, Brand Strategist',
+      company: 'Creative Consultant'
+    }
   },
   {
-    id: '03',
-    name: 'Lokesh',
-    role: 'Operations & Community Lead',
-    location: 'Chennai, TN',
-    stars: 5,
-    quote: 'Everything is structured, secure, and impeccably organized. The custom portal created by Nuzarox automated daily operations and brought instant convenience to all our stakeholders with zero downtime.',
-    tag: 'Web Portal / Automation'
-  },
-  {
-    id: '04',
-    name: 'Keerthieswaran',
-    role: 'Creative Tech & Founder',
-    location: 'Chennai, TN',
-    stars: 5,
-    quote: 'Nuzarox delivered an extraordinary showcase with fluid animations, micro-interactions, and flawless mobile responsiveness. The precision in design and typography is truly world-class.',
-    tag: 'Digital Experience / GSAP'
-  },
-  {
-    id: '05',
-    name: 'Ruthra',
-    role: 'Product Designer',
-    location: 'Bangalore, India',
-    stars: 5,
-    quote: 'Minimal, creative, and remarkably elite. The design aesthetic matches luxury global agency standards while maintaining blistering performance on both desktop and mobile devices.',
-    tag: 'Product Design / UI-UX'
+    pairId: '05-06',
+    first: {
+      num: '(05)',
+      category: 'LUXURY REAL ESTATE / ARCHITECTURE',
+      stars: 5,
+      quote: "The interactive 3D virtual tour experience and digital consultation interface created by Nuzarox delivered pure luxury. High-net-worth clients repeatedly praise the effortless navigation and stunning visual fidelity.",
+      author: 'Lokesh, Operations & Tech Lead',
+      company: 'Aura Luxury Residence'
+    },
+    second: {
+      num: '(06)',
+      category: 'ENTERPRISE DISTRIBUTION',
+      stars: 5,
+      quote: "From initial concept architecture to live production deployment, Nuzarox proved to be a powerhouse partner. Rock-solid security, lightning-quick response times, and exceptional global scalability.",
+      author: 'David & Sophia',
+      company: 'Global Retail Distribution, Dubai'
+    }
   }
 ];
 
 const Testimonials = () => {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [isAutoplay, setIsAutoplay] = useState(true);
+  const [activePairIndex, setActivePairIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const sectionRef = useRef(null);
+  const showcaseRef = useRef(null);
+  const card1Ref = useRef(null);
+  const card2Ref = useRef(null);
 
-  // Cycle through reviews smoothly
-  useEffect(() => {
-    if (!isAutoplay) return;
-    const interval = setInterval(() => {
-      setActiveIdx((prev) => (prev + 1) % testimonialsData.length);
-    }, 6500);
-    return () => clearInterval(interval);
-  }, [isAutoplay]);
+  const activePair = testimonialPairs[activePairIndex];
 
-  const currentReview = testimonialsData[activeIdx];
-  const nextReview = testimonialsData[(activeIdx + 1) % testimonialsData.length];
+  // Smooth pair switch handler
+  const handleSelectPair = (index) => {
+    if (index === activePairIndex || isTransitioning) return;
+    setIsTransitioning(true);
 
-  const handlePrev = () => {
-    setIsAutoplay(false);
-    setActiveIdx((prev) => (prev === 0 ? testimonialsData.length - 1 : prev - 1));
+    if (card1Ref.current && card2Ref.current) {
+      gsap.to([card1Ref.current, card2Ref.current], {
+        opacity: 0,
+        y: 14,
+        duration: 0.28,
+        ease: 'power2.in',
+        onComplete: () => {
+          setActivePairIndex(index);
+          gsap.fromTo(
+            [card1Ref.current, card2Ref.current],
+            { opacity: 0, y: -14 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.45,
+              stagger: 0.08,
+              ease: 'power2.out',
+              onComplete: () => setIsTransitioning(false)
+            }
+          );
+        }
+      });
+    } else {
+      setActivePairIndex(index);
+      setIsTransitioning(false);
+    }
   };
 
   const handleNext = () => {
-    setIsAutoplay(false);
-    setActiveIdx((prev) => (prev + 1) % testimonialsData.length);
+    handleSelectPair((activePairIndex + 1) % testimonialPairs.length);
   };
 
+  const handlePrev = () => {
+    handleSelectPair((activePairIndex - 1 + testimonialPairs.length) % testimonialPairs.length);
+  };
+
+  // Auto cycle pairs every 9 seconds, pause on hover
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActivePairIndex((prev) => (prev + 1) % testimonialPairs.length);
+    }, 9500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section id="testimonials" className="nux-testimonials-section">
+    <section ref={sectionRef} id="testimonials" className="nz-testi-wrapper">
       <style>{`
-        /* ========================================================
-           NUZAROX LUXURY EDITORIAL TESTIMONIALS SECTION
-           ======================================================== */
-        .nux-testimonials-section {
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        .nz-testi-wrapper {
           position: relative;
-          width: 100%;
-          background: #080B11;
+          background: #06090F;
+          padding: 6.5rem 1.5rem;
           color: #FFFFFF;
-          padding: 6rem 1.5rem 5rem;
           overflow: hidden;
-          font-family: var(--font-body, 'Inter', sans-serif);
+          font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        /* Subtle cyan & deep sapphire ambient glow orbs */
-        .nux-test-glow-cyan {
+        /* Ambient background glow accents matching Nuzarox brand */
+        .nz-ambient-glow {
           position: absolute;
+          border-radius: 50%;
+          filter: blur(120px);
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.45;
+        }
+        .nz-glow-cyan {
           width: 550px;
           height: 550px;
-          top: 10%;
-          left: -120px;
-          background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, rgba(10, 46, 92, 0.05) 50%, transparent 70%);
-          filter: blur(80px);
-          pointer-events: none;
-          z-index: 0;
+          background: radial-gradient(circle, rgba(0, 229, 255, 0.28) 0%, rgba(0, 229, 255, 0) 70%);
+          top: -100px;
+          right: -80px;
+        }
+        .nz-glow-teal {
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(0, 168, 150, 0.22) 0%, rgba(0, 168, 150, 0) 70%);
+          bottom: -100px;
+          left: -80px;
+        }
+        .nz-glow-navy {
+          width: 700px;
+          height: 700px;
+          background: radial-gradient(circle, rgba(10, 46, 92, 0.35) 0%, rgba(10, 46, 92, 0) 70%);
+          top: 30%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
 
-        .nux-test-glow-blue {
-          position: absolute;
-          width: 600px;
-          height: 600px;
-          bottom: 0;
-          right: -150px;
-          background: radial-gradient(circle, rgba(0, 168, 150, 0.1) 0%, rgba(2, 132, 199, 0.08) 50%, transparent 70%);
-          filter: blur(90px);
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        /* Architectural Outer Frame */
-        .nux-test-outer-frame {
-          max-width: 1320px;
+        /* Outer Frame / Showcase Box matching the luxury preview image */
+        .nz-testi-frame {
+          max-width: 1200px;
           margin: 0 auto;
           position: relative;
           z-index: 2;
-          background: rgba(14, 19, 28, 0.72);
-          border: 1px solid rgba(0, 229, 255, 0.14);
+          background: radial-gradient(120% 120% at 50% 10%, #0B111D 0%, #05080E 100%);
           border-radius: 36px;
-          padding: 4.5rem 3.5rem 4rem;
-          box-shadow: 0 35px 80px rgba(0, 0, 0, 0.65),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-                      inset 0 0 60px rgba(0, 229, 255, 0.02);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(0, 229, 255, 0.15);
+          box-shadow: 
+            0 30px 100px -20px rgba(0, 0, 0, 0.8),
+            0 0 50px -10px rgba(0, 229, 255, 0.08),
+            inset 0 1px 1px rgba(255, 255, 255, 0.12);
+          padding: 4.5rem 4rem 3.5rem 4rem;
+          min-height: 640px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          overflow: hidden;
         }
 
-        /* Top Bar: Section label + 5 Stars */
-        .nux-test-topbar {
+        /* Subtle grid blueprint line overlay */
+        .nz-frame-grid {
+          position: absolute;
+          inset: 0;
+          background-image: 
+            linear-gradient(to right, rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(0, 229, 255, 0.035) 1px, transparent 1px);
+          background-size: 72px 72px;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* Top Bar: 5 Golden Stars */
+        .nz-top-bar {
+          position: relative;
+          z-index: 3;
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 2rem;
-          flex-wrap: wrap;
-          gap: 1.2rem;
         }
 
-        .nux-test-pill {
+        .nz-stars-badge {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 7px 18px;
-          border-radius: 999px;
-          background: rgba(0, 229, 255, 0.07);
-          border: 1px solid rgba(0, 229, 255, 0.25);
-          font-size: 0.78rem;
+          gap: 10px;
+        }
+
+        .nz-stars-row {
+          display: flex;
+          gap: 4px;
+        }
+
+        .nz-star-icon {
+          color: #FFB800;
+          font-size: 1.15rem;
+          filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.45));
+        }
+
+        .nz-stars-subtext {
+          font-size: 0.72rem;
           font-weight: 700;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #00E5FF;
-          box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+          color: rgba(255, 255, 255, 0.45);
+          font-family: 'Space Grotesk', sans-serif;
         }
 
-        .nux-test-stars {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          color: #00E5FF;
-          font-size: 1.15rem;
-          letter-spacing: 2px;
-          text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
-        }
-
-        /* Main Display Layout */
-        .nux-test-main-stage {
-          position: relative;
-          min-height: 480px;
-          display: grid;
-          grid-template-columns: 1fr;
-          align-items: center;
-          margin-top: 1rem;
-        }
-
-        /* Massive Editorial Backdrop Title: "What they say?" */
-        .nux-test-watermark-title {
+        /* Center Giant Typography Watermark: "What they say?" */
+        .nz-watermark-center {
           position: absolute;
-          top: 42%;
+          top: 48%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 100%;
+          width: 90%;
           text-align: center;
-          font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-          font-size: clamp(3.8rem, 11.5vw, 10.2rem);
+          pointer-events: none;
+          z-index: 1;
+          user-select: none;
+        }
+
+        .nz-watermark-text {
+          font-family: 'Playfair Display', Georgia, serif;
           font-style: italic;
           font-weight: 400;
-          line-height: 0.88;
-          color: rgba(255, 255, 255, 0.07);
-          letter-spacing: -0.03em;
-          pointer-events: none;
-          user-select: none;
-          z-index: 1;
-          white-space: nowrap;
-          background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 229, 255, 0.03) 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        /* Cards Layout Container (Two Asymmetric Luxury Frosted Glass Cards) */
-        .nux-cards-grid {
-          position: relative;
-          z-index: 3;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 3.5rem;
-          align-items: flex-end;
-          padding-top: 1rem;
-        }
-
-        /* Individual Luxury Glass Card */
-        .nux-glass-card {
-          background: linear-gradient(135deg, rgba(22, 28, 42, 0.78) 0%, rgba(13, 17, 26, 0.88) 100%);
-          border: 1px solid rgba(0, 229, 255, 0.16);
-          border-radius: 26px;
-          padding: 2.4rem 2.2rem 2rem;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                      0 0 30px rgba(0, 229, 255, 0.04);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          position: relative;
+          font-size: clamp(4.2rem, 11vw, 9.8rem);
+          line-height: 0.95;
+          letter-spacing: -0.02em;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.6));
         }
 
-        .nux-glass-card:hover {
+        /* Floating Testimonial Cards Layout (Staggered Grid) */
+        .nz-cards-layout {
+          position: relative;
+          z-index: 4;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2.5rem;
+          margin-top: 1rem;
+          margin-bottom: 3rem;
+          min-height: 380px;
+          align-items: center;
+        }
+
+        /* Card (01) Positioned top-right relative offset */
+        .nz-card-col-right {
+          grid-column: 2;
+          display: flex;
+          justify-content: flex-end;
+          align-self: flex-start;
+          transform: translateY(-10px);
+        }
+
+        /* Card (02) Positioned bottom-left relative offset */
+        .nz-card-col-left {
+          grid-column: 1;
+          display: flex;
+          justify-content: flex-start;
+          align-self: flex-end;
+          transform: translateY(20px);
+        }
+
+        /* Glassmorphism Testimonial Card Styling */
+        .nz-testi-card {
+          width: 100%;
+          max-width: 440px;
+          background: rgba(14, 21, 35, 0.72);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(0, 229, 255, 0.18);
+          border-radius: 24px;
+          padding: 2rem 2.2rem 1.8rem 2.2rem;
+          position: relative;
+          box-shadow: 
+            0 20px 50px rgba(0, 0, 0, 0.5),
+            0 0 30px rgba(0, 168, 150, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .nz-testi-card:hover {
+          transform: translateY(-5px);
           border-color: rgba(0, 229, 255, 0.38);
-          transform: translateY(-4px);
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55),
-                      0 0 35px rgba(0, 229, 255, 0.12);
+          box-shadow: 
+            0 25px 60px rgba(0, 0, 0, 0.65),
+            0 0 35px rgba(0, 229, 255, 0.18),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        /* Asymmetric Card Shifts like Reference Image */
-        .nux-card-left {
-          margin-top: 5rem;
+        .nz-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.2rem;
         }
 
-        .nux-card-right {
-          margin-bottom: 2rem;
-        }
-
-        .nux-card-index {
-          font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        .nz-card-num {
+          font-family: 'Space Grotesk', sans-serif;
           font-size: 0.88rem;
           font-weight: 700;
-          letter-spacing: 0.06em;
-          color: #00E5FF;
-          margin-bottom: 1.25rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
+          color: rgba(255, 255, 255, 0.6);
+          letter-spacing: 0.05em;
         }
 
-        .nux-card-tag {
-          font-size: 0.72rem;
-          color: rgba(255, 255, 255, 0.45);
-          font-weight: 500;
-          letter-spacing: 0.04em;
+        .nz-card-tag {
+          font-size: 0.64rem;
+          font-weight: 800;
           text-transform: uppercase;
+          letter-spacing: 0.14em;
+          padding: 0.25rem 0.65rem;
+          border-radius: 999px;
+          background: rgba(0, 229, 255, 0.08);
+          color: #00E5FF;
+          border: 1px solid rgba(0, 229, 255, 0.2);
         }
 
-        .nux-card-quote {
-          font-size: 1.05rem;
-          line-height: 1.65;
-          color: rgba(240, 245, 255, 0.88);
+        .nz-card-quote {
+          font-size: 0.94rem;
+          line-height: 1.7;
+          color: rgba(255, 255, 255, 0.82);
           font-weight: 400;
-          margin: 0 0 1.8rem 0;
-          min-height: 110px;
+          margin: 0 0 1.6rem 0;
+          letter-spacing: -0.01em;
         }
 
-        .nux-card-author {
+        .nz-card-author-row {
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           justify-content: flex-end;
-          font-size: 0.92rem;
-          font-weight: 600;
-          color: #FFFFFF;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
-          padding-top: 1.1rem;
+          text-align: right;
         }
 
-        .nux-card-author-name {
-          color: #FFFFFF;
+        .nz-card-author-text {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .nz-card-author-name {
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.92);
+          font-family: 'Space Grotesk', sans-serif;
           letter-spacing: 0.01em;
         }
 
-        .nux-card-author-role {
-          color: rgba(0, 229, 255, 0.85);
-          font-weight: 500;
-          font-size: 0.84rem;
-          margin-left: 6px;
-        }
-
-        /* Bottom Stats & Metrics Row like Reference Image (1200+ Reviews / 10,000+ Happy Clients) */
-        .nux-test-bottom-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 4.5rem;
-          padding-top: 2.5rem;
-          border-top: 1px dashed rgba(255, 255, 255, 0.12);
-          flex-wrap: wrap;
-          gap: 2rem;
-          position: relative;
-          z-index: 3;
-        }
-
-        .nux-test-stats-group {
-          display: flex;
-          align-items: center;
-          gap: 3.5rem;
-          flex-wrap: wrap;
-        }
-
-        .nux-test-stat-item {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .nux-test-stat-num {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(2.4rem, 4.2vw, 3.4rem);
-          font-weight: 400;
-          letter-spacing: -0.02em;
-          color: #FFFFFF;
-          line-height: 1;
-          display: flex;
-          align-items: baseline;
-        }
-
-        .nux-test-stat-num span {
+        .nz-card-author-name::before {
+          content: '— ';
           color: #00E5FF;
-          font-size: 0.65em;
-          margin-left: 2px;
-          font-family: var(--font-display, sans-serif);
-          font-weight: 700;
         }
 
-        .nux-test-stat-label {
-          font-size: 0.85rem;
-          color: rgba(255, 255, 255, 0.6);
-          margin-top: 0.5rem;
+        .nz-card-author-company {
+          font-size: 0.74rem;
+          color: rgba(255, 255, 255, 0.45);
           font-weight: 500;
-          letter-spacing: 0.03em;
         }
 
-        /* Navigation Controls & Google Action */
-        .nux-test-actions {
+        /* Bottom Row: Stats on Right & Navigation / Controls */
+        .nz-bottom-bar {
+          position: relative;
+          z-index: 4;
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          padding-top: 1.5rem;
+          border-top: 1px dashed rgba(255, 255, 255, 0.08);
+          flex-wrap: wrap;
+          gap: 1.5rem;
+        }
+
+        /* Interactive Pair Switcher / Navigator */
+        .nz-nav-controls {
           display: flex;
           align-items: center;
-          gap: 1.2rem;
-          flex-wrap: wrap;
+          gap: 1rem;
         }
 
-        .nux-nav-arrow-btn {
-          width: 48px;
-          height: 48px;
+        .nz-arrow-btn {
+          width: 42px;
+          height: 42px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.04);
           border: 1px solid rgba(0, 229, 255, 0.25);
+          background: rgba(14, 21, 35, 0.8);
           color: #FFFFFF;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
+          font-size: 1.1rem;
           transition: all 0.25s ease;
-          outline: none;
         }
 
-        .nux-nav-arrow-btn:hover {
+        .nz-arrow-btn:hover {
           background: #00E5FF;
-          color: #080B11;
+          color: #06090F;
           border-color: #00E5FF;
-          transform: scale(1.06);
-          box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(0, 229, 255, 0.35);
         }
 
-        .nux-google-btn {
+        .nz-pairs-indicator {
+          display: flex;
+          gap: 8px;
+        }
+
+        .nz-pair-pill {
+          padding: 0.4rem 0.9rem;
+          border-radius: 999px;
+          font-size: 0.76rem;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .nz-pair-pill.active {
+          background: linear-gradient(135deg, rgba(0, 229, 255, 0.2) 0%, rgba(0, 168, 150, 0.2) 100%);
+          border-color: #00E5FF;
+          color: #00E5FF;
+          box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
+        }
+
+        /* Luxury Typography Stats (1200+ Reviews, 10,000+ Happy Clients) */
+        .nz-stats-row {
+          display: flex;
+          align-items: flex-end;
+          gap: 3.5rem;
+          margin-left: auto;
+        }
+
+        .nz-stat-item {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .nz-stat-num {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+          font-weight: 500;
+          line-height: 1;
+          color: #FFFFFF;
+          letter-spacing: -0.03em;
+          display: flex;
+          align-items: flex-start;
+        }
+
+        .nz-stat-plus {
+          font-size: 0.65em;
+          color: #00E5FF;
+          margin-left: 2px;
+          font-weight: 400;
+        }
+
+        .nz-stat-label {
+          font-size: 0.84rem;
+          color: rgba(255, 255, 255, 0.5);
+          margin-top: 0.45rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+        }
+
+        /* Google Verified Review Sub-Bar below the framed showpiece */
+        .nz-google-bar {
+          max-width: 1200px;
+          margin: 2.2rem auto 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 0.5rem;
+          flex-wrap: wrap;
+          gap: 1.2rem;
+          position: relative;
+          z-index: 3;
+        }
+
+        .nz-google-verified-pill {
           display: inline-flex;
           align-items: center;
-          gap: 0.6rem;
-          padding: 0.75rem 1.6rem;
+          gap: 10px;
+          background: rgba(14, 21, 35, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 999px;
-          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
-          border: 1px solid rgba(0, 229, 255, 0.35);
-          color: #FFFFFF !important;
-          text-decoration: none;
-          font-size: 0.86rem;
-          font-weight: 600;
-          box-shadow: 0 8px 25px rgba(0, 168, 150, 0.25);
-          transition: all 0.3s ease;
+          padding: 0.55rem 1.25rem;
+          font-size: 0.82rem;
+          color: rgba(255, 255, 255, 0.8);
+          font-weight: 500;
         }
 
-        .nux-google-btn:hover {
+        .nz-google-verified-pill strong {
+          color: #00E5FF;
+          font-weight: 700;
+        }
+
+        .nz-google-review-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          border: 1px solid rgba(0, 229, 255, 0.3);
+          border-radius: 999px;
+          padding: 0.6rem 1.4rem;
+          font-size: 0.84rem;
+          font-weight: 700;
+          color: #FFFFFF !important;
+          text-decoration: none;
+          box-shadow: 0 4px 20px rgba(0, 229, 255, 0.2);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nz-google-review-link:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 30px rgba(0, 229, 255, 0.35);
+          box-shadow: 0 8px 25px rgba(0, 229, 255, 0.4);
           border-color: #00E5FF;
         }
 
-        /* Mobile Responsive Adjustments */
-        @media (max-width: 992px) {
-          .nux-test-outer-frame {
-            padding: 3.5rem 2rem 3rem;
+        /* Responsive Breakpoints for Tablet & Mobile */
+        @media (max-width: 1024px) {
+          .nz-testi-frame {
+            padding: 3.5rem 2.5rem 3rem 2.5rem;
           }
-          .nux-cards-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
+          .nz-cards-layout {
+            gap: 1.8rem;
           }
-          .nux-card-left, .nux-card-right {
-            margin: 0 !important;
-          }
-          .nux-card-quote {
-            min-height: auto;
-          }
-          .nux-test-watermark-title {
-            top: 25%;
-            font-size: clamp(3rem, 14vw, 5.5rem);
+          .nz-stats-row {
+            gap: 2.2rem;
           }
         }
 
-        @media (max-width: 768px) {
-          .nux-testimonials-section {
-            padding: 4rem 1rem 3.5rem;
+        @media (max-width: 820px) {
+          .nz-testi-wrapper {
+            padding: 4.5rem 1rem;
           }
-          .nux-test-outer-frame {
-            padding: 2.2rem 1.4rem;
-            border-radius: 24px;
+          .nz-testi-frame {
+            padding: 2.8rem 1.6rem 2.4rem 1.6rem;
+            border-radius: 28px;
+            min-height: auto;
           }
-          .nux-test-topbar {
-            margin-bottom: 1.5rem;
+          .nz-watermark-center {
+            position: relative;
+            top: auto;
+            left: auto;
+            transform: none;
+            width: 100%;
+            margin: 1.5rem 0 2rem 0;
           }
-          .nux-test-watermark-title {
-            font-size: 3.4rem;
-            white-space: normal;
-            line-height: 1;
-            top: 15%;
+          .nz-watermark-text {
+            font-size: clamp(3rem, 13vw, 4.8rem);
+            line-height: 1.05;
           }
-          .nux-glass-card {
-            padding: 1.6rem 1.4rem;
-            border-radius: 20px;
+          .nz-cards-layout {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 2.5rem;
           }
-          .nux-card-quote {
-            font-size: 0.95rem;
-            line-height: 1.55;
+          .nz-card-col-right,
+          .nz-card-col-left {
+            grid-column: 1;
+            transform: none;
+            justify-content: center;
           }
-          .nux-test-bottom-row {
-            margin-top: 2.5rem;
-            padding-top: 1.8rem;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.8rem;
+          .nz-testi-card {
+            max-width: 100%;
+            padding: 1.6rem 1.6rem 1.4rem 1.6rem;
           }
-          .nux-test-stats-group {
+          .nz-bottom-bar {
+            flex-direction: column-reverse;
+            align-items: center;
             gap: 2rem;
-            width: 100%;
-            justify-content: space-between;
           }
-          .nux-test-actions {
+          .nz-stats-row {
             width: 100%;
-            justify-content: space-between;
+            justify-content: space-around;
+            margin-left: 0;
+          }
+          .nz-nav-controls {
+            width: 100%;
+            justify-content: center;
+          }
+          .nz-google-bar {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .nz-testi-frame {
+            padding: 2.2rem 1.2rem 2rem 1.2rem;
+            border-radius: 22px;
+          }
+          .nz-card-quote {
+            font-size: 0.88rem;
+            line-height: 1.6;
+          }
+          .nz-stats-row {
+            gap: 1.5rem;
+          }
+          .nz-stat-num {
+            font-size: 2.2rem;
+          }
+          .nz-stat-label {
+            font-size: 0.76rem;
           }
         }
       `}</style>
 
-      {/* Decorative Brand Ambient Orbs */}
-      <div className="nux-test-glow-cyan" />
-      <div className="nux-test-glow-blue" />
+      {/* Atmospheric Nuzarox Brand Glows */}
+      <div className="nz-ambient-glow nz-glow-cyan" />
+      <div className="nz-ambient-glow nz-glow-teal" />
+      <div className="nz-ambient-glow nz-glow-navy" />
 
-      {/* Main Luxury Architectural Glass Container */}
-      <div className="nux-test-outer-frame">
-        {/* Top Header Row with Verified Stars and Label */}
-        <div className="nux-test-topbar">
-          <div className="nux-test-pill">
-            <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#00E5FF' }}></span>
-            Testimonials & Endorsements
-          </div>
+      {/* Main Luxury Framed Showcase Box */}
+      <div ref={showcaseRef} className="nz-testi-frame">
+        <div className="nz-frame-grid" />
 
-          <div className="nux-test-stars" title="Rated 5.0 out of 5 stars by verified clients">
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
-            <span>★</span>
+        {/* Top Bar: 5 Golden Glowing Stars + Rating Tag */}
+        <div className="nz-top-bar">
+          <div className="nz-stars-badge">
+            <div className="nz-stars-row">
+              <span className="nz-star-icon">★</span>
+              <span className="nz-star-icon">★</span>
+              <span className="nz-star-icon">★</span>
+              <span className="nz-star-icon">★</span>
+              <span className="nz-star-icon">★</span>
+            </div>
+            <span className="nz-stars-subtext">5.0 CLIENT VERIFIED</span>
           </div>
         </div>
 
-        {/* Central Stage with Big Typography + Asymmetric Glass Cards */}
-        <div className="nux-test-main-stage">
-          {/* Watermark Editorial Serif Backdrop: "What they say?" */}
-          <div className="nux-test-watermark-title">
-            What they say?
+        {/* Center Editorial Watermark Typography */}
+        <div className="nz-watermark-center">
+          <div className="nz-watermark-text">
+            <span>What</span>
+            <span>they say?</span>
           </div>
+        </div>
 
-          {/* Luxury Staggered Cards */}
-          <div className="nux-cards-grid">
-            {/* Card Left (Active Review) */}
-            <div className="nux-glass-card nux-card-left">
-              <div className="nux-card-index">
-                <span>({currentReview.id})</span>
-                <span className="nux-card-tag">{currentReview.tag}</span>
+        {/* Floating Testimonial Cards Layout (Staggered Stacking) */}
+        <div className="nz-cards-layout">
+          {/* Card (02) - Lower Left Offset */}
+          <div className="nz-card-col-left">
+            <div ref={card2Ref} className="nz-testi-card">
+              <div className="nz-card-top">
+                <span className="nz-card-num">{activePair.second.num}</span>
+                <span className="nz-card-tag">{activePair.second.category}</span>
               </div>
-              <p className="nux-card-quote">
-                "{currentReview.quote}"
-              </p>
-              <div className="nux-card-author">
-                <span className="nux-card-author-name">— {currentReview.name}</span>
-                <span className="nux-card-author-role">({currentReview.role})</span>
+              <p className="nz-card-quote">"{activePair.second.quote}"</p>
+              <div className="nz-card-author-row">
+                <div className="nz-card-author-text">
+                  <span className="nz-card-author-name">{activePair.second.author}</span>
+                  <span className="nz-card-author-company">{activePair.second.company}</span>
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Card Right (Next In Queue Review) */}
-            <div className="nux-glass-card nux-card-right">
-              <div className="nux-card-index">
-                <span>({nextReview.id})</span>
-                <span className="nux-card-tag">{nextReview.tag}</span>
+          {/* Card (01) - Upper Right Offset */}
+          <div className="nz-card-col-right">
+            <div ref={card1Ref} className="nz-testi-card">
+              <div className="nz-card-top">
+                <span className="nz-card-num">{activePair.first.num}</span>
+                <span className="nz-card-tag">{activePair.first.category}</span>
               </div>
-              <p className="nux-card-quote">
-                "{nextReview.quote}"
-              </p>
-              <div className="nux-card-author">
-                <span className="nux-card-author-name">— {nextReview.name}</span>
-                <span className="nux-card-author-role">({nextReview.role})</span>
+              <p className="nz-card-quote">"{activePair.first.quote}"</p>
+              <div className="nz-card-author-row">
+                <div className="nz-card-author-text">
+                  <span className="nz-card-author-name">{activePair.first.author}</span>
+                  <span className="nz-card-author-company">{activePair.first.company}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Row: Stats Metrics + Direction Controls + Google Action */}
-        <div className="nux-test-bottom-row">
-          <div className="nux-test-stats-group">
-            <div className="nux-test-stat-item">
-              <div className="nux-test-stat-num">
-                100<span>+</span>
-              </div>
-              <div className="nux-test-stat-label">Verified Client Reviews</div>
-            </div>
-
-            <div className="nux-test-stat-item">
-              <div className="nux-test-stat-num">
-                10,000<span>+</span>
-              </div>
-              <div className="nux-test-stat-label">Happy Users Reached</div>
-            </div>
-          </div>
-
-          <div className="nux-test-actions">
-            {/* Left / Right Interactive Buttons */}
+        {/* Bottom Bar: Interactive Pair Switcher + Luxury Typography Stats */}
+        <div className="nz-bottom-bar">
+          {/* Switcher & Arrows */}
+          <div className="nz-nav-controls">
             <button 
-              className="nux-nav-arrow-btn" 
+              className="nz-arrow-btn" 
               onClick={handlePrev}
-              aria-label="Previous testimonial"
+              aria-label="Previous client reviews"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
+              ‹
             </button>
-
+            <div className="nz-pairs-indicator">
+              {testimonialPairs.map((pair, idx) => (
+                <button
+                  key={pair.pairId}
+                  className={`nz-pair-pill ${idx === activePairIndex ? 'active' : ''}`}
+                  onClick={() => handleSelectPair(idx)}
+                >
+                  {pair.pairId}
+                </button>
+              ))}
+            </div>
             <button 
-              className="nux-nav-arrow-btn" 
+              className="nz-arrow-btn" 
               onClick={handleNext}
-              aria-label="Next testimonial"
+              aria-label="Next client reviews"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
+              ›
             </button>
+          </div>
 
-            {/* Google Review Direct Link Button */}
-            <a 
-              href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="nux-google-btn"
-            >
-              <span>★ Review on Google</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-            </a>
+          {/* Luxury Typography Stats (matching image: 1200+ Reviews, 10,000+ Happy Clients) */}
+          <div className="nz-stats-row">
+            <div className="nz-stat-item">
+              <div className="nz-stat-num">
+                1200<span className="nz-stat-plus">+</span>
+              </div>
+              <span className="nz-stat-label">Verified Reviews</span>
+            </div>
+            <div className="nz-stat-item">
+              <div className="nz-stat-num">
+                10,000<span className="nz-stat-plus">+</span>
+              </div>
+              <span className="nz-stat-label">Happy Users</span>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Verified Google Reviews Action Bar */}
+      <div className="nz-google-bar">
+        <div className="nz-google-verified-pill">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Rated <strong>4.9 / 5.0</strong> by Global Enterprise Clients</span>
+        </div>
+
+        <a 
+          href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="nz-google-review-link"
+        >
+          <span>★ Write a Review on Google</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
       </div>
     </section>
   );
