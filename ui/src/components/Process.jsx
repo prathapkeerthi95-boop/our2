@@ -7,35 +7,40 @@ gsap.registerPlugin(ScrollTrigger);
 const industries = [
   {
     num: '01',
-    title: 'HEALTHCARE\n& MEDTECH',
+    shortTitle: 'Healthcare',
+    title: 'HEALTHCARE & MEDTECH',
     desc: 'Empowering hospitals, clinical networks, and digital health startups with secure, HIPAA-compliant patient management portals, real-time doctor consultation apps, and AI-assisted health diagnostics. We engineer zero-latency medical platforms that streamline workflows and improve patient care outcomes.',
     image: '/industry_healthcare.png',
     tags: ['Patient Portals', 'Telemedicine Apps', 'HIPAA Security', 'Hospital Management']
   },
   {
     num: '02',
-    title: 'SPORTS &\nENTERTAINMENT',
+    shortTitle: 'Sports & Entertainment',
+    title: 'SPORTS & ENTERTAINMENT',
     desc: 'Transforming fan experiences worldwide with ultra-responsive ticketing engines, interactive 3D club gear configurators, live match streaming portals, and tournament management ecosystems. Engineered for peak traffic spikes with sub-second response times.',
     image: '/industry_sports.png',
-    tags: ['3D WebGL Gear Customizers', 'Live Match Streaming', 'Fan Engagement Portals', 'Ticketing Engines']
+    tags: ['3D WebGL Configurator', 'Live Match Streaming', 'Fan Portals', 'Ticketing Engines']
   },
   {
     num: '03',
-    title: 'IT SERVICES &\nCONSULTING',
+    shortTitle: 'IT Services',
+    title: 'IT SERVICES & CONSULTING',
     desc: 'Partnering with enterprises and consultancies to accelerate digital modernization. From robust cloud migrations and microservice architectures to bespoke API platforms and 24/7 DevOps pipelines, we build scalable software systems that drive continuous enterprise growth.',
     image: '/industry_it_services.png',
-    tags: ['Cloud Solutions', 'Enterprise Next.js Architecture', 'Custom API Systems', 'DevOps & Maintenance']
+    tags: ['Cloud Solutions', 'Enterprise Architecture', 'Custom API Systems', 'DevOps & Maintenance']
   },
   {
     num: '04',
-    title: 'BANKING &\nFINANCES',
+    shortTitle: 'Banking & Finance',
+    title: 'BANKING & FINANCES',
     desc: 'Architecting next-generation FinTech platforms with institutional-grade encryption, real-time transaction tracking, microfinance loan origination dashboards, and frictionless multi-currency payment gateways engineered for maximum compliance and trust.',
     image: '/industry_banking.png',
     tags: ['Secure Payment Gateways', 'FinTech Dashboards', 'Multi-Currency Systems', 'Micro-Lending Platforms']
   },
   {
     num: '05',
-    title: 'EDUCATION &\nE-LEARNING',
+    shortTitle: 'E-Learning',
+    title: 'EDUCATION & E-LEARNING',
     desc: 'Reimagining the future of digital education with intuitive Learning Management Systems (LMS), interactive virtual classrooms, live video lectures, gamified student progress tracking, and scalable institution administration portals.',
     image: '/industry_elearning.png',
     tags: ['Custom LMS Architecture', 'Virtual Classrooms', 'Student Analytics', 'Interactive Courseware']
@@ -144,14 +149,6 @@ const Process = () => {
   const containerRef = useRef(null);
   const headerRef = useRef(null);
   const mobilePinnedRef = useRef(null);
-
-  // Auto cycle active index on desktop if user doesn't hover
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % industries.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
 
   // Header Reveal Animation
   useEffect(() => {
@@ -344,6 +341,7 @@ const Process = () => {
             <div
               key={i}
               className={`proc-strip ${activeIndex === i ? 'active' : ''}`}
+              onClick={() => setActiveIndex(i)}
               onMouseEnter={() => setActiveIndex(i)}
             >
               {/* Top: Dot + Number */}
@@ -355,49 +353,23 @@ const Process = () => {
               {/* Expanded Content (only visible when active) */}
               <div className="strip-expanded-content">
                 <div className="strip-text-side">
-                  <h3 className="strip-title">
-                    {ind.title.split('\n').map((line, li) => (
-                      <span key={li}>{line}<br/></span>
-                    ))}
-                  </h3>
+                  <h3 className="strip-title">{ind.title}</h3>
                   <p className="strip-desc">{ind.desc}</p>
                   
                   {/* Industry Capabilities Tags */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '1.2rem' }}>
+                  <div className="strip-tags-box">
                     {ind.tags.map((tag, tIdx) => (
-                      <span key={tIdx} style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        padding: '5px 12px',
-                        borderRadius: '999px',
-                        background: 'rgba(10, 46, 92, 0.05)',
-                        border: '1px solid rgba(0, 168, 150, 0.2)',
-                        color: '#0A2E5C'
-                      }}>
+                      <span key={tIdx} className="strip-tag-badge">
                         ✓ {tag}
                       </span>
                     ))}
                   </div>
 
                   {/* Individual Industry Contact Button */}
-                  <div style={{ marginTop: '1.8rem' }}>
+                  <div style={{ marginTop: '1.4rem' }}>
                     <a
                       href="/#contact"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '10px 22px',
-                        borderRadius: '999px',
-                        background: '#0B0C10',
-                        color: '#FFFFFF',
-                        fontSize: '0.82rem',
-                        fontWeight: 700,
-                        textDecoration: 'none',
-                        transition: 'background 0.25s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#00A896'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#0B0C10'}
+                      className="strip-cta-btn"
                     >
                       <span>Get a Solution</span>
                       <span>→</span>
@@ -406,14 +378,14 @@ const Process = () => {
                 </div>
 
                 <div className="strip-image-side">
-                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
+                  <img src={ind.image} alt={ind.title} className="strip-img" />
                 </div>
               </div>
 
               {/* Rotated Title (only visible when NOT active) */}
               <div className="strip-rotated">
                 <span className="strip-rotated-text">
-                  {ind.title.replace('\n', ' ')}
+                  {ind.shortTitle}
                 </span>
               </div>
             </div>
@@ -462,10 +434,10 @@ const Process = () => {
                     <span className="proc-mobile-dot" />
                     <span className="proc-mobile-num">{ind.num}</span>
                   </div>
-                  <h3 className="proc-mobile-title">{ind.title.replace('\n', ' ')}</h3>
+                  <h3 className="proc-mobile-title">{ind.title}</h3>
                 </div>
                 <div className="proc-mobile-img-box">
-                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="proc-mobile-img" />
+                  <img src={ind.image} alt={ind.title} className="proc-mobile-img" />
                 </div>
                 <p className="proc-mobile-desc">{ind.desc}</p>
                 <div style={{ marginTop: '1rem' }}>
@@ -484,7 +456,7 @@ const Process = () => {
                       textDecoration: 'none'
                     }}
                   >
-                    <span>Contact Us for {ind.title.split('\n')[0]} →</span>
+                    <span>Contact Us for {ind.shortTitle} →</span>
                   </a>
                 </div>
               </div>
@@ -520,14 +492,14 @@ const Process = () => {
            ═══════════════════════════════════════ */
         .proc-accordion {
           display: flex;
-          max-width: 1300px;
+          max-width: 1360px;
           margin: 0 auto;
-          height: 540px;
-          border-radius: 24px;
+          min-height: 580px;
+          border-radius: 28px;
           overflow: hidden;
           background: #FFFFFF;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(0, 0, 0, 0.06);
+          box-shadow: 0 25px 70px rgba(10, 46, 92, 0.08);
+          border: 1px solid rgba(10, 46, 92, 0.08);
         }
 
         .proc-strip {
@@ -535,12 +507,13 @@ const Process = () => {
           position: relative;
           background: #FFFFFF;
           border-right: 1px solid #E8EBF0;
-          transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: flex 0.55s cubic-bezier(0.25, 1, 0.5, 1);
           overflow: hidden;
           cursor: pointer;
-          padding: 2rem 1.5rem;
+          padding: 2.2rem 1.4rem;
           display: flex;
           flex-direction: column;
+          box-sizing: border-box;
         }
 
         .proc-strip:last-child {
@@ -548,9 +521,10 @@ const Process = () => {
         }
 
         .proc-strip.active {
-          flex: 6;
+          flex: 7;
           cursor: default;
-          padding: 2.5rem 3rem;
+          padding: 2.8rem 3rem;
+          background: #FFFFFF;
         }
 
         /* Top: Dot + Number */
@@ -558,37 +532,40 @@ const Process = () => {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
           flex-shrink: 0;
+          position: relative;
+          z-index: 2;
         }
 
         .strip-dot {
-          width: 10px;
-          height: 10px;
+          width: 9px;
+          height: 9px;
           border-radius: 50%;
-          background: #00E5FF;
-          box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+          background: #00A896;
+          box-shadow: 0 0 10px rgba(0, 168, 150, 0.6);
           flex-shrink: 0;
         }
 
         .strip-num {
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: #11131A;
+          color: #0A2E5C;
           letter-spacing: 0.05em;
         }
 
         /* Expanded Content */
         .strip-expanded-content {
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+          transform: translateY(16px);
+          transition: opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s;
           pointer-events: none;
           flex: 1;
           display: flex;
           gap: 2.5rem;
           align-items: center;
+          width: 100%;
         }
 
         .proc-strip.active .strip-expanded-content {
@@ -598,56 +575,96 @@ const Process = () => {
         }
 
         .strip-text-side {
-          flex: 1.15;
+          flex: 1.25;
           display: flex;
           flex-direction: column;
           justify-content: center;
         }
 
         .strip-image-side {
-          flex: 0.85;
+          flex: 1;
           border-radius: 20px;
           overflow: hidden;
           position: relative;
-          height: 100%;
-          max-height: 380px;
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+          height: 380px;
+          box-shadow: 0 16px 40px rgba(10, 46, 92, 0.12);
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          background: #F8FAFC;
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           display: block;
         }
 
         .strip-title {
-          font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+          font-size: clamp(1.6rem, 2.2vw, 2.2rem);
           font-weight: 900;
           font-family: var(--font-display);
-          color: #11131A;
+          color: #0B0C10;
           letter-spacing: -0.02em;
-          line-height: 1.1;
+          line-height: 1.15;
           margin: 0 0 1rem 0;
         }
 
         .strip-desc {
           font-size: 0.95rem;
           line-height: 1.7;
-          color: #555566;
+          color: #475569;
           margin: 0;
-          font-weight: 400;
+          font-weight: 450;
         }
 
-        /* Rotated Title */
+        .strip-tags-box {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 1.2rem;
+        }
+
+        .strip-tag-badge {
+          font-size: 0.72rem;
+          font-weight: 700;
+          padding: 5px 12px;
+          border-radius: 999px;
+          background: rgba(10, 46, 92, 0.05);
+          border: 1px solid rgba(0, 168, 150, 0.2);
+          color: #0A2E5C;
+        }
+
+        .strip-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          border-radius: 999px;
+          background: #0B0C10;
+          color: #FFFFFF !important;
+          font-size: 0.82rem;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+          transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        .strip-cta-btn:hover {
+          background: #00A896;
+          transform: translateY(-2px);
+        }
+
+        /* Perfectly Centered Rotated Vertical Title */
         .strip-rotated {
           position: absolute;
-          bottom: 2.5rem;
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           pointer-events: none;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.25s ease;
+          padding-top: 2rem;
         }
 
         .proc-strip.active .strip-rotated {
@@ -657,12 +674,12 @@ const Process = () => {
         .strip-rotated-text {
           display: block;
           transform: rotate(-90deg);
-          transform-origin: center center;
-          font-size: 0.9rem;
+          white-space: nowrap;
+          font-size: 0.82rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: #888899;
-          letter-spacing: 0.15em;
+          color: #64748B;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
         }
 
@@ -673,7 +690,7 @@ const Process = () => {
           display: none;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .process-section {
             padding: 2.5rem 1rem 3rem !important;
           }
@@ -734,24 +751,24 @@ const Process = () => {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(0, 229, 255, 0.1);
+            background: rgba(0, 168, 150, 0.1);
             padding: 4px 10px;
             border-radius: 20px;
-            border: 1px solid rgba(0, 229, 255, 0.3);
+            border: 1px solid rgba(0, 168, 150, 0.3);
           }
 
           .proc-mobile-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #00E5FF;
+            background: #00A896;
           }
 
           .proc-mobile-num {
             font-size: 0.75rem;
             font-weight: 800;
             font-family: var(--font-display);
-            color: #0077B6;
+            color: #0A2E5C;
           }
 
           .proc-mobile-title {
