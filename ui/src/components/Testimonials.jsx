@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const clientReels = [
+const clientCases = [
   {
     id: 'gagner',
     client: 'Gagner Sports',
@@ -14,12 +14,12 @@ const clientReels = [
     projectType: '3D Headless E-Commerce Platform',
     accent: '#00E5FF',
     accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
-    bgImage: '/gagner-showcase-new.jpg',
-    videoPreview: '/black-website-car-rental-car-display-promo.mp4',
-    highlightTitle: 'REVOLUTIONIZING SPORTS APPAREL COMMERCE',
+    image: '/gagner-showcase-new.jpg',
+    metricVal: '120%',
+    metricLabel: 'Conversion Surge',
+    badge: 'FLAGSHIP E-COMMERCE',
     quote: 'Nuzarox completely reimagined how athletes and clubs order bespoke gear. The real-time 3D customizer with Shopify headless architecture pushed our European market conversion through the roof.',
-    impact: '120% Conversion Surge',
-    deliverables: ['3D WebGL Configurator', 'Headless Next.js Architecture', 'European Multi-Currency Checkout']
+    deliverables: ['3D WebGL Configurator', 'Headless Next.js Engine', 'European Multi-Currency Checkout', 'Sub-second Edge Deployment']
   },
   {
     id: 'ke19',
@@ -30,12 +30,12 @@ const clientReels = [
     projectType: 'Kinetic Digital Identity & Portfolio',
     accent: '#38BDF8',
     accentGradient: 'linear-gradient(135deg, #00A896 0%, #38BDF8 100%)',
-    bgImage: '/ke19-showcase-new.jpg',
-    videoPreview: '/illustration-explainer-purple-ai-business-company-presentation.mp4',
-    highlightTitle: 'KINETIC GL INTERACTIVITY AT SCALE',
+    image: '/ke19-showcase-new.jpg',
+    metricVal: '0.8s',
+    metricLabel: 'Global Page Render',
+    badge: 'CREATIVE TECH',
     quote: 'The craftsmanship, custom shader physics, and fluid page transitions engineered by Nuzarox created an award-level interactive benchmark that loads in under 0.8 seconds globally.',
-    impact: 'Sub-Second WebGL Rendering',
-    deliverables: ['Custom GLSL Shaders', 'Zero-Latency Transitions', 'Dynamic Typography Physics']
+    deliverables: ['Custom GLSL Shaders', 'Zero-Latency Page Transitions', 'Dynamic Typography Physics', 'High-FPS Motion Architecture']
   },
   {
     id: 'aura',
@@ -46,12 +46,12 @@ const clientReels = [
     projectType: 'Virtual Architectural Experience',
     accent: '#00A896',
     accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
-    bgImage: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=80',
-    videoPreview: '/realistic-floral-nature-cosmetics-3d-booth-website-landing-page-ad-promo.mp4',
-    highlightTitle: 'HIGH-NET-WORTH ESTATE SHOWCASING',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=80',
+    metricVal: '200%',
+    metricLabel: 'Private Consultations',
+    badge: 'LUXURY REAL ESTATE',
     quote: 'Selling luxury real estate online requires breathtaking visual poise. Nuzarox created a virtual walkthrough platform so intuitive that high-net-worth investors committed during their initial digital tour.',
-    impact: '+200% Private Bookings',
-    deliverables: ['360° Interactive Walkthroughs', 'Smart Floorplan Switcher', 'Private Consultation Engine']
+    deliverables: ['360° Interactive Walkthroughs', 'Smart Floorplan Layer Switcher', 'Direct Consultation Engine', 'Retina 3D Rendering']
   },
   {
     id: 'consulting',
@@ -62,157 +62,111 @@ const clientReels = [
     projectType: 'Brand Strategy & Design Ecosystem',
     accent: '#0A2E5C',
     accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
-    bgImage: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80',
-    videoPreview: '/black-website-car-rental-car-display-promo.mp4',
-    highlightTitle: 'ENGINEERING REVENUE-FIRST DIGITAL ECOSYSTEMS',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80',
+    metricVal: '3x',
+    metricLabel: 'Brand Market Authority',
+    badge: 'STRATEGY & IDENTITY',
     quote: 'They do not simply design screens; they map out psychological buyer journeys and execute with razor-sharp code. The level of strategic foresight and aesthetic discipline is extraordinary.',
-    impact: '3x Brand Authority',
-    deliverables: ['Design System Architecture', 'Conversion Funnel Strategy', 'Ultra-Responsive Motion UI']
+    deliverables: ['Design System Architecture', 'Conversion Funnel Strategy', 'Ultra-Responsive Motion UI', 'Executive Brand Voice']
   }
 ];
 
 const Testimonials = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef(null);
-  const reelContentRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isAutoplay, setIsAutoplay] = useState(true);
+  const showcaseCardRef = useRef(null);
   const timerRef = useRef(null);
 
-  const currentReel = clientReels[activeIndex];
+  const activeCase = clientCases[activeIdx];
 
-  // Auto advance reels every 9s if playing
+  // Auto rotation
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isAutoplay) return;
     timerRef.current = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % clientReels.length);
-    }, 9000);
+      setActiveIdx((prev) => (prev + 1) % clientCases.length);
+    }, 8000);
     return () => clearInterval(timerRef.current);
-  }, [isPlaying, activeIndex]);
+  }, [isAutoplay, activeIdx]);
 
-  // Smooth entrance transition on reel change
+  // Smooth entrance transition on case switch
   useEffect(() => {
-    if (reelContentRef.current) {
+    if (showcaseCardRef.current) {
       gsap.fromTo(
-        reelContentRef.current.querySelectorAll('.cin-anim-fade'),
-        { opacity: 0, y: 22 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }
+        showcaseCardRef.current.querySelectorAll('.ts-anim-fade'),
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' }
       );
     }
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
-  }, [activeIndex]);
+  }, [activeIdx]);
 
-  const handleSelectReel = (idx) => {
-    if (idx === activeIndex) return;
-    setActiveIndex(idx);
+  const handleSelect = (idx) => {
+    setActiveIdx(idx);
+    setIsAutoplay(false);
   };
 
   return (
-    <section id="testimonials" className="cin-testimonials-section">
+    <section id="testimonials" className="ts-wrapper">
       <style>{`
-        .cin-testimonials-section {
+        .ts-wrapper {
           position: relative;
           width: 100%;
-          min-height: 100vh;
           background: #F5F3EF;
           color: #0A0A10;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 85px 4% 50px 4%;
+          padding: 100px 4% 80px 4%;
           font-family: var(--font-body);
           box-sizing: border-box;
-        }
-
-        /* Ambient video motion layer blended cleanly into #F5F3EF */
-        .cin-backdrop-media {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          pointer-events: none;
           overflow: hidden;
         }
 
-        .cin-bg-video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          opacity: 0.15;
-          filter: grayscale(0.5) contrast(1.1);
-          mix-blend-mode: multiply;
-          transition: opacity 0.8s ease;
-        }
-
-        .cin-backdrop-overlay {
+        /* Ambient subtle radial glow matching Services and Process */
+        .ts-ambient-layer {
           position: absolute;
           inset: 0;
-          background: 
-            radial-gradient(circle at 80% 20%, rgba(0, 168, 150, 0.12) 0%, transparent 55%),
-            radial-gradient(circle at 20% 80%, rgba(10, 46, 92, 0.08) 0%, transparent 60%),
-            linear-gradient(180deg, rgba(245, 243, 239, 0.7) 0%, rgba(245, 243, 239, 0.45) 50%, #F5F3EF 100%);
-          z-index: 2;
-        }
-
-        /* Blueprint grid line overlay matching Process/Services */
-        .cin-blueprint-grid {
-          position: absolute;
-          inset: 0;
-          background-image: 
-            linear-gradient(to right, rgba(10, 46, 92, 0.035) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(10, 46, 92, 0.035) 1px, transparent 1px);
-          background-size: 72px 72px;
-          z-index: 3;
           pointer-events: none;
+          z-index: 0;
+          background: 
+            radial-gradient(circle at 15% 20%, rgba(0, 168, 150, 0.08) 0%, transparent 45%),
+            radial-gradient(circle at 85% 80%, rgba(10, 46, 92, 0.06) 0%, transparent 50%);
         }
 
-        /* Top Header Bar */
-        .cin-header-bar {
+        .ts-container {
           position: relative;
-          z-index: 10;
+          z-index: 2;
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        /* ── SECTION HEADER (Matches Services & Process header design) ── */
+        .ts-header {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          margin-bottom: 3.5rem;
+          flex-wrap: wrap;
+          gap: 2rem;
+        }
+
+        .ts-header-left {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .ts-label-row {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          max-width: 1440px;
-          margin: 0 auto 3rem auto;
-          flex-wrap: wrap;
-          gap: 1.5rem;
-        }
-
-        .cin-badge-label {
-          display: inline-flex;
-          align-items: center;
           gap: 10px;
-          padding: 8px 18px;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.85);
-          border: 1px solid rgba(10, 46, 92, 0.08);
-          backdrop-filter: blur(16px);
-          box-shadow: 0 4px 16px rgba(10, 46, 92, 0.04);
+          margin-bottom: 8px;
         }
 
-        .cin-pulse-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: #00A896;
-          box-shadow: 0 0 10px #00A896;
-          animation: cinPulse 1.8s ease-in-out infinite alternate;
+        .ts-label-bar {
+          width: 24px;
+          height: 3px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
         }
 
-        @keyframes cinPulse {
-          0% { transform: scale(0.85); opacity: 0.6; }
-          100% { transform: scale(1.25); opacity: 1; }
-        }
-
-        .cin-badge-text {
-          font-size: 0.78rem;
+        .ts-label-text {
+          font-size: 0.85rem;
           font-weight: 800;
           letter-spacing: 0.22em;
           text-transform: uppercase;
@@ -222,274 +176,245 @@ const Testimonials = () => {
           font-family: var(--font-display);
         }
 
-        .cin-header-right {
-          display: inline-flex;
+        .ts-title {
+          font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+          font-weight: 900;
+          line-height: 1.1;
+          color: #0A0A10;
+          font-family: var(--font-display);
+          letter-spacing: -1.5px;
+          margin: 0;
+        }
+
+        .ts-title-accent {
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        /* Google Verified Review Badge in Header */
+        .ts-header-right {
+          display: flex;
           align-items: center;
           gap: 14px;
           flex-wrap: wrap;
         }
 
-        /* Google Review Pill in Header */
-        .cin-google-pill {
+        .ts-google-badge {
           display: inline-flex;
           align-items: center;
-          gap: 9px;
-          padding: 7px 16px;
+          gap: 10px;
+          padding: 8px 18px;
           background: #FFFFFF;
           border: 1px solid rgba(10, 46, 92, 0.1);
           border-radius: 999px;
-          box-shadow: 0 4px 14px rgba(10, 46, 92, 0.05);
-          font-size: 0.82rem;
+          box-shadow: 0 4px 16px rgba(10, 46, 92, 0.05);
+          font-size: 0.85rem;
           color: #1E293B;
           font-weight: 600;
         }
 
-        .cin-google-pill strong {
-          color: #0A2E5C;
+        .ts-google-stars {
+          color: #FFB800;
+          font-size: 0.88rem;
+          letter-spacing: 1px;
         }
 
-        .cin-google-write-btn {
+        .ts-google-review-btn {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          padding: 7px 18px;
+          gap: 8px;
+          padding: 9px 20px;
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           color: #FFFFFF !important;
           border-radius: 999px;
-          font-size: 0.8rem;
+          font-size: 0.84rem;
           font-weight: 700;
           text-decoration: none;
           box-shadow: 0 4px 18px rgba(0, 168, 150, 0.25);
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .cin-google-write-btn:hover {
+        .ts-google-review-btn:hover {
           transform: translateY(-2px);
           box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
-        .cin-ctrl-btn {
-          background: rgba(255, 255, 255, 0.9);
-          border: 1px solid rgba(10, 46, 92, 0.12);
-          color: #0A2E5C;
-          border-radius: 999px;
-          padding: 7px 14px;
-          font-size: 0.74rem;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          box-shadow: 0 2px 8px rgba(10, 46, 92, 0.04);
-          transition: all 0.25s ease;
-        }
-
-        .cin-ctrl-btn:hover {
-          border-color: #00A896;
-          color: #00A896;
-          transform: translateY(-1px);
-        }
-
-        /* Central Layout */
-        .cin-main-container {
-          position: relative;
-          z-index: 10;
-          width: 100%;
-          max-width: 1440px;
-          margin: 0 auto;
+        /* ── TWO-COLUMN SHOWCASE ARCHITECTURE ── */
+        .ts-showcase-grid {
           display: grid;
-          grid-template-columns: 1.15fr 0.85fr;
-          gap: 4.5rem;
-          align-items: center;
-          min-height: 480px;
+          grid-template-columns: 360px 1fr;
+          gap: 2.5rem;
+          align-items: stretch;
         }
 
-        .cin-story-panel {
+        /* Left Column: Interactive Client Nav Cards */
+        .ts-nav-list {
           display: flex;
           flex-direction: column;
-          gap: 1.8rem;
-        }
-
-        .cin-client-meta-pill {
-          display: inline-flex;
-          align-items: center;
           gap: 12px;
-          font-family: var(--font-display);
         }
 
-        .cin-client-company {
-          font-size: 1.28rem;
-          font-weight: 800;
-          color: #0A2E5C;
-          letter-spacing: -0.01em;
-        }
-
-        .cin-client-sep {
-          color: rgba(10, 46, 92, 0.25);
-        }
-
-        .cin-client-type {
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .cin-headline-title {
-          font-size: clamp(2.2rem, 3.8vw, 3.6rem);
-          font-weight: 900;
-          line-height: 1.1;
-          font-family: var(--font-display);
-          letter-spacing: -0.03em;
-          color: #0B0C10;
-          margin: 0;
-          text-transform: uppercase;
-        }
-
-        .cin-quote-block {
+        .ts-nav-card {
           position: relative;
-          padding-left: 24px;
-          border-left: 3px solid #00A896;
-        }
-
-        .cin-quote-text {
-          font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-          line-height: 1.75;
-          color: #2D3748;
-          font-weight: 450;
-          margin: 0;
-          letter-spacing: -0.01em;
-        }
-
-        .cin-author-card {
+          padding: 1.4rem 1.6rem;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.7);
+          border: 1.5px solid rgba(10, 46, 92, 0.08);
+          cursor: pointer;
+          backdrop-filter: blur(12px);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 14px;
+          text-align: left;
         }
 
-        .cin-author-avatar {
-          width: 54px;
-          height: 54px;
-          border-radius: 18px;
+        .ts-nav-card:hover {
+          background: #FFFFFF;
+          border-color: rgba(0, 168, 150, 0.3);
+          transform: translateX(4px);
+          box-shadow: 0 8px 24px rgba(10, 46, 92, 0.06);
+        }
+
+        .ts-nav-card.active {
+          background: #FFFFFF;
+          border-color: #00A896;
+          box-shadow: 0 12px 32px rgba(0, 168, 150, 0.15);
+          transform: translateX(8px);
+        }
+
+        .ts-nav-card.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 14px;
+          bottom: 14px;
+          width: 4px;
+          border-radius: 0 4px 4px 0;
+          background: linear-gradient(180deg, #0A2E5C, #00A896);
+        }
+
+        .ts-nav-avatar {
+          width: 46px;
+          height: 46px;
+          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 1.25rem;
+          font-size: 1rem;
           font-weight: 900;
           color: #FFFFFF;
           font-family: var(--font-display);
-          box-shadow: 0 10px 25px rgba(10, 46, 92, 0.15);
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(10, 46, 92, 0.12);
         }
 
-        .cin-author-name {
-          font-size: 1.08rem;
+        .ts-nav-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
+        }
+
+        .ts-nav-client {
+          font-size: 1rem;
           font-weight: 800;
-          color: #0B0C10;
+          color: #0A0A10;
           font-family: var(--font-display);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        .cin-author-sub {
-          font-size: 0.82rem;
+        .ts-nav-sub {
+          font-size: 0.74rem;
           color: #64748B;
-          margin-top: 2px;
           font-weight: 500;
         }
 
-        .cin-deliverables-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 0.4rem;
+        .ts-nav-metric {
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: #00A896;
+          font-family: var(--font-display);
+          margin-top: 2px;
         }
 
-        .cin-deliv-tag {
-          font-size: 0.74rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          padding: 6px 14px;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.9);
-          border: 1px solid rgba(10, 46, 92, 0.08);
-          color: #0A2E5C;
-          box-shadow: 0 2px 6px rgba(10, 46, 92, 0.03);
-        }
-
-        /* Right Side: Showcase Frame */
-        .cin-preview-panel {
+        /* Right Column: Hero Showcase Glass Box */
+        .ts-hero-card {
           position: relative;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .cin-preview-card {
-          position: relative;
-          width: 100%;
-          max-width: 480px;
-          aspect-ratio: 16/11;
-          border-radius: 28px;
-          overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.8);
-          box-shadow: 
-            0 24px 60px rgba(10, 46, 92, 0.12),
-            0 2px 10px rgba(0, 168, 150, 0.08);
           background: #FFFFFF;
+          border-radius: 28px;
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          box-shadow: 
+            0 24px 60px rgba(10, 46, 92, 0.08),
+            0 2px 6px rgba(0, 0, 0, 0.02);
+          overflow: hidden;
+          display: grid;
+          grid-template-columns: 1fr 1.05fr;
+          min-height: 480px;
         }
 
-        .cin-card-image {
+        /* Card Left Side: Big Imagery with Impact Pill */
+        .ts-card-visual-col {
+          position: relative;
+          overflow: hidden;
+          background: #0A1929;
+        }
+
+        .ts-case-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.6s ease;
         }
 
-        .cin-preview-card:hover .cin-card-image {
+        .ts-hero-card:hover .ts-case-image {
           transform: scale(1.04);
         }
 
-        .cin-card-gradient-shim {
+        .ts-visual-gradient {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, transparent 40%, rgba(10, 46, 92, 0.9) 100%);
-          pointer-events: none;
+          background: linear-gradient(180deg, rgba(10, 46, 92, 0.2) 0%, rgba(10, 25, 41, 0.85) 100%);
         }
 
-        .cin-impact-floating-tag {
+        .ts-floating-metric-badge {
           position: absolute;
-          top: 18px;
-          right: 18px;
-          padding: 8px 16px;
-          border-radius: 999px;
+          top: 24px;
+          left: 24px;
+          padding: 10px 18px;
+          border-radius: 16px;
           background: rgba(255, 255, 255, 0.95);
-          border: 1px solid rgba(0, 168, 150, 0.3);
-          backdrop-filter: blur(14px);
+          backdrop-filter: blur(12px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           display: flex;
-          align-items: center;
-          gap: 8px;
-          box-shadow: 0 10px 25px rgba(10, 46, 92, 0.12);
+          flex-direction: column;
         }
 
-        .cin-impact-spark {
-          color: #00A896;
-          font-size: 0.95rem;
-        }
-
-        .cin-impact-val {
-          font-size: 0.84rem;
-          font-weight: 800;
+        .ts-metric-num {
+          font-size: 1.55rem;
+          font-weight: 900;
+          line-height: 1;
           font-family: var(--font-display);
-          color: #0A2E5C;
+          background: linear-gradient(135deg, #0A2E5C, #00A896);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
-        .cin-card-client-footer {
+        .ts-metric-txt {
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-top: 3px;
+        }
+
+        .ts-visual-bottom-meta {
           position: absolute;
-          bottom: 20px;
+          bottom: 24px;
           left: 24px;
           right: 24px;
           display: flex;
@@ -498,307 +423,321 @@ const Testimonials = () => {
           z-index: 5;
         }
 
-        .cin-card-name-box {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .cin-card-client-label {
-          font-size: 1.15rem;
+        .ts-visual-client-title {
+          font-size: 1.25rem;
           font-weight: 900;
-          font-family: var(--font-display);
           color: #FFFFFF;
+          font-family: var(--font-display);
           margin: 0;
         }
 
-        .cin-card-sub-loc {
-          font-size: 0.72rem;
+        .ts-visual-loc {
+          font-size: 0.74rem;
           color: rgba(255, 255, 255, 0.75);
           text-transform: uppercase;
           letter-spacing: 0.1em;
           margin-top: 2px;
         }
 
-        .cin-card-stars {
+        .ts-visual-stars {
           color: #FFB800;
-          font-size: 0.9rem;
+          font-size: 0.95rem;
           letter-spacing: 2px;
         }
 
-        /* Bottom Filmstrip Carousel Navigation */
-        .cin-filmstrip-bar {
-          position: relative;
-          z-index: 10;
-          width: 100%;
-          max-width: 1440px;
-          margin: 3.5rem auto 0 auto;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+        /* Card Right Side: Story, Quote & Deliverables */
+        .ts-card-story-col {
+          padding: 3rem 2.8rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
           gap: 1.5rem;
         }
 
-        .cin-strip-tab {
-          position: relative;
-          padding: 1.2rem 1.4rem;
-          border-radius: 18px;
-          background: rgba(255, 255, 255, 0.7);
-          border: 1px solid rgba(10, 46, 92, 0.08);
-          cursor: pointer;
-          backdrop-filter: blur(12px);
-          transition: all 0.3s ease;
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          text-align: left;
-          box-shadow: 0 4px 16px rgba(10, 46, 92, 0.03);
-        }
-
-        .cin-strip-tab:hover {
-          background: #FFFFFF;
-          border-color: rgba(0, 168, 150, 0.3);
-          transform: translateY(-3px);
-          box-shadow: 0 8px 24px rgba(10, 46, 92, 0.08);
-        }
-
-        .cin-strip-tab.active {
-          background: #FFFFFF;
-          border-color: #00A896;
-          box-shadow: 0 10px 30px rgba(0, 168, 150, 0.15);
-        }
-
-        .cin-tab-progress-line {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3.5px;
-          border-radius: 18px 18px 0 0;
-          background: transparent;
-        }
-
-        .cin-strip-tab.active .cin-tab-progress-line {
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
-        }
-
-        .cin-tab-top-row {
+        .ts-case-tag-row {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          gap: 10px;
         }
 
-        .cin-tab-num {
-          font-size: 0.75rem;
+        .ts-badge-pill {
+          padding: 4px 12px;
+          border-radius: 999px;
+          font-size: 0.68rem;
           font-weight: 800;
-          font-family: var(--font-display);
-          color: rgba(10, 46, 92, 0.4);
-        }
-
-        .cin-strip-tab.active .cin-tab-num {
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          background: rgba(0, 168, 150, 0.1);
           color: #00A896;
+          border: 1px solid rgba(0, 168, 150, 0.2);
         }
 
-        .cin-tab-person {
-          font-size: 0.72rem;
-          font-weight: 600;
+        .ts-quote-mark {
+          font-size: 4rem;
+          font-family: Georgia, serif;
+          line-height: 0.8;
+          color: #0A2E5C;
+          opacity: 0.15;
+          margin-bottom: -15px;
+          user-select: none;
+        }
+
+        .ts-story-quote {
+          font-size: clamp(1.05rem, 1.4vw, 1.22rem);
+          line-height: 1.75;
+          color: #1E293B;
+          font-weight: 450;
+          margin: 0;
+          letter-spacing: -0.01em;
+        }
+
+        .ts-deliverables-box {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding-top: 1.2rem;
+          border-top: 1px solid rgba(10, 46, 92, 0.08);
+        }
+
+        .ts-deliverables-label {
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
           color: #64748B;
         }
 
-        .cin-tab-client-title {
-          font-size: 1rem;
-          font-weight: 800;
-          color: #0B0C10;
-          font-family: var(--font-display);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        .ts-tags-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
         }
 
-        .cin-tab-impact-sub {
-          font-size: 0.75rem;
-          font-weight: 700;
-          color: #00A896;
+        .ts-deliverable-chip {
+          padding: 4px 12px;
+          border-radius: 999px;
+          background: #F8FAFC;
+          border: 1px solid rgba(10, 46, 92, 0.06);
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: #0A2E5C;
+        }
+
+        /* Author Info Footer */
+        .ts-author-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 1.2rem;
+          border-top: 1px solid rgba(10, 46, 92, 0.08);
+        }
+
+        .ts-author-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .ts-author-avatar-sm {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: #FFFFFF;
+          font-family: var(--font-display);
+        }
+
+        .ts-author-name {
+          font-size: 0.98rem;
+          font-weight: 800;
+          color: #0A0A10;
+          font-family: var(--font-display);
+        }
+
+        .ts-author-role {
+          font-size: 0.76rem;
+          color: #64748B;
         }
 
         /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
-          .cin-main-container {
+        @media (max-width: 1080px) {
+          .ts-showcase-grid {
             grid-template-columns: 1fr;
-            gap: 3rem;
           }
-          .cin-filmstrip-bar {
-            grid-template-columns: repeat(2, 1fr);
+          .ts-nav-list {
+            flex-direction: row;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+          }
+          .ts-nav-list::-webkit-scrollbar {
+            display: none;
+          }
+          .ts-nav-card {
+            min-width: 240px;
+            flex-shrink: 0;
+            transform: none !important;
+          }
+          .ts-hero-card {
+            grid-template-columns: 1fr;
+          }
+          .ts-card-visual-col {
+            min-height: 280px;
           }
         }
 
         @media (max-width: 768px) {
-          .cin-testimonials-section {
-            padding: 60px 1.2rem 35px 1.2rem;
+          .ts-wrapper {
+            padding: 70px 1.2rem 50px 1.2rem;
           }
-          .cin-headline-title {
-            font-size: 1.95rem;
+          .ts-title {
+            font-size: 2.2rem;
           }
-          .cin-quote-text {
+          .ts-card-story-col {
+            padding: 2rem 1.6rem;
+          }
+          .ts-story-quote {
             font-size: 0.98rem;
-          }
-          .cin-filmstrip-bar {
-            grid-template-columns: 1fr;
-            gap: 0.85rem;
-          }
-          .cin-preview-card {
-            max-width: 100%;
           }
         }
       `}</style>
 
-      {/* Cinematic Background Video Blended with Project Theme #F5F3EF */}
-      <div className="cin-backdrop-media">
-        <video
-          ref={videoRef}
-          key={currentReel.videoPreview}
-          className="cin-bg-video"
-          src={currentReel.videoPreview}
-          autoPlay
-          loop
-          muted={isMuted}
-          playsInline
-        />
-        <div className="cin-backdrop-overlay" />
-        <div className="cin-blueprint-grid" />
-      </div>
+      <div className="ts-ambient-layer" />
 
-      {/* Top Header Bar with Google Verified Review + Controls */}
-      <div className="cin-header-bar">
-        <div className="cin-badge-label">
-          <span className="cin-pulse-dot" />
-          <span className="cin-badge-text">Cinematic Client Showcases</span>
-        </div>
-
-        <div className="cin-header-right">
-          {/* Google Review Badge & CTA Button */}
-          <div className="cin-google-pill">
-            <svg width="17" height="17" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>Rated <strong>4.9 / 5.0</strong> on Google</span>
+      <div className="ts-container">
+        {/* ── SECTION HEADER ── */}
+        <div className="ts-header">
+          <div className="ts-header-left">
+            <div className="ts-label-row">
+              <span className="ts-label-bar" />
+              <span className="ts-label-text">Client Testimonials</span>
+            </div>
+            <h2 className="ts-title">
+              What Our Clients <span className="ts-title-accent">Say About Us</span>
+            </h2>
           </div>
 
-          <a
-            href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cin-google-write-btn"
-          >
-            <span>★ Leave Review</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-              <polyline points="15 3 21 3 21 9"/>
-              <line x1="10" y1="14" x2="21" y2="3"/>
-            </svg>
-          </a>
+          <div className="ts-header-right">
+            <div className="ts-google-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Rated <strong>4.9 / 5.0</strong></span>
+              <span className="ts-google-stars">★★★★★</span>
+            </div>
 
-          <button
-            className="cin-ctrl-btn"
-            onClick={() => setIsPlaying(!isPlaying)}
-            aria-label="Toggle autoplay"
-          >
-            {isPlaying ? '⏸ Pause' : '▶ Play'}
-          </button>
-          <button
-            className="cin-ctrl-btn"
-            onClick={() => setIsMuted(!isMuted)}
-            aria-label="Toggle sound"
-          >
-            {isMuted ? '🔇 Sound' : '🔊 Sound'}
-          </button>
-        </div>
-      </div>
-
-      {/* Central Interactive Story Panel */}
-      <div ref={reelContentRef} className="cin-main-container">
-        {/* Left Side: Client Editorial Story */}
-        <div className="cin-story-panel">
-          <div className="cin-client-meta-pill cin-anim-fade">
-            <span className="cin-client-company">{currentReel.client}</span>
-            <span className="cin-client-sep">/</span>
-            <span className="cin-client-type">{currentReel.projectType}</span>
-          </div>
-
-          <h2 className="cin-headline-title cin-anim-fade">
-            {currentReel.highlightTitle}
-          </h2>
-
-          <div className="cin-quote-block cin-anim-fade">
-            <p className="cin-quote-text">"{currentReel.quote}"</p>
-          </div>
-
-          <div className="cin-author-card cin-anim-fade">
-            <div
-              className="cin-author-avatar"
-              style={{ background: currentReel.accentGradient }}
+            <a
+              href="https://www.google.com/search?q=Nuzarox+Technology+Chennai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ts-google-review-btn"
             >
-              {currentReel.person.charAt(0)}
-            </div>
-            <div>
-              <div className="cin-author-name">{currentReel.person}</div>
-              <div className="cin-author-sub">{currentReel.role} · {currentReel.location}</div>
-            </div>
+              <span>★ View Google Reviews</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
           </div>
+        </div>
 
-          <div className="cin-deliverables-row cin-anim-fade">
-            {currentReel.deliverables.map((item, i) => (
-              <span key={i} className="cin-deliv-tag">
-                ✓ {item}
-              </span>
+        {/* ── TWO-COLUMN SHOWCASE ARCHITECTURE ── */}
+        <div className="ts-showcase-grid">
+          {/* Left Column: Interactive Client Nav Cards */}
+          <div className="ts-nav-list">
+            {clientCases.map((item, idx) => (
+              <div
+                key={item.id}
+                className={`ts-nav-card ${idx === activeIdx ? 'active' : ''}`}
+                onClick={() => handleSelect(idx)}
+              >
+                <div
+                  className="ts-nav-avatar"
+                  style={{ background: item.accentGradient }}
+                >
+                  {item.person.charAt(0)}
+                </div>
+                <div className="ts-nav-info">
+                  <div className="ts-nav-client">{item.client}</div>
+                  <div className="ts-nav-sub">{item.person} · {item.role}</div>
+                  <div className="ts-nav-metric">{item.metricVal} {item.metricLabel}</div>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
 
-        {/* Right Side: Interactive Showcase Card */}
-        <div className="cin-preview-panel cin-anim-fade">
-          <div className="cin-preview-card">
-            <img
-              src={currentReel.bgImage}
-              alt={currentReel.client}
-              className="cin-card-image"
-            />
-            <div className="cin-card-gradient-shim" />
+          {/* Right Column: Hero Showcase Glass Card */}
+          <div ref={showcaseCardRef} className="ts-hero-card">
+            {/* Visual Column */}
+            <div className="ts-card-visual-col">
+              <img
+                src={activeCase.image}
+                alt={activeCase.client}
+                className="ts-case-image"
+              />
+              <div className="ts-visual-gradient" />
 
-            <div className="cin-impact-floating-tag">
-              <span className="cin-impact-spark">⚡</span>
-              <span className="cin-impact-val">{currentReel.impact}</span>
+              <div className="ts-floating-metric-badge ts-anim-fade">
+                <span className="ts-metric-num">{activeCase.metricVal}</span>
+                <span className="ts-metric-txt">{activeCase.metricLabel}</span>
+              </div>
+
+              <div className="ts-visual-bottom-meta ts-anim-fade">
+                <div>
+                  <h3 className="ts-visual-client-title">{activeCase.client}</h3>
+                  <div className="ts-visual-loc">{activeCase.location}</div>
+                </div>
+                <div className="ts-visual-stars">★★★★★</div>
+              </div>
             </div>
 
-            <div className="cin-card-client-footer">
-              <div className="cin-card-name-box">
-                <h3 className="cin-card-client-label">{currentReel.client}</h3>
-                <span className="cin-card-sub-loc">{currentReel.location}</span>
+            {/* Story & Deliverables Column */}
+            <div className="ts-card-story-col">
+              <div className="ts-case-tag-row ts-anim-fade">
+                <span className="ts-badge-pill">{activeCase.badge}</span>
               </div>
-              <div className="cin-card-stars">★★★★★</div>
+
+              <div className="ts-anim-fade">
+                <div className="ts-quote-mark">“</div>
+                <p className="ts-story-quote">"{activeCase.quote}"</p>
+              </div>
+
+              <div className="ts-deliverables-box ts-anim-fade">
+                <span className="ts-deliverables-label">Delivered by Nuzarox:</span>
+                <div className="ts-tags-grid">
+                  {activeCase.deliverables.map((item, i) => (
+                    <span key={i} className="ts-deliverable-chip">
+                      ✓ {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ts-author-footer ts-anim-fade">
+                <div className="ts-author-left">
+                  <div
+                    className="ts-author-avatar-sm"
+                    style={{ background: activeCase.accentGradient }}
+                  >
+                    {activeCase.person.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="ts-author-name">{activeCase.person}</div>
+                    <div className="ts-author-role">{activeCase.role} · {activeCase.client}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Filmstrip Tabs Navigation */}
-      <div className="cin-filmstrip-bar">
-        {clientReels.map((reel, idx) => (
-          <button
-            key={reel.id}
-            className={`cin-strip-tab ${idx === activeIndex ? 'active' : ''}`}
-            onClick={() => handleSelectReel(idx)}
-          >
-            <div className="cin-tab-progress-line" />
-            <div className="cin-tab-top-row">
-              <span className="cin-tab-num">0{idx + 1}</span>
-              <span className="cin-tab-person">{reel.person}</span>
-            </div>
-            <div className="cin-tab-client-title">{reel.client}</div>
-            <div className="cin-tab-impact-sub">{reel.impact}</div>
-          </button>
-        ))}
       </div>
     </section>
   );
