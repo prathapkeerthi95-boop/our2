@@ -75,7 +75,7 @@ const VectorWavesBackground = () => (
 const SpinningTechOrbitsBackground = () => (
   <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
     <div className="proc-orbit-system" style={{ position: 'absolute', top: '50%', left: '-180px', width: '560px', height: '560px', transform: 'translateY(-50%)' }}>
-      <svg viewBox="0 560 560" style={{ width: '100%', height: '100%' }}>
+      <svg viewBox="0 0 560 560" style={{ width: '100%', height: '100%' }}>
         <defs>
           <linearGradient id="topLogoBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00E5FF" />
@@ -273,7 +273,6 @@ const Process = () => {
 
                 <div className="strip-image-side">
                   <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
-                  <div className="strip-img-gradient-shim" />
                 </div>
               </div>
 
@@ -375,12 +374,12 @@ const Process = () => {
           display: flex;
           max-width: 1300px;
           margin: 0 auto;
-          height: 540px;
-          border-radius: 24px;
+          height: 520px;
+          border-radius: 20px;
           overflow: hidden;
           background: #FFFFFF;
-          box-shadow: 0 20px 60px rgba(10, 46, 92, 0.08);
-          border: 1px solid rgba(10, 46, 92, 0.08);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+          border: 1px solid rgba(0, 0, 0, 0.06);
         }
 
         .proc-strip {
@@ -404,7 +403,6 @@ const Process = () => {
           flex: 6;
           cursor: default;
           padding: 2.5rem 3rem;
-          background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
         }
 
         /* Top: Dot + Number */
@@ -412,7 +410,7 @@ const Process = () => {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 1.5rem;
+          margin-bottom: 2rem;
           flex-shrink: 0;
         }
 
@@ -420,8 +418,8 @@ const Process = () => {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          background: #00A896;
-          box-shadow: 0 0 10px rgba(0, 168, 150, 0.6);
+          background: #00E5FF;
+          box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
           flex-shrink: 0;
         }
 
@@ -429,7 +427,7 @@ const Process = () => {
           font-size: 0.85rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: #0A2E5C;
+          color: #11131A;
           letter-spacing: 0.05em;
         }
 
@@ -441,7 +439,7 @@ const Process = () => {
           pointer-events: none;
           flex: 1;
           display: flex;
-          gap: 3rem;
+          gap: 2.5rem;
           align-items: stretch;
         }
 
@@ -452,7 +450,7 @@ const Process = () => {
         }
 
         .strip-text-side {
-          flex: 1.1;
+          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -470,22 +468,22 @@ const Process = () => {
         }
 
         .strip-title {
-          font-size: clamp(2rem, 2.6vw, 3rem);
+          font-size: clamp(1.8rem, 3vw, 2.8rem);
           font-weight: 900;
           font-family: var(--font-display);
-          color: #0B0C10;
-          letter-spacing: -0.025em;
-          line-height: 1.08;
+          color: #11131A;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
           margin: 0 0 1.2rem 0;
           text-transform: uppercase;
         }
 
         .strip-desc {
-          font-size: 0.95rem;
+          font-size: 0.92rem;
           line-height: 1.7;
-          color: #4A5568;
-          font-weight: 450;
-          margin: 0 0 1.8rem 0;
+          color: #555555;
+          font-weight: 500;
+          margin: 0 0 1.6rem 0;
         }
 
         .strip-cta-wrap {
@@ -497,30 +495,28 @@ const Process = () => {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 11px 24px;
+          padding: 10px 22px;
           border-radius: 999px;
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           color: #FFFFFF !important;
-          font-size: 0.85rem;
+          font-size: 0.82rem;
           font-weight: 700;
           text-decoration: none;
-          box-shadow: 0 6px 20px rgba(0, 168, 150, 0.25);
+          box-shadow: 0 4px 18px rgba(0, 168, 150, 0.25);
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .strip-contact-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 10px 28px rgba(0, 168, 150, 0.4);
+          box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
+        /* ── EXACT PREVIOUS IMAGE CONTAINER SIZING & PROPORTIONS ── */
         .strip-image-side {
-          flex: 0.9;
-          border-radius: 20px;
+          flex: 1;
+          border-radius: 16px;
           overflow: hidden;
           position: relative;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(10, 46, 92, 0.08);
-          background: #F1F5F9;
         }
 
         .strip-img {
@@ -528,18 +524,6 @@ const Process = () => {
           height: 100%;
           object-fit: cover;
           display: block;
-          transition: transform 0.6s ease;
-        }
-
-        .proc-strip.active:hover .strip-img {
-          transform: scale(1.03);
-        }
-
-        .strip-img-gradient-shim {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, transparent 65%, rgba(10, 46, 92, 0.3) 100%);
-          pointer-events: none;
         }
 
         /* Rotated Title (Collapsed Strips) */
@@ -562,7 +546,7 @@ const Process = () => {
           font-size: 0.85rem;
           font-weight: 900;
           font-family: var(--font-display);
-          color: #0A2E5C;
+          color: #11131A;
           letter-spacing: 0.15em;
           text-transform: uppercase;
         }
@@ -595,7 +579,7 @@ const Process = () => {
             flex-direction: column;
             position: relative;
             width: 100%;
-            height: calc(100vh - 120px);
+            height: calc(100vh - 150px);
             margin: 0 auto 2.5rem;
             overflow: hidden;
             box-sizing: border-box;
@@ -622,10 +606,10 @@ const Process = () => {
             width: 100%;
             height: 100%;
             background: #FFFFFF;
-            border-radius: 22px;
-            padding: 1.1rem 1.2rem;
-            box-shadow: 0 8px 25px rgba(10, 46, 92, 0.08);
-            border: 1px solid rgba(10, 46, 92, 0.1);
+            border-radius: 20px;
+            padding: 1rem 1.1rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -651,19 +635,19 @@ const Process = () => {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #00A896;
-            box-shadow: 0 0 8px rgba(0, 168, 150, 0.6);
+            background: #00E5FF;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
           }
 
           .proc-mobile-num {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 800;
             font-family: var(--font-display);
-            color: #0A2E5C;
+            color: #11131A;
           }
 
           .proc-mobile-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 900;
             font-family: var(--font-display);
             color: #11131A;
@@ -674,15 +658,14 @@ const Process = () => {
 
           .proc-mobile-img-box {
             flex: 1;
-            min-height: 130px;
-            max-height: 190px;
+            min-height: 110px;
+            max-height: 180px;
             width: 100%;
             border-radius: 14px;
             overflow: hidden;
             margin: 8px 0;
             position: relative;
             background: #F1F5F9;
-            border: 1px solid rgba(10, 46, 92, 0.08);
           }
 
           .proc-mobile-img {
@@ -695,8 +678,8 @@ const Process = () => {
           .proc-mobile-desc {
             flex-shrink: 0;
             font-size: 0.78rem;
-            line-height: 1.45;
-            color: #4A5568;
+            line-height: 1.4;
+            color: #555555;
             font-weight: 500;
             margin: 0;
             display: -webkit-box;
@@ -711,10 +694,10 @@ const Process = () => {
             justify-content: center;
             gap: 8px;
             width: 100%;
-            padding: 9px 16px;
+            padding: 8px 16px;
             background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
             color: #FFFFFF !important;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             border-radius: 999px;
             text-decoration: none;
