@@ -267,7 +267,7 @@ const Process = () => {
 
       {/* ── HEADER (Tight Padding, High-Impact 3D Kinetic Entrance) ── */}
       <div ref={headerRef} className="proc-header-container">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1rem', overflow: 'hidden' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '0.6rem', overflow: 'hidden' }}>
           <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
           <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.22em', color: '#00A896', textTransform: 'uppercase' }}>
             INDUSTRIES WE SERVE
@@ -277,7 +277,7 @@ const Process = () => {
         
         <h2 style={{ 
           fontSize: 'clamp(2.4rem, 4.5vw, 4.2rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
-          color: '#11131A', letterSpacing: '-0.035em', margin: '0 auto 1rem auto', lineHeight: 1.1,
+          color: '#11131A', letterSpacing: '-0.035em', margin: '0 auto 0.6rem auto', lineHeight: 1.1,
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px',
           maxWidth: '1100px'
         }}>
@@ -306,7 +306,7 @@ const Process = () => {
           lineHeight: 1.6,
           color: '#475569',
           maxWidth: '750px',
-          margin: '0 auto 1.6rem auto',
+          margin: '0 auto 0.8rem auto',
           fontWeight: 450
         }}>
           We partner with businesses across diverse industries to create innovative digital experiences, scalable solutions and meaningful business outcomes.
@@ -490,7 +490,7 @@ const Process = () => {
           background: transparent;
           position: relative;
           font-family: var(--font-body);
-          padding: 2.5rem 5% 4rem; /* Tight, proportional section padding */
+          padding: 1.5rem 5% 3rem; /* Tight, proportional section padding */
           overflow: hidden;
         }
 
@@ -499,7 +499,7 @@ const Process = () => {
           z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding: 0 2rem 2.2rem; /* Clean tight gap above accordion */
+          padding: 0 2rem 1rem; /* Clean tight gap above accordion */
           text-align: center;
         }
 
@@ -520,7 +520,7 @@ const Process = () => {
           display: flex;
           max-width: 1360px;
           margin: 0 auto;
-          min-height: 580px;
+          min-height: 520px;
           border-radius: 28px;
           overflow: hidden;
           background: #FFFFFF;
@@ -612,7 +612,9 @@ const Process = () => {
           border-radius: 20px;
           overflow: hidden;
           position: relative;
-          height: 380px;
+          min-height: 320px;
+          max-height: 100%;
+          align-self: stretch;
           box-shadow: 0 16px 40px rgba(10, 46, 92, 0.12);
           border: 1px solid rgba(10, 46, 92, 0.08);
           background: #F8FAFC;
@@ -621,7 +623,7 @@ const Process = () => {
         .strip-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
           display: block;
         }
