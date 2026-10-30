@@ -6,6 +6,14 @@ import MagneticElement from './MagneticElement';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const navItems = [
+  { label: 'About Us', href: '/#about' },
+  { label: 'Our Work', href: '/#portfolio' },
+  { label: 'Process', href: '/#process' },
+  { label: 'Testimonials', href: '/#testimonials' },
+  { label: 'Careers', href: '/careers', isRoute: true }
+];
+
 const Navbar = () => {
   const navContainerRef = useRef(null);
   const navInnerRef = useRef(null);
@@ -103,70 +111,69 @@ const Navbar = () => {
       }
     });
 
-    // Clean scroll trigger cleanup without mutating button background inline styles
     return () => {
       st.kill();
+      showAnim.kill();
     };
   }, []);
 
   return (
-    <div 
+    <header 
       ref={navContainerRef}
-      style={{ 
-        position: 'fixed', 
-        top: 0, 
+      style={{
+        position: 'fixed',
+        top: 0,
         left: 0,
-        right: 0,
-        width: '100%', 
+        width: '100%',
         zIndex: 9999,
-        pointerEvents: 'none',
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '0 1rem'
+        pointerEvents: 'none'
       }}
     >
       <style>{`
-        @media (max-width: 900px) {
-          .desktop-nav-links {
-            display: none !important;
-          }
-          .mobile-menu-btn {
-            display: flex !important;
-          }
-          .nav-inner-container {
-            padding: 0 1.2rem !important;
-            height: 60px !important;
-          }
-        }
-        @media (min-width: 901px) {
-          .mobile-menu-btn {
-            display: none !important;
-          }
-          .desktop-nav-links {
-            display: flex !important;
-          }
-        }
-        @media (max-width: 480px) {
-          .nav-inner-container {
-            padding: 0 0.8rem !important;
-            height: 54px !important;
-          }
-          #mainNavbarLogo {
-            height: 36px !important;
-          }
-        }
         @keyframes smoothBounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-4px);
+          }
         }
-        @keyframes mobileMenuSlideDown {
-          from { opacity: 0; transform: translateY(-16px) scale(0.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes pulseGlow {
+          0%, 100% {
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2), inset 0 0 10px rgba(0, 229, 255, 0.1);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4), inset 0 0 15px rgba(0, 229, 255, 0.2);
+          }
+        }
+        .navbar-links a {
+          position: relative;
+          color: #11131A !important;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .navbar-links a::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 2px;
+          bottom: -4px;
+          left: 50%;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateX(-50%);
+          border-radius: 2px;
+        }
+        .navbar-links a:hover {
+          color: #00A896 !important;
+          opacity: 1 !important;
+        }
+        .navbar-links a:hover::after {
+          width: 100%;
         }
         .nav-start-btn {
-          padding: 0.55rem 1.35rem;
-          font-size: 0.82rem;
-          border: 1px solid rgba(0, 0, 0, 0.15);
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          padding: 0.55rem 1.4rem;
+          font-size: 0.85rem;
           color: #11131A;
           border-radius: 50px;
           font-weight: 700;
@@ -231,7 +238,7 @@ const Navbar = () => {
           </a>
         </MagneticElement>
 
-        {/* DESKTOP NAV LINKS */}
+        {/* DESKTOP NAV LINKS (Exact match to Footer Company List) */}
         <ul 
           className="desktop-nav-links navbar-links"
           style={{ 
@@ -243,12 +250,32 @@ const Navbar = () => {
             alignItems: 'center'
           }}
         >
-          {['About', 'Services', 'Portfolio', 'Process', 'Clients'].map((item, index) => {
-            const hash = item === 'Clients' ? 'testimonials' : item.toLowerCase();
+          {navItems.map((item, index) => {
+            if (item.isRoute) {
+              return (
+                <li key={item.label}>
+                  <Link 
+                    to={item.href} 
+                    style={{ 
+                      color: '#11131A', 
+                      textDecoration: 'none', 
+                      fontSize: '0.85rem', 
+                      fontWeight: 600,
+                      opacity: 0.8,
+                      transition: 'opacity 0.2s, color 0.3s',
+                      position: 'relative',
+                      letterSpacing: '0.02em'
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            }
             return (
-              <li key={item}>
+              <li key={item.label}>
                 <a 
-                  href={`/#${hash}`} 
+                  href={item.href} 
                   ref={el => linksRef.current[index] = el}
                   style={{ 
                     color: '#11131A', 
@@ -261,36 +288,19 @@ const Navbar = () => {
                     letterSpacing: '0.02em'
                   }}
                 >
-                  {item}
+                  {item.label}
                 </a>
               </li>
             );
           })}
           <li>
-            <Link 
-              to="/careers" 
-              style={{ 
-                color: '#11131A', 
-                textDecoration: 'none', 
-                fontSize: '0.85rem', 
-                fontWeight: 600,
-                opacity: 0.8,
-                transition: 'opacity 0.2s, color 0.3s',
-                position: 'relative',
-                letterSpacing: '0.02em'
-              }}
-            >
-              Careers
-            </Link>
-          </li>
-          <li>
             <MagneticElement>
               <a 
-                  href="/#contact" 
+                href="/#contact" 
                 ref={btnRef}
                 className="nav-start-btn"
               >
-                Start a Project
+                Contact
               </a>
             </MagneticElement>
           </li>
@@ -319,54 +329,51 @@ const Navbar = () => {
             transition: 'all 0.3s ease'
           }}
         >
-          <div style={{ width: '20px', height: '15px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ width: '20px', height: '14px', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <span style={{
-              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
-              transform: mobileMenuOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none',
-              transition: 'transform 0.3s ease'
+              display: 'block',
+              width: '100%',
+              height: '2px',
+              backgroundColor: '#111827',
+              borderRadius: '2px',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              transform: mobileMenuOpen ? 'rotate(45deg) translate(4px, 4.5px)' : 'none'
             }} />
             <span style={{
-              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
+              display: 'block',
+              width: '100%',
+              height: '2px',
+              backgroundColor: '#111827',
+              borderRadius: '2px',
+              transition: 'all 0.2s ease',
               opacity: mobileMenuOpen ? 0 : 1,
-              transition: 'opacity 0.2s ease'
+              transform: mobileMenuOpen ? 'scaleX(0)' : 'none'
             }} />
             <span style={{
-              width: '100%', height: '2.5px', backgroundColor: '#111827', borderRadius: '2px',
-              transform: mobileMenuOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none',
-              transition: 'transform 0.3s ease'
+              display: 'block',
+              width: '100%',
+              height: '2px',
+              backgroundColor: '#111827',
+              borderRadius: '2px',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              transform: mobileMenuOpen ? 'rotate(-45deg) translate(4px, -4.5px)' : 'none'
             }} />
           </div>
         </button>
-      </nav>
 
-      {/* MOBILE NAV DRAWER OVERLAY */}
-      {mobileMenuOpen && (
-        <>
-          {/* Backdrop Blur */}
-          <div 
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.35)',
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
-              zIndex: 9998,
-              pointerEvents: 'auto'
-            }}
-          />
-
-          {/* Mobile Menu Panel */}
+        {/* MOBILE POPUP MENU */}
+        {mobileMenuOpen && (
           <div
+            className="mobile-nav-drawer"
             style={{
-              position: 'fixed',
-              top: '72px',
+              position: 'absolute',
+              top: '76px',
               left: '16px',
               right: '16px',
-              backgroundColor: 'rgba(255, 255, 255, 0.96)',
-              backdropFilter: 'blur(30px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-              border: '1.5px solid rgba(255, 255, 255, 0.8)',
+              backgroundColor: 'rgba(255, 255, 255, 0.98)',
+              backdropFilter: 'blur(30px)',
+              WebkitBackdropFilter: 'blur(30px)',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
               borderRadius: '24px',
               boxShadow: '0 25px 60px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.9)',
               padding: '1.25rem',
@@ -376,12 +383,35 @@ const Navbar = () => {
             }}
           >
             <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              {['About', 'Services', 'Portfolio', 'Process', 'Clients'].map((item) => {
-                const hash = item === 'Clients' ? 'testimonials' : item.toLowerCase();
+              {navItems.map((item) => {
+                if (item.isRoute) {
+                  return (
+                    <li key={item.label}>
+                      <Link
+                        to={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        style={{
+                          display: 'block',
+                          padding: '0.8rem 1.1rem',
+                          color: '#111827',
+                          textDecoration: 'none',
+                          fontSize: '1.05rem',
+                          fontWeight: 700,
+                          borderRadius: '14px',
+                          backgroundColor: 'transparent',
+                          transition: 'all 0.2s ease',
+                          letterSpacing: '-0.01em'
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                }
                 return (
-                  <li key={item}>
+                  <li key={item.label}>
                     <a
-                      href={`/#${hash}`}
+                      href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                       style={{
                         display: 'block',
@@ -398,60 +428,39 @@ const Navbar = () => {
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 229, 255, 0.08)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 );
               })}
-              <li>
-                <Link
-                  to="/careers"
-                  onClick={() => setMobileMenuOpen(false)}
-                  style={{
-                    display: 'block',
-                    padding: '0.8rem 1.1rem',
-                    color: '#111827',
-                    textDecoration: 'none',
-                    fontSize: '1.05rem',
-                    fontWeight: 700,
-                    borderRadius: '14px',
-                    backgroundColor: 'transparent',
-                    transition: 'all 0.2s ease',
-                    letterSpacing: '-0.01em'
-                  }}
-                >
-                  Careers
-                </Link>
-              </li>
               <li style={{ marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                 <a
-                    href="/#contact"
+                  href="/#contact"
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
-                    display: 'block',
-                    padding: '0.9rem 1.2rem',
-                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0.9rem',
+                    background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
                     color: '#FFFFFF',
                     textDecoration: 'none',
-                    fontSize: '0.95rem',
+                    borderRadius: '16px',
                     fontWeight: 800,
-                    borderRadius: '50px',
-                    background: 'linear-gradient(135deg, #00E5FF 0%, #00A896 100%)',
-                    boxShadow: '0 8px 25px rgba(0, 229, 255, 0.35)',
-                    letterSpacing: '0.02em',
-                    transition: 'all 0.2s ease'
+                    fontSize: '1rem',
+                    boxShadow: '0 8px 24px rgba(0, 168, 150, 0.35)',
+                    letterSpacing: '0.02em'
                   }}
                 >
-                  Start a Project
+                  Contact
                 </a>
               </li>
             </ul>
           </div>
-        </>
-      )}
-    </div>
+        )}
+      </nav>
+    </header>
   );
 };
 
 export default Navbar;
-

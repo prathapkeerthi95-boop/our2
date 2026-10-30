@@ -116,16 +116,14 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Company — Aligned perfectly with Header Navigation */}
+          {/* Company — Exact 1:1 match to screenshot */}
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Company</h4>
             <ul style={{ padding: 0, margin: 0, textAlign: 'center' }}>
-              <li><a href="/#about" style={{ color: '#475569' }}>About</a></li>
-              <li><a href="/#services" style={{ color: '#475569' }}>Services</a></li>
-              <li><a href="/#portfolio" style={{ color: '#475569' }}>Portfolio</a></li>
+              <li><a href="/#about" style={{ color: '#475569' }}>About Us</a></li>
+              <li><a href="/#portfolio" style={{ color: '#475569' }}>Our Work</a></li>
               <li><a href="/#process" style={{ color: '#475569' }}>Process</a></li>
-              <li><a href="/#testimonials" style={{ color: '#475569' }}>Clients</a></li>
-              <li><a href="/careers" style={{ color: '#475569' }}>Careers</a></li>
+              <li><a href="/#testimonials" style={{ color: '#475569' }}>Testimonials</a></li>
               <li><a href="/#contact" style={{ color: '#475569' }}>Contact</a></li>
             </ul>
           </div>
