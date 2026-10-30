@@ -13,7 +13,7 @@ const clientReels = [
     location: 'Paris & Online',
     projectType: '3D Headless E-Commerce Platform',
     accent: '#00E5FF',
-    accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00E5FF 100%)',
+    accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
     bgImage: '/gagner-showcase-new.jpg',
     videoPreview: '/black-website-car-rental-car-display-promo.mp4',
     highlightTitle: 'REVOLUTIONIZING SPORTS APPAREL COMMERCE',
@@ -60,8 +60,8 @@ const clientReels = [
     role: 'Brand Strategist',
     location: 'Tamil Nadu, India',
     projectType: 'Brand Strategy & Design Ecosystem',
-    accent: '#6366F1',
-    accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #6366F1 100%)',
+    accent: '#0A2E5C',
+    accentGradient: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
     bgImage: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80',
     videoPreview: '/black-website-car-rental-car-display-promo.mp4',
     highlightTitle: 'ENGINEERING REVENUE-FIRST DIGITAL ECOSYSTEMS',
@@ -95,8 +95,8 @@ const Testimonials = () => {
     if (reelContentRef.current) {
       gsap.fromTo(
         reelContentRef.current.querySelectorAll('.cin-anim-fade'),
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: 'power3.out' }
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }
       );
     }
     if (videoRef.current) {
@@ -117,18 +117,18 @@ const Testimonials = () => {
           position: relative;
           width: 100%;
           min-height: 100vh;
-          background: #080D16;
-          color: #FFFFFF;
+          background: #F5F3EF;
+          color: #0A0A10;
           overflow: hidden;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 80px 4% 50px 4%;
+          padding: 85px 4% 50px 4%;
           font-family: var(--font-body);
           box-sizing: border-box;
         }
 
-        /* Ambient glowing gradient backdrops */
+        /* Ambient video motion layer blended cleanly into #F5F3EF */
         .cin-backdrop-media {
           position: absolute;
           inset: 0;
@@ -143,33 +143,35 @@ const Testimonials = () => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          opacity: 0.38;
-          filter: saturate(1.2) contrast(1.1) brightness(0.7);
+          opacity: 0.15;
+          filter: grayscale(0.5) contrast(1.1);
+          mix-blend-mode: multiply;
           transition: opacity 0.8s ease;
         }
 
         .cin-backdrop-overlay {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at 75% 30%, rgba(0, 229, 255, 0.12) 0%, transparent 60%),
-                      linear-gradient(180deg, rgba(8, 13, 22, 0.85) 0%, rgba(8, 13, 22, 0.65) 50%, #080D16 100%),
-                      linear-gradient(90deg, rgba(8, 13, 22, 0.95) 0%, rgba(8, 13, 22, 0.4) 100%);
+          background: 
+            radial-gradient(circle at 80% 20%, rgba(0, 168, 150, 0.12) 0%, transparent 55%),
+            radial-gradient(circle at 20% 80%, rgba(10, 46, 92, 0.08) 0%, transparent 60%),
+            linear-gradient(180deg, rgba(245, 243, 239, 0.7) 0%, rgba(245, 243, 239, 0.45) 50%, #F5F3EF 100%);
           z-index: 2;
         }
 
-        /* Glass grid blueprint trace */
+        /* Blueprint grid line overlay matching Process/Services */
         .cin-blueprint-grid {
           position: absolute;
           inset: 0;
           background-image: 
-            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-          background-size: 80px 80px;
+            linear-gradient(to right, rgba(10, 46, 92, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(10, 46, 92, 0.035) 1px, transparent 1px);
+          background-size: 72px 72px;
           z-index: 3;
           pointer-events: none;
         }
 
-        /* Header bar */
+        /* Top Header Bar */
         .cin-header-bar {
           position: relative;
           z-index: 10;
@@ -189,64 +191,107 @@ const Testimonials = () => {
           gap: 10px;
           padding: 8px 18px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.85);
+          border: 1px solid rgba(10, 46, 92, 0.08);
           backdrop-filter: blur(16px);
+          box-shadow: 0 4px 16px rgba(10, 46, 92, 0.04);
         }
 
         .cin-pulse-dot {
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: #00E5FF;
-          box-shadow: 0 0 12px #00E5FF;
+          background: #00A896;
+          box-shadow: 0 0 10px #00A896;
           animation: cinPulse 1.8s ease-in-out infinite alternate;
         }
 
         @keyframes cinPulse {
           0% { transform: scale(0.85); opacity: 0.6; }
-          100% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1.25); opacity: 1; }
         }
 
         .cin-badge-text {
-          font-size: 0.76rem;
+          font-size: 0.78rem;
           font-weight: 800;
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          color: #E2E8F0;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
           font-family: var(--font-display);
         }
 
-        .cin-reel-controls {
+        .cin-header-right {
           display: inline-flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+
+        /* Google Review Pill in Header */
+        .cin-google-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          padding: 7px 16px;
+          background: #FFFFFF;
+          border: 1px solid rgba(10, 46, 92, 0.1);
+          border-radius: 999px;
+          box-shadow: 0 4px 14px rgba(10, 46, 92, 0.05);
+          font-size: 0.82rem;
+          color: #1E293B;
+          font-weight: 600;
+        }
+
+        .cin-google-pill strong {
+          color: #0A2E5C;
+        }
+
+        .cin-google-write-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 7px 18px;
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          color: #FFFFFF !important;
+          border-radius: 999px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 4px 18px rgba(0, 168, 150, 0.25);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .cin-google-write-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
         .cin-ctrl-btn {
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: #FFFFFF;
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(10, 46, 92, 0.12);
+          color: #0A2E5C;
           border-radius: 999px;
-          padding: 7px 16px;
-          font-size: 0.75rem;
+          padding: 7px 14px;
+          font-size: 0.74rem;
           font-weight: 700;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.05em;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          backdrop-filter: blur(12px);
+          gap: 6px;
+          box-shadow: 0 2px 8px rgba(10, 46, 92, 0.04);
           transition: all 0.25s ease;
         }
 
         .cin-ctrl-btn:hover {
-          background: rgba(0, 229, 255, 0.15);
-          border-color: #00E5FF;
-          color: #00E5FF;
+          border-color: #00A896;
+          color: #00A896;
+          transform: translateY(-1px);
         }
 
-        /* Central Cinematic Showcase Canvas */
+        /* Central Layout */
         .cin-main-container {
           position: relative;
           z-index: 10;
@@ -255,12 +300,11 @@ const Testimonials = () => {
           margin: 0 auto;
           display: grid;
           grid-template-columns: 1.15fr 0.85fr;
-          gap: 4rem;
+          gap: 4.5rem;
           align-items: center;
           min-height: 480px;
         }
 
-        /* Left Side: Client Quote, Story & Deliverables */
         .cin-story-panel {
           display: flex;
           flex-direction: column;
@@ -275,31 +319,33 @@ const Testimonials = () => {
         }
 
         .cin-client-company {
-          font-size: 1.25rem;
+          font-size: 1.28rem;
           font-weight: 800;
-          color: #FFFFFF;
+          color: #0A2E5C;
           letter-spacing: -0.01em;
         }
 
         .cin-client-sep {
-          color: rgba(255, 255, 255, 0.3);
+          color: rgba(10, 46, 92, 0.25);
         }
 
         .cin-client-type {
           font-size: 0.82rem;
-          font-weight: 700;
-          color: #00E5FF;
+          font-weight: 800;
           letter-spacing: 0.12em;
           text-transform: uppercase;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
         .cin-headline-title {
-          font-size: clamp(2.2rem, 4vw, 3.8rem);
+          font-size: clamp(2.2rem, 3.8vw, 3.6rem);
           font-weight: 900;
-          line-height: 1.08;
+          line-height: 1.1;
           font-family: var(--font-display);
           letter-spacing: -0.03em;
-          color: #FFFFFF;
+          color: #0B0C10;
           margin: 0;
           text-transform: uppercase;
         }
@@ -307,14 +353,14 @@ const Testimonials = () => {
         .cin-quote-block {
           position: relative;
           padding-left: 24px;
-          border-left: 2px solid #00E5FF;
+          border-left: 3px solid #00A896;
         }
 
         .cin-quote-text {
-          font-size: clamp(1.05rem, 1.45vw, 1.25rem);
-          line-height: 1.7;
-          color: rgba(255, 255, 255, 0.88);
-          font-weight: 400;
+          font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+          line-height: 1.75;
+          color: #2D3748;
+          font-weight: 450;
           margin: 0;
           letter-spacing: -0.01em;
         }
@@ -326,52 +372,53 @@ const Testimonials = () => {
         }
 
         .cin-author-avatar {
-          width: 52px;
-          height: 52px;
-          border-radius: 16px;
+          width: 54px;
+          height: 54px;
+          border-radius: 18px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 1.2rem;
+          font-size: 1.25rem;
           font-weight: 900;
           color: #FFFFFF;
           font-family: var(--font-display);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 10px 25px rgba(10, 46, 92, 0.15);
         }
 
         .cin-author-name {
-          font-size: 1.05rem;
+          font-size: 1.08rem;
           font-weight: 800;
-          color: #FFFFFF;
+          color: #0B0C10;
           font-family: var(--font-display);
         }
 
         .cin-author-sub {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.82rem;
+          color: #64748B;
           margin-top: 2px;
+          font-weight: 500;
         }
 
         .cin-deliverables-row {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          margin-top: 0.5rem;
+          margin-top: 0.4rem;
         }
 
         .cin-deliv-tag {
-          font-size: 0.72rem;
+          font-size: 0.74rem;
           font-weight: 700;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.04em;
           padding: 6px 14px;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          color: #0A2E5C;
+          box-shadow: 0 2px 6px rgba(10, 46, 92, 0.03);
         }
 
-        /* Right Side: Interactive Preview Reel Frame */
+        /* Right Side: Showcase Frame */
         .cin-preview-panel {
           position: relative;
           width: 100%;
@@ -388,12 +435,11 @@ const Testimonials = () => {
           aspect-ratio: 16/11;
           border-radius: 28px;
           overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.18);
+          border: 1px solid rgba(255, 255, 255, 0.8);
           box-shadow: 
-            0 30px 80px rgba(0, 0, 0, 0.7),
-            0 0 50px rgba(0, 229, 255, 0.15),
-            inset 0 1px 1px rgba(255, 255, 255, 0.25);
-          background: #000000;
+            0 24px 60px rgba(10, 46, 92, 0.12),
+            0 2px 10px rgba(0, 168, 150, 0.08);
+          background: #FFFFFF;
         }
 
         .cin-card-image {
@@ -410,27 +456,27 @@ const Testimonials = () => {
         .cin-card-gradient-shim {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, transparent 40%, rgba(8, 13, 22, 0.95) 100%);
+          background: linear-gradient(180deg, transparent 40%, rgba(10, 46, 92, 0.9) 100%);
           pointer-events: none;
         }
 
         .cin-impact-floating-tag {
           position: absolute;
-          top: 20px;
-          right: 20px;
+          top: 18px;
+          right: 18px;
           padding: 8px 16px;
           border-radius: 999px;
-          background: rgba(8, 13, 22, 0.85);
-          border: 1px solid rgba(0, 229, 255, 0.4);
+          background: rgba(255, 255, 255, 0.95);
+          border: 1px solid rgba(0, 168, 150, 0.3);
           backdrop-filter: blur(14px);
           display: flex;
           align-items: center;
           gap: 8px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 10px 25px rgba(10, 46, 92, 0.12);
         }
 
         .cin-impact-spark {
-          color: #00E5FF;
+          color: #00A896;
           font-size: 0.95rem;
         }
 
@@ -438,7 +484,7 @@ const Testimonials = () => {
           font-size: 0.84rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: #FFFFFF;
+          color: #0A2E5C;
         }
 
         .cin-card-client-footer {
@@ -467,7 +513,7 @@ const Testimonials = () => {
 
         .cin-card-sub-loc {
           font-size: 0.72rem;
-          color: rgba(255, 255, 255, 0.6);
+          color: rgba(255, 255, 255, 0.75);
           text-transform: uppercase;
           letter-spacing: 0.1em;
           margin-top: 2px;
@@ -495,8 +541,8 @@ const Testimonials = () => {
           position: relative;
           padding: 1.2rem 1.4rem;
           border-radius: 18px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.7);
+          border: 1px solid rgba(10, 46, 92, 0.08);
           cursor: pointer;
           backdrop-filter: blur(12px);
           transition: all 0.3s ease;
@@ -504,18 +550,20 @@ const Testimonials = () => {
           flex-direction: column;
           gap: 6px;
           text-align: left;
+          box-shadow: 0 4px 16px rgba(10, 46, 92, 0.03);
         }
 
         .cin-strip-tab:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(0, 229, 255, 0.3);
+          background: #FFFFFF;
+          border-color: rgba(0, 168, 150, 0.3);
           transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(10, 46, 92, 0.08);
         }
 
         .cin-strip-tab.active {
-          background: rgba(0, 229, 255, 0.08);
-          border-color: #00E5FF;
-          box-shadow: 0 10px 30px rgba(0, 229, 255, 0.15);
+          background: #FFFFFF;
+          border-color: #00A896;
+          box-shadow: 0 10px 30px rgba(0, 168, 150, 0.15);
         }
 
         .cin-tab-progress-line {
@@ -523,13 +571,13 @@ const Testimonials = () => {
           top: 0;
           left: 0;
           right: 0;
-          height: 3px;
+          height: 3.5px;
           border-radius: 18px 18px 0 0;
           background: transparent;
         }
 
         .cin-strip-tab.active .cin-tab-progress-line {
-          background: #00E5FF;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
         }
 
         .cin-tab-top-row {
@@ -542,23 +590,23 @@ const Testimonials = () => {
           font-size: 0.75rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: rgba(255, 255, 255, 0.4);
+          color: rgba(10, 46, 92, 0.4);
         }
 
         .cin-strip-tab.active .cin-tab-num {
-          color: #00E5FF;
+          color: #00A896;
         }
 
         .cin-tab-person {
-          font-size: 0.7rem;
+          font-size: 0.72rem;
           font-weight: 600;
-          color: rgba(255, 255, 255, 0.6);
+          color: #64748B;
         }
 
         .cin-tab-client-title {
           font-size: 1rem;
           font-weight: 800;
-          color: #FFFFFF;
+          color: #0B0C10;
           font-family: var(--font-display);
           white-space: nowrap;
           overflow: hidden;
@@ -568,7 +616,7 @@ const Testimonials = () => {
         .cin-tab-impact-sub {
           font-size: 0.75rem;
           font-weight: 700;
-          color: #00E5FF;
+          color: #00A896;
         }
 
         /* Responsive Breakpoints */
@@ -602,7 +650,7 @@ const Testimonials = () => {
         }
       `}</style>
 
-      {/* Cinematic Background Video & Overlay */}
+      {/* Cinematic Background Video Blended with Project Theme #F5F3EF */}
       <div className="cin-backdrop-media">
         <video
           ref={videoRef}
@@ -618,27 +666,52 @@ const Testimonials = () => {
         <div className="cin-blueprint-grid" />
       </div>
 
-      {/* Top Header & Direct Controls */}
+      {/* Top Header Bar with Google Verified Review + Controls */}
       <div className="cin-header-bar">
         <div className="cin-badge-label">
           <span className="cin-pulse-dot" />
           <span className="cin-badge-text">Cinematic Client Showcases</span>
         </div>
 
-        <div className="cin-reel-controls">
+        <div className="cin-header-right">
+          {/* Google Review Badge & CTA Button */}
+          <div className="cin-google-pill">
+            <svg width="17" height="17" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Rated <strong>4.9 / 5.0</strong> on Google</span>
+          </div>
+
+          <a
+            href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cin-google-write-btn"
+          >
+            <span>★ Leave Review</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+
           <button
             className="cin-ctrl-btn"
             onClick={() => setIsPlaying(!isPlaying)}
             aria-label="Toggle autoplay"
           >
-            {isPlaying ? '⏸ Pause Reel' : '▶ Play Reel'}
+            {isPlaying ? '⏸ Pause' : '▶ Play'}
           </button>
           <button
             className="cin-ctrl-btn"
             onClick={() => setIsMuted(!isMuted)}
             aria-label="Toggle sound"
           >
-            {isMuted ? '🔇 Sound Off' : '🔊 Sound On'}
+            {isMuted ? '🔇 Sound' : '🔊 Sound'}
           </button>
         </div>
       </div>
