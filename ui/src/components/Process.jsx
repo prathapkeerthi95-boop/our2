@@ -137,7 +137,7 @@ const Process = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Desktop Header Entrance
+      // Desktop Header Entrance - replayable on scroll
       gsap.fromTo(
         headerRef.current.querySelectorAll('.proc-hdr-word'),
         { opacity: 0, y: 40, rotateX: -30 },
@@ -151,79 +151,114 @@ const Process = () => {
           scrollTrigger: {
             trigger: headerRef.current,
             start: 'top 85%',
-            toggleActions: 'play none none none'
+            toggleActions: 'restart reverse restart reverse'
           }
         }
       );
 
-      // Unique Stagger Entrance for the 5 Accordion Cards from RIGHT to LEFT
-      if (accordionRef.current) {
-        const strips = accordionRef.current.querySelectorAll('.proc-strip');
-        gsap.fromTo(
-          strips,
-          {
-            opacity: 0,
-            x: 80,
-            scale: 0.94,
-            filter: 'blur(8px)'
-          },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 0.75,
-            stagger: 0.12,
-            ease: 'back.out(1.4)',
-            scrollTrigger: {
-              trigger: accordionRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none none'
-            }
-          }
-        );
-      }
+      const mm = gsap.matchMedia();
 
-      // Mobile pinned cards GSAP scroll animation
-      const container = mobilePinnedRef.current;
-      if (container) {
+      // ── DESKTOP (>= 769px): Card Entrance + Pinned Scroll Card Sequencer from Right ──
+      mm.add("(min-width: 769px)", () => {
+        if (accordionRef.current) {
+          const strips = accordionRef.current.querySelectorAll('.proc-strip');
+          gsap.fromTo(
+            strips,
+            {
+              opacity: 0,
+              x: 120,
+              scale: 0.94,
+              filter: 'blur(6px)'
+            },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.75,
+              stagger: 0.1,
+              ease: 'back.out(1.2)',
+              scrollTrigger: {
+                trigger: accordionRef.current,
+                start: 'top 82%',
+                toggleActions: 'restart reverse restart reverse'
+              }
+            }
+          );
+        }
+
+        // Pinned scroll scrubber: scrolling through section dynamically opens each card from the right
+        if (sectionRef.current) {
+          ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: 'top top+=40px',
+            end: () => `+=${industries.length * 60}%`,
+            pin: true,
+            scrub: 0.4,
+            refreshPriority: 2,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const idx = Math.min(
+                Math.floor(self.progress * industries.length),
+                industries.length - 1
+              );
+              setActiveIndex(idx);
+            }
+          });
+        }
+      });
+
+      // ── MOBILE (<= 768px): Pinned Overlapping Stack Sliding from RIGHT to LEFT on Scroll ──
+      mm.add("(max-width: 768px)", () => {
+        const container = mobilePinnedRef.current;
+        if (!container) return;
         const slides = Array.from(container.querySelectorAll('.proc-mobile-card'));
+        if (slides.length === 0) return;
+
         slides.forEach((slide, i) => {
           if (i === 0) {
-            gsap.set(slide, { yPercent: 0, opacity: 1 });
+            gsap.set(slide, { xPercent: 0, opacity: 1, scale: 1, rotate: 0 });
           } else {
-            gsap.set(slide, { yPercent: 100, opacity: 1 });
+            // Each card starts parked out to the RIGHT
+            gsap.set(slide, { xPercent: 115, opacity: 0.85, scale: 0.95, rotate: 2 });
           }
         });
 
-        const mm = gsap.matchMedia();
-        mm.add("(max-width: 768px)", () => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: container,
-              start: "top top+=75px",
-              end: () => `+=${slides.length * 45}%`,
-              pin: true,
-              scrub: 0.3,
-              refreshPriority: 2,
-              invalidateOnRefresh: true
-            }
-          });
-
-          slides.forEach((slide, i) => {
-            if (i === 0) return;
-            tl.to(slide, {
-              yPercent: 0,
-              ease: "none",
-              duration: 1
-            });
-            tl.to({}, { duration: 0.25 });
-          });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: "top top+=75px",
+            end: () => `+=${slides.length * 55}%`,
+            pin: true,
+            scrub: 0.35,
+            refreshPriority: 2,
+            invalidateOnRefresh: true
+          }
         });
-      }
+
+        slides.forEach((slide, i) => {
+          if (i === 0) return;
+          tl.to(slide, {
+            xPercent: 0,
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            ease: "power2.out",
+            duration: 1
+          });
+          tl.to({}, { duration: 0.25 });
+        });
+      });
     }, sectionRef);
 
-    return () => ctx.revert();
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -301,9 +336,7 @@ const Process = () => {
                 </div>
 
                 <div className="strip-image-side">
-                  <div className="strip-image-wrapper">
-                    <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
-                  </div>
+                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
                 </div>
               </div>
 
@@ -378,6 +411,10 @@ const Process = () => {
         @keyframes spinCCW {
           from { transform: rotate(0deg); }
           to { transform: rotate(-360deg); }
+        }
+        .spin-cw-slow, .spin-ccw-slow, .spin-cw-med, .spin-ccw-med, .spin-cw-fast, .spin-ccw-fast {
+          transform-box: fill-box;
+          transform-origin: center;
         }
         .spin-cw-slow { animation: spinCW 55s linear infinite; }
         .spin-ccw-slow { animation: spinCCW 55s linear infinite; }
@@ -482,11 +519,11 @@ const Process = () => {
           letter-spacing: 0.05em;
         }
 
-        /* Expanded Content */
+        /* Expanded Content - Glides in from the RIGHT */
         .strip-expanded-content {
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+          transform: translateX(45px);
+          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
           pointer-events: none;
           flex: 1;
           display: flex;
@@ -496,12 +533,12 @@ const Process = () => {
 
         .proc-strip.active .strip-expanded-content {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0);
           pointer-events: auto;
         }
 
         .strip-text-side {
-          flex: 1.1;
+          flex: 1.05;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -562,42 +599,36 @@ const Process = () => {
           box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── PERFECT 16:10 / 4:3 CARD IMAGE FIT (NO ZOOM CROP) ── */
+        /* ── ORIGINAL PROPORTIONAL FULL IMAGE FIT (PALAYA MADHRI) ── */
         .strip-image-side {
-          flex: 0.95;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          flex: 1;
           height: 100%;
-          max-height: 380px;
-        }
-
-        .strip-image-wrapper {
-          width: 100%;
-          height: 100%;
-          max-height: 360px;
           border-radius: 18px;
           overflow: hidden;
           position: relative;
-          background: #F8FAFC;
-          border: 1px solid rgba(10, 46, 92, 0.08);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: #0A192F;
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+          transform: translateX(40px);
+          opacity: 0;
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, opacity 0.4s ease 0.15s;
+        }
+
+        .proc-strip.active .strip-image-side {
+          transform: translateX(0);
+          opacity: 1;
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center;
           display: block;
-          transition: transform 0.4s ease;
+          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .proc-strip.active:hover .strip-img {
-          transform: scale(1.02);
+          transform: scale(1.03);
         }
 
         /* Rotated Title (Collapsed Strips) */
@@ -732,20 +763,22 @@ const Process = () => {
 
           .proc-mobile-img-box {
             flex: 1;
-            min-height: 110px;
-            max-height: 180px;
+            min-height: 120px;
+            max-height: 190px;
             width: 100%;
             border-radius: 14px;
             overflow: hidden;
             margin: 8px 0;
             position: relative;
-            background: #F1F5F9;
+            background: #0A192F;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
           }
 
           .proc-mobile-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
+            object-position: center;
             display: block;
           }
 
