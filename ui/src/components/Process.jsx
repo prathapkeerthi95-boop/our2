@@ -158,7 +158,7 @@ const Process = () => {
 
       const mm = gsap.matchMedia();
 
-      // ── DESKTOP (>= 769px): Card Entrance from Right ──
+      // ── DESKTOP (>= 769px): Dramatic, Paced Card Entrance from Right ──
       mm.add("(min-width: 769px)", () => {
         if (accordionRef.current) {
           const strips = accordionRef.current.querySelectorAll('.proc-strip');
@@ -166,21 +166,24 @@ const Process = () => {
             strips,
             {
               opacity: 0,
-              x: 120,
-              scale: 0.94,
-              filter: 'blur(6px)'
+              x: 280,
+              rotateY: -18,
+              scale: 0.92,
+              filter: 'blur(8px)',
+              transformOrigin: 'right center'
             },
             {
               opacity: 1,
               x: 0,
+              rotateY: 0,
               scale: 1,
               filter: 'blur(0px)',
-              duration: 0.75,
-              stagger: 0.1,
-              ease: 'back.out(1.2)',
+              duration: 1.3,
+              stagger: 0.16,
+              ease: 'power4.out',
               scrollTrigger: {
                 trigger: accordionRef.current,
-                start: 'top 82%',
+                start: 'top 78%',
                 toggleActions: 'restart reverse restart reverse'
               }
             }
@@ -452,14 +455,16 @@ const Process = () => {
         }
 
         .proc-strip {
-          flex: 1;
+          flex: 0.65;
+          min-width: 62px;
+          max-width: 76px;
           position: relative;
           background: #FFFFFF;
           border-right: 1px solid #E8EBF0;
-          transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: flex 0.75s cubic-bezier(0.2, 0.9, 0.3, 1), max-width 0.75s cubic-bezier(0.2, 0.9, 0.3, 1);
           overflow: hidden;
           cursor: pointer;
-          padding: 2rem 1.5rem;
+          padding: 2rem 1rem;
           display: flex;
           flex-direction: column;
         }
@@ -469,7 +474,8 @@ const Process = () => {
         }
 
         .proc-strip.active {
-          flex: 6;
+          flex: 8.5;
+          max-width: 1050px;
           cursor: default;
           padding: 2.5rem 3rem;
           background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
@@ -503,24 +509,22 @@ const Process = () => {
 
         /* Expanded Content - Glides in from the RIGHT */
         .strip-expanded-content {
-          opacity: 0;
-          transform: translateX(40px);
-          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
           pointer-events: none;
           flex: 1;
           display: flex;
-          gap: 3rem;
+          gap: 2.8rem;
           align-items: stretch;
+          width: 100%;
         }
 
         .proc-strip.active .strip-expanded-content {
-          opacity: 1;
-          transform: translateX(0);
           pointer-events: auto;
         }
 
         .strip-text-side {
-          flex: 1.1;
+          flex: 0.95;
+          min-width: 360px;
+          max-width: 440px;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -535,6 +539,14 @@ const Process = () => {
           color: #00A896;
           margin-bottom: 0.75rem;
           font-family: var(--font-display);
+          opacity: 0;
+          transform: translateX(60px);
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s, opacity 0.6s ease 0.05s;
+        }
+
+        .proc-strip.active .strip-tagline-chip {
+          opacity: 1;
+          transform: translateX(0);
         }
 
         .strip-title {
@@ -546,6 +558,14 @@ const Process = () => {
           line-height: 1.08;
           margin: 0 0 1.2rem 0;
           text-transform: uppercase;
+          opacity: 0;
+          transform: translateX(90px);
+          transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, opacity 0.7s ease 0.1s;
+        }
+
+        .proc-strip.active .strip-title {
+          opacity: 1;
+          transform: translateX(0);
         }
 
         .strip-desc {
@@ -554,11 +574,27 @@ const Process = () => {
           color: #4A5568;
           font-weight: 450;
           margin: 0 0 1.8rem 0;
+          opacity: 0;
+          transform: translateX(80px);
+          transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, opacity 0.75s ease 0.15s;
+        }
+
+        .proc-strip.active .strip-desc {
+          opacity: 1;
+          transform: translateX(0);
         }
 
         .strip-cta-wrap {
           display: flex;
           align-items: center;
+          opacity: 0;
+          transform: translateX(60px);
+          transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, opacity 0.8s ease 0.2s;
+        }
+
+        .proc-strip.active .strip-cta-wrap {
+          opacity: 1;
+          transform: translateX(0);
         }
 
         .strip-contact-btn {
@@ -581,21 +617,34 @@ const Process = () => {
           box-shadow: 0 10px 28px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── EXACT ORIGINAL IMAGE PROPORTIONS & SIZING (PALAYA MADHRI) ── */
+        /* ── EXPANSIVE LANDSCAPE IMAGE CANVAS (NO VERTICAL CROPPING) ── */
         .strip-image-side {
-          flex: 0.9;
+          flex: 1.4;
+          height: 100%;
+          min-height: 360px;
           border-radius: 20px;
           overflow: hidden;
           position: relative;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 16px 40px rgba(10, 46, 92, 0.12);
           border: 1px solid rgba(10, 46, 92, 0.08);
           background: #F1F5F9;
+          opacity: 0;
+          transform: translateX(140px) scale(0.92);
+          filter: blur(4px);
+          transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, opacity 0.85s ease 0.12s, filter 0.85s ease 0.12s;
+        }
+
+        .proc-strip.active .strip-image-side {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          filter: blur(0px);
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           display: block;
           transition: transform 0.6s ease;
         }
