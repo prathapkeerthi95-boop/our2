@@ -441,12 +441,12 @@ const Process = () => {
           display: flex;
           max-width: 1300px;
           margin: 0 auto;
-          height: 520px;
-          border-radius: 20px;
+          height: 540px;
+          border-radius: 24px;
           overflow: hidden;
           background: #FFFFFF;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(0, 0, 0, 0.06);
+          box-shadow: 0 20px 60px rgba(10, 46, 92, 0.08);
+          border: 1px solid rgba(10, 46, 92, 0.08);
           position: relative;
           z-index: 5;
         }
@@ -472,6 +472,7 @@ const Process = () => {
           flex: 6;
           cursor: default;
           padding: 2.5rem 3rem;
+          background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
         }
 
         /* Top: Dot + Number */
@@ -479,7 +480,7 @@ const Process = () => {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
           flex-shrink: 0;
         }
 
@@ -487,8 +488,8 @@ const Process = () => {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          background: #00E5FF;
-          box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+          background: #00A896;
+          box-shadow: 0 0 10px rgba(0, 168, 150, 0.6);
           flex-shrink: 0;
         }
 
@@ -496,15 +497,15 @@ const Process = () => {
           font-size: 0.85rem;
           font-weight: 800;
           font-family: var(--font-display);
-          color: #11131A;
+          color: #0A2E5C;
           letter-spacing: 0.05em;
         }
 
-        /* Expanded Content */
+        /* Expanded Content - Glides in from the RIGHT */
         .strip-expanded-content {
           opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+          transform: translateX(40px);
+          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
           pointer-events: none;
           flex: 1;
           display: flex;
@@ -514,7 +515,7 @@ const Process = () => {
 
         .proc-strip.active .strip-expanded-content {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0);
           pointer-events: auto;
         }
 
@@ -537,22 +538,22 @@ const Process = () => {
         }
 
         .strip-title {
-          font-size: clamp(1.8rem, 3vw, 2.8rem);
+          font-size: clamp(2rem, 2.6vw, 3rem);
           font-weight: 900;
           font-family: var(--font-display);
-          color: #11131A;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
+          color: #0B0C10;
+          letter-spacing: -0.025em;
+          line-height: 1.08;
           margin: 0 0 1.2rem 0;
           text-transform: uppercase;
         }
 
         .strip-desc {
-          font-size: 0.92rem;
+          font-size: 0.95rem;
           line-height: 1.7;
-          color: #555555;
-          font-weight: 500;
-          margin: 0 0 1.6rem 0;
+          color: #4A5568;
+          font-weight: 450;
+          margin: 0 0 1.8rem 0;
         }
 
         .strip-cta-wrap {
@@ -564,23 +565,23 @@ const Process = () => {
           display: inline-flex;
           align-items: center;
           gap: 10px;
-          padding: 10px 22px;
+          padding: 11px 24px;
           border-radius: 999px;
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           color: #FFFFFF !important;
-          font-size: 0.82rem;
+          font-size: 0.85rem;
           font-weight: 700;
           text-decoration: none;
-          box-shadow: 0 4px 18px rgba(0, 168, 150, 0.25);
+          box-shadow: 0 6px 20px rgba(0, 168, 150, 0.25);
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .strip-contact-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
+          box-shadow: 0 10px 28px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── EXACT ORIGINAL IMAGE FIT (COMMIT 5f299f0) ── */
+        /* ── EXACT ORIGINAL IMAGE PROPORTIONS & SIZING (PALAYA MADHRI) ── */
         .strip-image-side {
           flex: 0.9;
           border-radius: 20px;
@@ -741,19 +742,23 @@ const Process = () => {
           }
 
           .proc-mobile-img-box {
+            flex: 1;
+            min-height: 120px;
+            max-height: 190px;
             width: 100%;
-            height: 190px;
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
-            margin-bottom: 0.8rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            background: #F1F5F9;
+            margin: 8px 0;
+            position: relative;
+            background: #0A192F;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
           }
 
           .proc-mobile-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             display: block;
           }
 
