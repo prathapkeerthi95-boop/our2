@@ -643,7 +643,7 @@ const Process = () => {
         .strip-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
           display: block;
           transition: transform 0.6s ease;
