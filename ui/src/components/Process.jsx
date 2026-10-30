@@ -317,6 +317,7 @@ const Process = () => {
 
                 <div className="strip-image-side">
                   <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
+                  <div className="strip-img-gradient-shim" />
                 </div>
               </div>
 
@@ -499,26 +500,26 @@ const Process = () => {
           letter-spacing: 0.05em;
         }
 
-        /* Expanded Content - Glides in from the RIGHT */
+        /* Expanded Content */
         .strip-expanded-content {
           opacity: 0;
-          transform: translateX(45px);
-          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+          transform: translateY(20px);
+          transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
           pointer-events: none;
           flex: 1;
           display: flex;
-          gap: 2.5rem;
-          align-items: center;
+          gap: 3rem;
+          align-items: stretch;
         }
 
         .proc-strip.active .strip-expanded-content {
           opacity: 1;
-          transform: translateX(0);
+          transform: translateY(0);
           pointer-events: auto;
         }
 
         .strip-text-side {
-          flex: 1.05;
+          flex: 1.1;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -579,36 +580,34 @@ const Process = () => {
           box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── ORIGINAL PROPORTIONAL FULL IMAGE FIT (PALAYA MADHRI) ── */
+        /* ── EXACT ORIGINAL IMAGE FIT (COMMIT 5f299f0) ── */
         .strip-image-side {
-          flex: 1;
-          height: 100%;
-          border-radius: 18px;
+          flex: 0.9;
+          border-radius: 20px;
           overflow: hidden;
           position: relative;
-          background: #0A192F;
-          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
-          transform: translateX(40px);
-          opacity: 0;
-          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, opacity 0.4s ease 0.15s;
-        }
-
-        .proc-strip.active .strip-image-side {
-          transform: translateX(0);
-          opacity: 1;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          background: #F1F5F9;
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
           display: block;
-          transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+          transition: transform 0.6s ease;
         }
 
         .proc-strip.active:hover .strip-img {
           transform: scale(1.03);
+        }
+
+        .strip-img-gradient-shim {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, transparent 65%, rgba(10, 46, 92, 0.3) 100%);
+          pointer-events: none;
         }
 
         /* Rotated Title (Collapsed Strips) */
@@ -742,23 +741,19 @@ const Process = () => {
           }
 
           .proc-mobile-img-box {
-            flex: 1;
-            min-height: 120px;
-            max-height: 190px;
             width: 100%;
-            border-radius: 14px;
+            height: 190px;
+            border-radius: 16px;
             overflow: hidden;
-            margin: 8px 0;
-            position: relative;
-            background: #0A192F;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 0.8rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            background: #F1F5F9;
           }
 
           .proc-mobile-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
             display: block;
           }
 
