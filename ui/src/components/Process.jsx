@@ -306,7 +306,7 @@ const Process = () => {
           lineHeight: 1.6,
           color: '#475569',
           maxWidth: '750px',
-          margin: '0 auto 0.8rem auto',
+          margin: '0 auto 1rem auto',
           fontWeight: 450
         }}>
           We partner with businesses across diverse industries to create innovative digital experiences, scalable solutions and meaningful business outcomes.
@@ -386,7 +386,7 @@ const Process = () => {
                   </div>
 
                   {/* Individual Industry Contact Button */}
-                  <div style={{ marginTop: '1.4rem' }}>
+                  <div style={{ marginTop: '1rem' }}>
                     <a
                       href="/#contact"
                       className="strip-cta-btn"
@@ -490,7 +490,7 @@ const Process = () => {
           background: transparent;
           position: relative;
           font-family: var(--font-body);
-          padding: 1.5rem 5% 3rem; /* Tight, proportional section padding */
+          padding: 1.5rem 5% 2.5rem;
           overflow: hidden;
         }
 
@@ -499,7 +499,7 @@ const Process = () => {
           z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding: 0 2rem 1rem; /* Clean tight gap above accordion */
+          padding: 0 2rem 1.2rem;
           text-align: center;
         }
 
@@ -520,7 +520,7 @@ const Process = () => {
           display: flex;
           max-width: 1360px;
           margin: 0 auto;
-          min-height: 520px;
+          min-height: 480px;
           border-radius: 28px;
           overflow: hidden;
           background: #FFFFFF;
@@ -536,7 +536,7 @@ const Process = () => {
           transition: flex 0.55s cubic-bezier(0.25, 1, 0.5, 1);
           overflow: hidden;
           cursor: pointer;
-          padding: 2.2rem 1.4rem;
+          padding: 1.8rem 1.2rem;
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
@@ -549,7 +549,7 @@ const Process = () => {
         .proc-strip.active {
           flex: 7;
           cursor: default;
-          padding: 2.8rem 3rem;
+          padding: 2.2rem 2.5rem;
           background: #FFFFFF;
         }
 
@@ -558,7 +558,7 @@ const Process = () => {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
           flex-shrink: 0;
           position: relative;
           z-index: 2;
@@ -589,7 +589,7 @@ const Process = () => {
           pointer-events: none;
           flex: 1;
           display: flex;
-          gap: 2.5rem;
+          gap: 2rem;
           align-items: center;
           width: 100%;
         }
@@ -612,8 +612,7 @@ const Process = () => {
           border-radius: 20px;
           overflow: hidden;
           position: relative;
-          min-height: 320px;
-          max-height: 100%;
+          min-height: 100%;
           align-self: stretch;
           box-shadow: 0 16px 40px rgba(10, 46, 92, 0.12);
           border: 1px solid rgba(10, 46, 92, 0.08);
@@ -623,7 +622,7 @@ const Process = () => {
         .strip-img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center;
           display: block;
         }
@@ -635,7 +634,7 @@ const Process = () => {
           color: #0B0C10;
           letter-spacing: -0.02em;
           line-height: 1.15;
-          margin: 0 0 1rem 0;
+          margin: 0 0 0.7rem 0;
         }
 
         .strip-desc {
@@ -650,7 +649,7 @@ const Process = () => {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          margin-top: 1.2rem;
+          margin-top: 0.8rem;
         }
 
         .strip-tag-badge {
@@ -692,7 +691,7 @@ const Process = () => {
           justify-content: center;
           pointer-events: none;
           transition: opacity 0.25s ease;
-          padding-top: 2rem;
+          padding-top: 1.5rem;
         }
 
         .proc-strip.active .strip-rotated {
@@ -720,7 +719,7 @@ const Process = () => {
 
         @media (max-width: 900px) {
           .process-section {
-            padding: 2rem 1rem 2.5rem !important;
+            padding: 1.2rem 1rem 2rem !important;
           }
 
           .proc-header-container {
