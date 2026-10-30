@@ -7,43 +7,38 @@ gsap.registerPlugin(ScrollTrigger);
 const industries = [
   {
     num: '01',
-    shortTitle: 'Healthcare',
-    title: 'HEALTHCARE & MEDTECH',
-    desc: 'Empowering hospitals, clinical networks, and digital health startups with secure, HIPAA-compliant patient management portals, real-time doctor consultation apps, and AI-assisted health diagnostics. We engineer zero-latency medical platforms that streamline workflows and improve patient care outcomes.',
-    image: '/industry_healthcare.png',
-    tags: ['Patient Portals', 'Telemedicine Apps', 'HIPAA Security', 'Hospital Management']
+    title: 'HEALTHCARE',
+    desc: 'Empowering hospitals, clinical networks, and healthtech innovators with HIPAA-compliant patient portals, automated appointment engines, telemedicine ecosystems, and secure real-time diagnostic workflows.',
+    tagline: 'Precision Care · HIPAA Compliant · Zero-Latency Telehealth',
+    image: '/industry-healthcare.png'
   },
   {
     num: '02',
-    shortTitle: 'Sports & Entertainment',
-    title: 'SPORTS & ENTERTAINMENT',
-    desc: 'Transforming fan experiences worldwide with ultra-responsive ticketing engines, interactive 3D club gear configurators, live match streaming portals, and tournament management ecosystems. Engineered for peak traffic spikes with sub-second response times.',
-    image: '/industry_sports.png',
-    tags: ['3D WebGL Configurator', 'Live Match Streaming', 'Fan Portals', 'Ticketing Engines']
+    title: 'SPORTS &\nENTERTAINMENT',
+    desc: 'Engineering interactive 3D merchandise customizers, high-traffic streaming architectures, fan-engagement platforms, and digital ticketing hubs that turn supporters into lifelong brand advocates.',
+    tagline: 'Headless 3D Customizers · High-Traffic Scalability · Fan Portals',
+    image: '/industry-sports.png'
   },
   {
     num: '03',
-    shortTitle: 'IT Services',
-    title: 'IT SERVICES & CONSULTING',
-    desc: 'Partnering with enterprises and consultancies to accelerate digital modernization. From robust cloud migrations and microservice architectures to bespoke API platforms and 24/7 DevOps pipelines, we build scalable software systems that drive continuous enterprise growth.',
-    image: '/industry_it_services.png',
-    tags: ['Cloud Solutions', 'Enterprise Architecture', 'Custom API Systems', 'DevOps & Maintenance']
+    title: 'IT SERVICES &\nCONSULTING',
+    desc: 'Building intelligent cloud infrastructure, enterprise SaaS applications, microservices architecture, and automated devops pipelines that accelerate operational velocity and slash engineering overhead.',
+    tagline: 'Cloud Infrastructure · Enterprise SaaS · Microservices Velocity',
+    image: '/industry-it-services.png'
   },
   {
     num: '04',
-    shortTitle: 'Banking & Finance',
-    title: 'BANKING & FINANCES',
-    desc: 'Architecting next-generation FinTech platforms with institutional-grade encryption, real-time transaction tracking, microfinance loan origination dashboards, and frictionless multi-currency payment gateways engineered for maximum compliance and trust.',
-    image: '/industry_banking.png',
-    tags: ['Secure Payment Gateways', 'FinTech Dashboards', 'Multi-Currency Systems', 'Micro-Lending Platforms']
+    title: 'BANKING &\nFINANCES',
+    desc: 'Architecting ultra-secure fintech platforms, multi-currency payment gateways, automated AML/KYC compliance tools, and high-performance financial dashboards engineered with bank-grade encryption.',
+    tagline: 'Bank-Grade Security · Fast Multi-Currency Pay · Fintech Portals',
+    image: '/industry-banking.png'
   },
   {
     num: '05',
-    shortTitle: 'E-Learning',
-    title: 'EDUCATION & E-LEARNING',
-    desc: 'Reimagining the future of digital education with intuitive Learning Management Systems (LMS), interactive virtual classrooms, live video lectures, gamified student progress tracking, and scalable institution administration portals.',
-    image: '/industry_elearning.png',
-    tags: ['Custom LMS Architecture', 'Virtual Classrooms', 'Student Analytics', 'Interactive Courseware']
+    title: 'EDUCATION &\nE-LEARNING',
+    desc: 'Creating interactive LMS platforms, gamified curriculum portals, real-time virtual classroom dashboards, and responsive multi-device learning environments designed for peak student retention.',
+    tagline: 'Interactive LMS · Gamified Learning · Real-Time Progress Engine',
+    image: '/industry-education.png'
   },
 ];
 
@@ -80,7 +75,7 @@ const VectorWavesBackground = () => (
 const SpinningTechOrbitsBackground = () => (
   <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
     <div className="proc-orbit-system" style={{ position: 'absolute', top: '50%', left: '-180px', width: '560px', height: '560px', transform: 'translateY(-50%)' }}>
-      <svg viewBox="0 0 560 560" style={{ width: '100%', height: '100%' }}>
+      <svg viewBox="0 560 560" style={{ width: '100%', height: '100%' }}>
         <defs>
           <linearGradient id="topLogoBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00E5FF" />
@@ -108,250 +103,133 @@ const SpinningTechOrbitsBackground = () => (
     <div className="proc-orbit-system" style={{ position: 'absolute', top: '50%', right: '-180px', width: '560px', height: '560px', transform: 'translateY(-50%)' }}>
       <svg viewBox="0 0 560 560" style={{ width: '100%', height: '100%' }}>
         <defs>
-          <linearGradient id="topTealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="topLogoGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#00A896" />
-            <stop offset="50%" stopColor="#2DD4BF" />
-            <stop offset="100%" stopColor="#99F6E4" />
+            <stop offset="50%" stopColor="#00E5FF" />
+            <stop offset="100%" stopColor="#38BDF8" />
           </linearGradient>
         </defs>
         <g className="spin-ccw-slow" style={{ transformOrigin: '280px 280px' }}>
-          <circle cx="280" cy="280" r="268" stroke="url(#topTealGrad)" strokeWidth="3" strokeDasharray="4 7" fill="none" opacity="0.85" />
+          <circle cx="280" cy="280" r="268" stroke="url(#topLogoGreenGrad)" strokeWidth="3" strokeDasharray="4 7" fill="none" opacity="0.85" />
           <circle cx="280" cy="280" r="245" stroke="rgba(0, 168, 150, 0.4)" strokeWidth="1.5" strokeDasharray="12 12" fill="none" />
         </g>
         <g className="spin-cw-med" style={{ transformOrigin: '280px 280px' }}>
-          <circle cx="280" cy="280" r="215" stroke="url(#topTealGrad)" strokeWidth="30" strokeDasharray="36 16" fill="none" opacity="0.3" />
+          <circle cx="280" cy="280" r="215" stroke="url(#topLogoGreenGrad)" strokeWidth="30" strokeDasharray="36 16" fill="none" opacity="0.3" />
           <circle cx="280" cy="280" r="192" stroke="#00A896" strokeWidth="2.5" strokeDasharray="7 7" fill="none" opacity="0.85" />
         </g>
         <g className="spin-ccw-fast" style={{ transformOrigin: '280px 280px' }}>
-          <circle cx="280" cy="280" r="168" stroke="url(#topTealGrad)" strokeWidth="5" fill="none" style={{ filter: 'drop-shadow(0 0 14px #00A896)' }} />
-          <circle cx="280" cy="280" r="153" stroke="rgba(45, 212, 191, 0.6)" strokeWidth="1.8" strokeDasharray="18 9 5 9" fill="none" />
+          <circle cx="280" cy="280" r="168" stroke="url(#topLogoGreenGrad)" strokeWidth="5" fill="none" style={{ filter: 'drop-shadow(0 0 14px #00A896)' }} />
+          <circle cx="280" cy="280" r="153" stroke="rgba(0, 229, 255, 0.6)" strokeWidth="1.8" strokeDasharray="18 9 5 9" fill="none" />
         </g>
         <circle cx="280" cy="280" r="128" fill="#F0FDF4" stroke="rgba(255,255,255,0.95)" strokeWidth="3.5" />
         <circle cx="280" cy="280" r="100" fill="rgba(248, 250, 252, 0.98)" />
       </svg>
     </div>
-
-    <style>{`
-      @keyframes spinCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      @keyframes spinCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-      .spin-cw-slow { animation: spinCW 55s linear infinite; }
-      .spin-ccw-slow { animation: spinCCW 55s linear infinite; }
-      .spin-cw-med { animation: spinCW 32s linear infinite; }
-      .spin-ccw-med { animation: spinCCW 32s linear infinite; }
-      .spin-cw-fast { animation: spinCW 18s linear infinite; }
-      .spin-ccw-fast { animation: spinCCW 18s linear infinite; }
-    `}</style>
   </div>
 );
 
 const Process = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef(null);
+  const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const mobilePinnedRef = useRef(null);
 
-  // High-Impact Kinetic Header Entrance Animation with GSAP
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const headerWords = headerRef.current?.querySelectorAll('.proc-hdr-char');
-      const headerLines = headerRef.current?.querySelectorAll('.proc-hdr-line');
-      const headerLabel = headerRef.current?.querySelector('.proc-hdr-label');
-      const headerSubtext = headerRef.current?.querySelector('.proc-hdr-subtext');
-      const headerBtn = headerRef.current?.querySelector('.proc-hdr-cta');
-
-      if (headerLines && headerLabel) {
-        const tl = gsap.timeline({
+      // Desktop Header Entrance
+      gsap.fromTo(
+        headerRef.current.querySelectorAll('.proc-hdr-word'),
+        { opacity: 0, y: 40, rotateX: -30 },
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.8,
+          stagger: 0.08,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: headerRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none"
+            start: 'top 85%',
+            toggleActions: 'play none none none'
           }
-        });
-
-        tl.fromTo(headerLines,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.6, ease: "power3.inOut" }
-        )
-        .fromTo(headerLabel,
-          { opacity: 0, y: -20, letterSpacing: '0.05em', filter: 'blur(8px)' },
-          { opacity: 1, y: 0, letterSpacing: '0.22em', filter: 'blur(0px)', duration: 0.5, ease: "back.out(1.8)" },
-          "-=0.3"
-        )
-        .fromTo(headerWords,
-          { opacity: 0, y: 40, rotateX: -40, scale: 0.7, filter: 'blur(10px)' },
-          { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.025, ease: "back.out(2.0)" },
-          "-=0.25"
-        );
-
-        if (headerSubtext) {
-          tl.fromTo(headerSubtext,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-            "-=0.2"
-          );
         }
+      );
 
-        if (headerBtn) {
-          tl.fromTo(headerBtn,
-            { opacity: 0, scale: 0.85, y: 15 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.2)" },
-            "-=0.2"
-          );
-        }
-      }
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Mobile Pinned Animation
-  useEffect(() => {
-    if (!mobilePinnedRef.current) return;
-
-    const ctx = gsap.context(() => {
+      // Mobile pinned cards GSAP scroll animation
       const container = mobilePinnedRef.current;
-      if (!container) return;
-      const slides = Array.from(container.querySelectorAll('.proc-mobile-card'));
-      if (slides.length === 0) return;
-
-      slides.forEach((slide, i) => {
-        if (i === 0) {
-          gsap.set(slide, { yPercent: 0, opacity: 1 });
-        } else {
-          gsap.set(slide, { yPercent: 100, opacity: 1 });
-        }
-      });
-
-      const mm = gsap.matchMedia();
-      mm.add("(max-width: 900px)", () => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: container,
-            start: "top top+=75px",
-            end: () => `+=${slides.length * 45}%`,
-            pin: true,
-            scrub: 0.3,
-            refreshPriority: 2,
-            invalidateOnRefresh: true
+      if (container) {
+        const slides = Array.from(container.querySelectorAll('.proc-mobile-card'));
+        slides.forEach((slide, i) => {
+          if (i === 0) {
+            gsap.set(slide, { yPercent: 0, opacity: 1 });
+          } else {
+            gsap.set(slide, { yPercent: 100, opacity: 1 });
           }
         });
 
-        slides.forEach((slide, i) => {
-          if (i === 0) return;
-
-          tl.to(slide, {
-            yPercent: 0,
-            ease: "none",
-            duration: 1
+        const mm = gsap.matchMedia();
+        mm.add("(max-width: 768px)", () => {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: container,
+              start: "top top+=75px",
+              end: () => `+=${slides.length * 45}%`,
+              pin: true,
+              scrub: 0.3,
+              refreshPriority: 2,
+              invalidateOnRefresh: true
+            }
           });
 
-          tl.to({}, { duration: 0.35 });
+          slides.forEach((slide, i) => {
+            if (i === 0) return;
+            tl.to(slide, {
+              yPercent: 0,
+              ease: "none",
+              duration: 1
+            });
+            tl.to({}, { duration: 0.25 });
+          });
         });
-      });
-    }, mobilePinnedRef);
+      }
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const titleWords = [
-    { text: "Technology", isAccent: false },
-    { text: "That", isAccent: false },
-    { text: "Transforms", isAccent: true },
-    { text: "Every", isAccent: false },
-    { text: "Industry.", isAccent: false }
-  ];
-
   return (
-    <section ref={containerRef} id="process" className="process-section">
+    <section id="process" ref={sectionRef} className="process-section">
+      {/* TOP ANIMATED VECTOR WAVES */}
       <VectorWavesBackground />
 
-      {/* ── HEADER (Tight Padding, High-Impact 3D Kinetic Entrance) ── */}
+      {/* ── HEADER ── */}
       <div ref={headerRef} className="proc-header-container">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '0.5rem', overflow: 'hidden' }}>
-          <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1.2rem', overflow: 'hidden' }}>
+          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
           <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.22em', color: '#00A896', textTransform: 'uppercase' }}>
             INDUSTRIES WE SERVE
           </span>
-          <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)', transformOrigin: 'right' }} />
+          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)', transformOrigin: 'right' }} />
         </div>
         
         <h2 style={{ 
-          fontSize: 'clamp(2.2rem, 4vw, 3.6rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
-          color: '#11131A', letterSpacing: '-0.035em', margin: '0 auto 0.6rem auto', lineHeight: 1.1,
-          display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px',
-          maxWidth: '1100px'
+          fontSize: 'clamp(2.4rem, 4.8vw, 4.8rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
+          color: '#11131A', letterSpacing: '-0.03em', margin: '0 0 1rem 0', lineHeight: 1.12,
+          display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px'
         }}>
-          {titleWords.map((wordObj, wIdx) => (
-            <div key={wIdx} className="proc-word-wrap" style={{ display: 'inline-flex', transformStyle: 'preserve-3d' }}>
-              {wordObj.text.split('').map((char, cIdx) => (
-                <span
-                  key={cIdx}
-                  className={`proc-hdr-char ${wordObj.isAccent ? 'proc-accent-char' : ''}`}
-                  style={{
-                    display: 'inline-block',
-                    transformStyle: 'preserve-3d',
-                    willChange: 'transform, opacity, filter'
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
-            </div>
-          ))}
+          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Technology</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>That</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block', color: '#00A896' }}>Transforms</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Every</span>
+          <span className="proc-hdr-word" style={{ display: 'inline-block', color: 'transparent', WebkitTextStroke: '2px rgba(17, 19, 26, 0.55)' }}>Industry.</span>
         </h2>
 
-        {/* Subtitle Paragraph */}
-        <p className="proc-hdr-subtext" style={{
-          fontSize: 'clamp(0.95rem, 1.15vw, 1.1rem)',
-          lineHeight: 1.6,
-          color: '#475569',
-          maxWidth: '750px',
-          margin: '0 auto 0.8rem auto',
-          fontWeight: 450
-        }}>
+        <p className="proc-header-subtitle">
           We partner with businesses across diverse industries to create innovative digital experiences, scalable solutions and meaningful business outcomes.
         </p>
-
-        {/* Contact CTA Button linking directly to #contact page */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <a
-            href="/#contact"
-            className="proc-hdr-cta"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '9px 22px',
-              borderRadius: '999px',
-              background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
-              color: '#FFFFFF',
-              fontWeight: 800,
-              fontSize: '0.88rem',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-display)',
-              letterSpacing: '0.03em',
-              boxShadow: '0 8px 24px rgba(0, 168, 150, 0.35)',
-              transition: 'transform 0.25s ease, box-shadow 0.25s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 168, 150, 0.5)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 168, 150, 0.35)';
-            }}
-          >
-            <span>Discuss Your Industry Project</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
-          </a>
-        </div>
       </div>
 
-      {/* SPINNING ORBITS & ACCORDION (TIGHT GAP) */}
+      {/* SPINNING ORBITS BACKGROUND */}
       <div style={{ position: 'relative' }}>
         <SpinningTechOrbitsBackground />
 
@@ -361,7 +239,6 @@ const Process = () => {
             <div
               key={i}
               className={`proc-strip ${activeIndex === i ? 'active' : ''}`}
-              onClick={() => setActiveIndex(i)}
               onMouseEnter={() => setActiveIndex(i)}
             >
               {/* Top: Dot + Number */}
@@ -373,39 +250,37 @@ const Process = () => {
               {/* Expanded Content (only visible when active) */}
               <div className="strip-expanded-content">
                 <div className="strip-text-side">
-                  <h3 className="strip-title">{ind.title}</h3>
-                  <p className="strip-desc">{ind.desc}</p>
-                  
-                  {/* Industry Capabilities Tags */}
-                  <div className="strip-tags-box">
-                    {ind.tags.map((tag, tIdx) => (
-                      <span key={tIdx} className="strip-tag-badge">
-                        ✓ {tag}
-                      </span>
-                    ))}
-                  </div>
+                  <div className="strip-tagline-chip">{ind.tagline}</div>
 
-                  {/* Individual Industry Contact Button */}
-                  <div style={{ marginTop: '1rem' }}>
-                    <a
-                      href="/#contact"
-                      className="strip-cta-btn"
-                    >
-                      <span>Get a Solution</span>
-                      <span>→</span>
+                  <h3 className="strip-title">
+                    {ind.title.split('\n').map((line, li) => (
+                      <span key={li}>{line}<br/></span>
+                    ))}
+                  </h3>
+
+                  <p className="strip-desc">{ind.desc}</p>
+
+                  <div className="strip-cta-wrap">
+                    <a href="/#contact" className="strip-contact-btn">
+                      <span>Consult With Our Specialists</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                      </svg>
                     </a>
                   </div>
                 </div>
 
                 <div className="strip-image-side">
-                  <img src={ind.image} alt={ind.title} className="strip-img" />
+                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
+                  <div className="strip-img-gradient-shim" />
                 </div>
               </div>
 
               {/* Rotated Title (only visible when NOT active) */}
               <div className="strip-rotated">
                 <span className="strip-rotated-text">
-                  {ind.shortTitle}
+                  {ind.title.replace('\n', ' ')}
                 </span>
               </div>
             </div>
@@ -417,33 +292,17 @@ const Process = () => {
           <div className="proc-mobile-header-box">
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '0.4rem' }}>
               <span className="proc-hdr-line" style={{ width: '30px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)' }} />
-              <span className="proc-hdr-label" style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.15em', color: '#00A896', textTransform: 'uppercase' }}>
+              <span className="proc-hdr-label" style={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.15em', color: '#00A896', textTransform: 'uppercase' }}>
                 INDUSTRIES WE SERVE
               </span>
               <span className="proc-hdr-line" style={{ width: '30px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)' }} />
             </div>
-            <h2 style={{ fontSize: '1.45rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#11131A', margin: 0, lineHeight: 1.15 }}>
-              Technology That <span style={{ color: '#00A896' }}>Transforms Every Industry</span>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: '#11131A', margin: '0 0 0.4rem 0', lineHeight: 1.15 }}>
+              Technology That Transforms <span style={{ color: '#00A896' }}>Every Industry.</span>
             </h2>
-            <div style={{ marginTop: '0.8rem' }}>
-              <a
-                href="/#contact"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 18px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
-                  color: '#FFFFFF',
-                  fontSize: '0.78rem',
-                  fontWeight: 800,
-                  textDecoration: 'none'
-                }}
-              >
-                <span>Discuss Your Project →</span>
-              </a>
-            </div>
+            <p style={{ fontSize: '0.74rem', color: '#555', margin: '0 auto', maxWidth: '340px', lineHeight: 1.4 }}>
+              We partner with businesses across diverse industries to create innovative digital experiences.
+            </p>
           </div>
 
           <div className="proc-mobile-slides-wrapper">
@@ -454,29 +313,22 @@ const Process = () => {
                     <span className="proc-mobile-dot" />
                     <span className="proc-mobile-num">{ind.num}</span>
                   </div>
-                  <h3 className="proc-mobile-title">{ind.title}</h3>
+                  <h3 className="proc-mobile-title">{ind.title.replace('\n', ' ')}</h3>
                 </div>
+
                 <div className="proc-mobile-img-box">
-                  <img src={ind.image} alt={ind.title} className="proc-mobile-img" />
+                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="proc-mobile-img" />
                 </div>
+
                 <p className="proc-mobile-desc">{ind.desc}</p>
-                <div style={{ marginTop: '1rem' }}>
-                  <a
-                    href="/#contact"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '8px 16px',
-                      borderRadius: '999px',
-                      background: '#0B0C10',
-                      color: '#FFFFFF',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      textDecoration: 'none'
-                    }}
-                  >
-                    <span>Contact Us for {ind.shortTitle} →</span>
+
+                <div style={{ marginTop: '0.6rem' }}>
+                  <a href="/#contact" className="proc-mobile-contact-btn">
+                    <span>Contact Specialists</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
                   </a>
                 </div>
               </div>
@@ -490,7 +342,7 @@ const Process = () => {
           background: transparent;
           position: relative;
           font-family: var(--font-body);
-          padding: 1rem 5% 1.5rem; /* Tight, proportional section padding */
+          padding: 8rem 5% 6rem;
           overflow: hidden;
         }
 
@@ -499,18 +351,21 @@ const Process = () => {
           z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding: 0 2rem 1rem; /* Clean tight gap above accordion */
+          padding: 4rem 5% 3.5rem;
           text-align: center;
         }
 
-        .proc-hdr-char {
-          display: inline-block;
+        .proc-header-subtitle {
+          max-width: 780px;
+          margin: 1.2rem auto 0 auto;
+          font-size: clamp(1rem, 1.4vw, 1.15rem);
+          line-height: 1.65;
+          color: #4A5568;
+          font-weight: 500;
         }
 
-        .proc-accent-char {
-          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+        .proc-hdr-word {
+          display: inline-block;
         }
 
         /* ═══════════════════════════════════════
@@ -518,13 +373,13 @@ const Process = () => {
            ═══════════════════════════════════════ */
         .proc-accordion {
           display: flex;
-          max-width: 1360px;
+          max-width: 1300px;
           margin: 0 auto;
-          min-height: 480px;
-          border-radius: 28px;
+          height: 540px;
+          border-radius: 24px;
           overflow: hidden;
           background: #FFFFFF;
-          box-shadow: 0 25px 70px rgba(10, 46, 92, 0.08);
+          box-shadow: 0 20px 60px rgba(10, 46, 92, 0.08);
           border: 1px solid rgba(10, 46, 92, 0.08);
         }
 
@@ -533,13 +388,12 @@ const Process = () => {
           position: relative;
           background: #FFFFFF;
           border-right: 1px solid #E8EBF0;
-          transition: flex 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+          transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
           cursor: pointer;
-          padding: 1.6rem 1.2rem;
+          padding: 2rem 1.5rem;
           display: flex;
           flex-direction: column;
-          box-sizing: border-box;
         }
 
         .proc-strip:last-child {
@@ -547,10 +401,10 @@ const Process = () => {
         }
 
         .proc-strip.active {
-          flex: 7;
+          flex: 6;
           cursor: default;
-          padding: 2rem 2.5rem;
-          background: #FFFFFF;
+          padding: 2.5rem 3rem;
+          background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
         }
 
         /* Top: Dot + Number */
@@ -558,15 +412,13 @@ const Process = () => {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
           flex-shrink: 0;
-          position: relative;
-          z-index: 2;
         }
 
         .strip-dot {
-          width: 9px;
-          height: 9px;
+          width: 10px;
+          height: 10px;
           border-radius: 50%;
           background: #00A896;
           box-shadow: 0 0 10px rgba(0, 168, 150, 0.6);
@@ -574,7 +426,7 @@ const Process = () => {
         }
 
         .strip-num {
-          font-size: 0.88rem;
+          font-size: 0.85rem;
           font-weight: 800;
           font-family: var(--font-display);
           color: #0A2E5C;
@@ -584,14 +436,13 @@ const Process = () => {
         /* Expanded Content */
         .strip-expanded-content {
           opacity: 0;
-          transform: translateY(16px);
-          transition: opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s;
+          transform: translateY(20px);
+          transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
           pointer-events: none;
           flex: 1;
           display: flex;
-          gap: 2rem;
-          align-items: center;
-          width: 100%;
+          gap: 3rem;
+          align-items: stretch;
         }
 
         .proc-strip.active .strip-expanded-content {
@@ -601,98 +452,106 @@ const Process = () => {
         }
 
         .strip-text-side {
-          flex: 1.25;
+          flex: 1.1;
           display: flex;
           flex-direction: column;
           justify-content: center;
         }
 
+        .strip-tagline-chip {
+          display: inline-block;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #00A896;
+          margin-bottom: 0.75rem;
+          font-family: var(--font-display);
+        }
+
+        .strip-title {
+          font-size: clamp(2rem, 2.6vw, 3rem);
+          font-weight: 900;
+          font-family: var(--font-display);
+          color: #0B0C10;
+          letter-spacing: -0.025em;
+          line-height: 1.08;
+          margin: 0 0 1.2rem 0;
+          text-transform: uppercase;
+        }
+
+        .strip-desc {
+          font-size: 0.95rem;
+          line-height: 1.7;
+          color: #4A5568;
+          font-weight: 450;
+          margin: 0 0 1.8rem 0;
+        }
+
+        .strip-cta-wrap {
+          display: flex;
+          align-items: center;
+        }
+
+        .strip-contact-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 11px 24px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          color: #FFFFFF !important;
+          font-size: 0.85rem;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 6px 20px rgba(0, 168, 150, 0.25);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .strip-contact-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 28px rgba(0, 168, 150, 0.4);
+        }
+
         .strip-image-side {
-          flex: 1;
-          border-radius: 16px;
+          flex: 0.9;
+          border-radius: 20px;
           overflow: hidden;
           position: relative;
-          min-height: 300px;
-          max-height: 100%;
-          align-self: stretch;
-          box-shadow: 0 12px 32px rgba(10, 46, 92, 0.10);
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
           border: 1px solid rgba(10, 46, 92, 0.08);
-          background: #F8FAFC;
+          background: #F1F5F9;
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
           display: block;
+          transition: transform 0.6s ease;
         }
 
-        .strip-title {
-          font-size: clamp(1.4rem, 2vw, 1.9rem);
-          font-weight: 900;
-          font-family: var(--font-display);
-          color: #0B0C10;
-          letter-spacing: -0.02em;
-          line-height: 1.15;
-          margin: 0 0 0.6rem 0;
+        .proc-strip.active:hover .strip-img {
+          transform: scale(1.03);
         }
 
-        .strip-desc {
-          font-size: 0.88rem;
-          line-height: 1.6;
-          color: #475569;
-          margin: 0;
-          font-weight: 450;
-        }
-
-        .strip-tags-box {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 0.8rem;
-        }
-
-        .strip-tag-badge {
-          font-size: 0.72rem;
-          font-weight: 700;
-          padding: 5px 12px;
-          border-radius: 999px;
-          background: rgba(10, 46, 92, 0.05);
-          border: 1px solid rgba(0, 168, 150, 0.2);
-          color: #0A2E5C;
-        }
-
-        .strip-cta-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 22px;
-          border-radius: 999px;
-          background: #0B0C10;
-          color: #FFFFFF !important;
-          font-size: 0.82rem;
-          font-weight: 700;
-          text-decoration: none;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-          transition: background 0.25s ease, transform 0.25s ease;
-        }
-
-        .strip-cta-btn:hover {
-          background: #00A896;
-          transform: translateY(-2px);
-        }
-
-        /* Perfectly Centered Rotated Vertical Title */
-        .strip-rotated {
+        .strip-img-gradient-shim {
           position: absolute;
           inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: linear-gradient(180deg, transparent 65%, rgba(10, 46, 92, 0.3) 100%);
           pointer-events: none;
-          transition: opacity 0.25s ease;
-          padding-top: 2rem;
+        }
+
+        /* Rotated Title (Collapsed Strips) */
+        .strip-rotated {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-90deg);
+          white-space: nowrap;
+          opacity: 1;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
         }
 
         .proc-strip.active .strip-rotated {
@@ -700,27 +559,27 @@ const Process = () => {
         }
 
         .strip-rotated-text {
-          display: block;
-          transform: rotate(-90deg);
-          white-space: nowrap;
-          font-size: 0.82rem;
-          font-weight: 800;
+          font-size: 0.85rem;
+          font-weight: 900;
           font-family: var(--font-display);
-          color: #64748B;
-          letter-spacing: 0.14em;
+          color: #0A2E5C;
+          letter-spacing: 0.15em;
           text-transform: uppercase;
         }
 
-        /* ═══════════════════════════════════════
-           MOBILE PINNED OVERLAPPING STACK
-           ═══════════════════════════════════════ */
         .proc-mobile-pinned-section {
           display: none;
         }
 
-        @media (max-width: 900px) {
+        /* ═══════════════════════════════════════
+           MOBILE PINNED CARDS STACK (<769px)
+           ═══════════════════════════════════════ */
+        @media (max-width: 768px) {
           .process-section {
-            padding: 1rem 1rem 1.5rem !important;
+            padding: 1rem 4% 2.5rem !important;
+            background: transparent !important;
+            position: relative !important;
+            z-index: 5 !important;
           }
 
           .proc-header-container {
@@ -732,68 +591,72 @@ const Process = () => {
           }
 
           .proc-mobile-pinned-section {
-            display: block !important;
+            display: flex !important;
+            flex-direction: column;
             position: relative;
             width: 100%;
-            padding-top: 10px;
+            height: calc(100vh - 120px);
+            margin: 0 auto 2.5rem;
+            overflow: hidden;
+            box-sizing: border-box;
+            background: transparent !important;
           }
 
           .proc-mobile-header-box {
+            flex-shrink: 0;
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 0 0.5rem;
+            padding-bottom: 0.8rem;
+            background: transparent !important;
           }
 
           .proc-mobile-slides-wrapper {
+            flex: 1;
             position: relative;
             width: 100%;
-            height: 520px;
+            height: 100%;
           }
 
           .proc-mobile-card {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             background: #FFFFFF;
-            border-radius: 24px;
-            padding: 1.6rem 1.4rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 22px;
+            padding: 1.1rem 1.2rem;
+            box-shadow: 0 8px 25px rgba(10, 46, 92, 0.08);
+            border: 1px solid rgba(10, 46, 92, 0.1);
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: space-between;
             box-sizing: border-box;
-            will-change: transform, opacity;
+            overflow: hidden;
+            will-change: transform;
           }
 
           .proc-mobile-card-header {
+            flex-shrink: 0;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 1rem;
+            flex-direction: column;
+            gap: 4px;
           }
 
           .proc-mobile-num-badge {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            background: rgba(0, 168, 150, 0.1);
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 168, 150, 0.3);
+            gap: 8px;
           }
 
           .proc-mobile-dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #00A896;
+            box-shadow: 0 0 8px rgba(0, 168, 150, 0.6);
           }
 
           .proc-mobile-num {
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             font-weight: 800;
             font-family: var(--font-display);
             color: #0A2E5C;
@@ -804,17 +667,22 @@ const Process = () => {
             font-weight: 900;
             font-family: var(--font-display);
             color: #11131A;
+            letter-spacing: -0.02em;
             margin: 0;
-            line-height: 1.15;
+            text-transform: uppercase;
           }
 
           .proc-mobile-img-box {
+            flex: 1;
+            min-height: 130px;
+            max-height: 190px;
             width: 100%;
-            height: 190px;
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
-            margin-bottom: 1rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin: 8px 0;
+            position: relative;
+            background: #F1F5F9;
+            border: 1px solid rgba(10, 46, 92, 0.08);
           }
 
           .proc-mobile-img {
@@ -825,10 +693,32 @@ const Process = () => {
           }
 
           .proc-mobile-desc {
-            font-size: 0.85rem;
-            line-height: 1.55;
-            color: #475569;
+            flex-shrink: 0;
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: #4A5568;
+            font-weight: 500;
             margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .proc-mobile-contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 9px 16px;
+            background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+            color: #FFFFFF !important;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(0, 168, 150, 0.25);
           }
         }
       `}</style>
