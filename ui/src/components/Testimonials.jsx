@@ -1,899 +1,894 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-/* ═══════════════════════════════════════════════════════════════
-   PREMIUM CLIENT TESTIMONIALS DATA
-   (Nimmi & Mani removed, real high-impact projects only)
-   ═══════════════════════════════════════════════════════════════ */
-const clients = [
+// Audio-Visual / Podcast-Story Testimonials Data
+const stories = [
   {
     id: 1,
-    name: 'Balaji',
+    client: 'Balaji',
     role: 'Founder & CEO',
-    company: 'Gagner Sports',
+    org: 'Gagner Sports',
     location: 'Paris & Online',
-    project: 'Next.js 3D WebGL Storefront',
-    tag: 'E-COMMERCE / 3D WEB',
-    quote: "Nuzarox architected a truly world-class e-commerce platform for us — complete with interactive 3D product customizers, sub-second checkout, and craftsmanship that elevated our brand internationally across Europe.",
+    project: 'Next.js 14 · Headless 3D WebGL Storefront',
+    duration: '0:42',
+    audioPeak: [28, 45, 75, 92, 54, 80, 100, 65, 88, 70, 95, 60, 48, 85, 98, 72, 50, 88, 64, 40],
+    quote: "Nuzarox architected a truly world-class e-commerce platform for Gagner Sports. Interactive 3D product customizers, sub-second checkout, and craftsmanship that elevated our brand internationally.",
+    keyTakeaway: "120% Increase in Global Mobile Conversions",
+    accent: '#00E5FF',
+    badge: 'Flagship Showcase',
+    avatarChar: 'B',
     stats: [
-      { label: 'Mobile Conversion', val: '+120%' },
-      { label: 'Avg Page Load', val: '0.6s' }
-    ],
-    avatarBg: 'linear-gradient(135deg, #0A2E5C, #00A896)',
-    accentColor: '#00A896',
-    verifiedId: 'NZ-VERIFIED-8491'
+      { label: 'Conversion', val: '+120%' },
+      { label: 'Page Load', val: '0.6s' }
+    ]
   },
   {
     id: 2,
-    name: 'Siva',
+    client: 'Siva',
     role: 'Marketing Director',
-    company: 'Gagner Sports',
-    location: 'Chennai, India',
-    project: 'Brand Engine & Growth',
-    tag: 'BRANDING & MARKETING',
-    quote: "Working with Nuzarox was transformative for our entire digital presence. From intuitive mobile UX to kinetic motion design, our customer engagement and European partner inquiries surged by over 86%.",
+    org: 'Gagner Sports',
+    location: 'Chennai & Europe',
+    project: 'Kinetic Motion · Multi-Currency Funnels',
+    duration: '0:36',
+    audioPeak: [20, 60, 85, 45, 90, 70, 82, 100, 68, 88, 52, 75, 92, 60, 80, 95, 48, 70, 55, 30],
+    quote: "The entire journey was seamless. From intuitive mobile UX to micro-interactions, customer engagement surged and European partner inquiries grew by over eighty-six percent in 60 days.",
+    keyTakeaway: "86% Surge in Enterprise Partner Enquiries",
+    accent: '#00A896',
+    badge: 'Growth Story',
+    avatarChar: 'S',
     stats: [
-      { label: 'Partner Inquiries', val: '+86%' },
-      { label: 'Brand Reach', val: '3.4x' }
-    ],
-    avatarBg: 'linear-gradient(135deg, #00A896, #00E5FF)',
-    accentColor: '#00E5FF',
-    verifiedId: 'NZ-VERIFIED-9214'
+      { label: 'Engagement', val: '+86%' },
+      { label: 'Bounce Rate', val: '-44%' }
+    ]
   },
   {
     id: 3,
-    name: 'Keerthieswaran',
-    role: 'Lead Developer',
-    company: 'KE19 Studio',
-    location: 'Chennai, India',
-    project: 'Kinetic Portfolio & Shaders',
-    tag: 'INTERACTIVE WEBGL',
-    quote: "The custom WebGL shaders, reactive mouse physics, and kinetic typography engineered by Nuzarox brought KE19 Portfolio to an international design benchmark. Ultra-clean code that loads instantaneously.",
+    client: 'Keerthieswaran',
+    role: 'Lead Architect',
+    org: 'KE19 Studio',
+    location: 'Chennai, TN',
+    project: 'Custom WebGL Shaders & Kinetic Typography',
+    duration: '0:29',
+    audioPeak: [35, 70, 90, 60, 85, 100, 75, 58, 92, 80, 64, 88, 96, 70, 52, 85, 62, 78, 45, 25],
+    quote: "The WebGL shaders, reactive physics, and brutalist typography engineered by Nuzarox established an international standard. Clean architecture that runs at 60fps locked on mobile.",
+    keyTakeaway: "60 FPS Locked Canvas · 0.8s Global LCP",
+    accent: '#0A2E5C',
+    badge: 'Engineering Excellence',
+    avatarChar: 'K',
     stats: [
-      { label: 'Design Score', val: '9.8/10' },
-      { label: 'Bounce Rate', val: '-42%' }
-    ],
-    avatarBg: 'linear-gradient(135deg, #0A2E5C, #3B82F6)',
-    accentColor: '#3B82F6',
-    verifiedId: 'NZ-VERIFIED-3810'
+      { label: 'FPS Performance', val: '60fps' },
+      { label: 'Design Score', val: '9.8/10' }
+    ]
   },
   {
     id: 4,
-    name: 'Ruthra',
-    role: 'Brand Strategist',
-    company: 'Creative Consultant',
-    location: 'Tamil Nadu',
-    project: 'Digital Identity & Systems',
-    tag: 'BRAND STRATEGY',
-    quote: "The obsessive attention to UX detail, responsive fluidity, and brand storytelling sets Nuzarox apart in a crowded market. They don't just build websites — they engineer digital ecosystems that command authority.",
+    client: 'Lokesh',
+    role: 'Operations & Tech Lead',
+    org: 'Aura Luxury Residence',
+    location: 'Mayiladuthurai',
+    project: '360° Architectural VR & Booking Engine',
+    duration: '0:38',
+    audioPeak: [25, 50, 78, 90, 65, 82, 95, 70, 88, 60, 92, 74, 58, 86, 100, 68, 52, 75, 60, 35],
+    quote: "The interactive 3D virtual tour experience and consultation interface delivered pure luxury. High-net-worth buyers repeatedly praise the effortless navigation and stunning visual fidelity.",
+    keyTakeaway: "3x Private Villa Walkthrough Bookings",
+    accent: '#00A896',
+    badge: 'Immersive Real Estate',
+    avatarChar: 'L',
     stats: [
-      { label: 'Brand Recall', val: '3x' },
-      { label: 'Client Retention', val: '98%' }
-    ],
-    avatarBg: 'linear-gradient(135deg, #00A896, #0A2E5C)',
-    accentColor: '#00A896',
-    verifiedId: 'NZ-VERIFIED-7104'
+      { label: 'Tour Bookings', val: '300%' },
+      { label: 'Avg Session', val: '4m 12s' }
+    ]
   },
   {
     id: 5,
-    name: 'Lokesh',
-    role: 'Operations & Tech Lead',
-    company: 'Aura Luxury Residence',
-    location: 'Mayiladuthurai',
-    project: '3D VR Virtual Walkthroughs',
-    tag: 'REAL ESTATE / 3D VR',
-    quote: "The interactive 3D virtual tour experience and consultation interface created by Nuzarox delivered pure luxury. High-net-worth clients repeatedly praise the effortless navigation and visual fidelity.",
+    client: 'Ruthra',
+    role: 'Brand Strategist',
+    org: 'Creative Consultant',
+    location: 'Tamil Nadu',
+    project: 'Brand Identity · Multi-channel UX System',
+    duration: '0:32',
+    audioPeak: [30, 65, 80, 95, 60, 75, 90, 70, 85, 100, 64, 82, 90, 55, 70, 88, 60, 74, 48, 28],
+    quote: "They don't just build websites — they engineer digital ecosystems that command absolute market authority. The attention to typography, contrast, and micro-delights is obsessive.",
+    keyTakeaway: "Dominant Brand Recall & Enterprise Positioning",
+    accent: '#0A2E5C',
+    badge: 'Strategy Review',
+    avatarChar: 'R',
     stats: [
-      { label: 'Inquiries', val: '+200%' },
-      { label: 'Tour Time', val: '4.8m' }
-    ],
-    avatarBg: 'linear-gradient(135deg, #0A2E5C, #00E5FF)',
-    accentColor: '#00E5FF',
-    verifiedId: 'NZ-VERIFIED-5521'
+      { label: 'Brand Lift', val: '+240%' },
+      { label: 'Inbound Leads', val: '4.2x' }
+    ]
   }
 ];
 
 const Testimonials = () => {
-  const [deck, setDeck] = useState(clients);
-  const [swipeDirection, setSwipeDirection] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackProgress, setPlaybackProgress] = useState(18); // default progress preview
+  const animFrameRef = useRef(null);
+  const containerRef = useRef(null);
+  const quoteRef = useRef(null);
 
-  const cardRef = useRef(null);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const currentDrag = useRef({ x: 0, y: 0 });
-  const audioIntervalRef = useRef(null);
-  const [waveHeights, setWaveHeights] = useState([12, 24, 18, 30, 16, 22, 28, 14, 20, 26, 15, 23]);
+  const activeStory = stories[activeIdx];
 
-  // Handle Voice Note simulation
+  // Simulated Audio Playback & Waveform Animation
   useEffect(() => {
-    if (isAudioPlaying) {
-      audioIntervalRef.current = setInterval(() => {
-        setWaveHeights(prev => prev.map(() => Math.floor(Math.random() * 26) + 8));
-      }, 120);
-    } else {
-      if (audioIntervalRef.current) clearInterval(audioIntervalRef.current);
-      setWaveHeights([10, 16, 12, 18, 14, 10, 16, 12, 14, 18, 10, 12]);
-    }
-    return () => {
-      if (audioIntervalRef.current) clearInterval(audioIntervalRef.current);
-    };
-  }, [isAudioPlaying]);
-
-  // Swipe Card Handlers
-  const triggerSwipe = useCallback((direction) => {
-    if (deck.length === 0) return;
-    setSwipeDirection(direction);
-    setIsAudioPlaying(false);
-
-    const el = cardRef.current;
-    if (el) {
-      const flyX = direction === 'right' ? window.innerWidth * 0.8 : -window.innerWidth * 0.8;
-      const flyRot = direction === 'right' ? 35 : -35;
-
-      gsap.to(el, {
-        x: flyX,
-        y: 60,
-        rotation: flyRot,
-        opacity: 0,
-        duration: 0.42,
-        ease: 'power2.in',
-        onComplete: () => {
-          // Move top card to back of deck
-          setDeck(prev => {
-            const nextDeck = [...prev];
-            const popped = nextDeck.shift();
-            nextDeck.push(popped);
-            return nextDeck;
-          });
-          setSwipeDirection(null);
-          gsap.set(el, { x: 0, y: 0, rotation: 0, opacity: 1 });
-        }
-      });
-    }
-  }, [deck]);
-
-  // Mouse / Touch Gesture Handlers for Physics Drag
-  const onPointerDown = (e) => {
-    setIsDragging(true);
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-    dragStart.current = { x: clientX, y: clientY };
-    currentDrag.current = { x: 0, y: 0 };
-  };
-
-  const onPointerMove = (e) => {
-    if (!isDragging) return;
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-    const deltaX = clientX - dragStart.current.x;
-    const deltaY = clientY - dragStart.current.y;
-    currentDrag.current = { x: deltaX, y: deltaY };
-
-    if (cardRef.current) {
-      const rot = deltaX * 0.07;
-      gsap.set(cardRef.current, {
-        x: deltaX,
-        y: deltaY * 0.35,
-        rotation: rot,
-        cursor: 'grabbing'
-      });
-    }
-  };
-
-  const onPointerUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    const deltaX = currentDrag.current.x;
-
-    // Threshold check: swipe out if dragged more than 110px
-    if (deltaX > 110) {
-      triggerSwipe('right');
-    } else if (deltaX < -110) {
-      triggerSwipe('left');
-    } else {
-      // Snap back with natural rubber spring
-      if (cardRef.current) {
-        gsap.to(cardRef.current, {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          duration: 0.5,
-          ease: 'elastic.out(1, 0.65)'
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        setPlaybackProgress((prev) => {
+          if (prev >= 100) {
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 1.2;
         });
-      }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying]);
+
+  const handleSelectStory = (idx) => {
+    if (idx === activeIdx) {
+      setIsPlaying(!isPlaying);
+      return;
+    }
+    setPlaybackProgress(0);
+    setIsPlaying(true);
+    setActiveIdx(idx);
+
+    if (quoteRef.current) {
+      gsap.fromTo(
+        quoteRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
+      );
     }
   };
 
-  const activeCard = deck[0];
-  const nextCard = deck[1];
-  const thirdCard = deck[2];
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+  };
 
   return (
-    <section id="testimonials" className="nz-3d-testi-section">
+    <section ref={containerRef} id="testimonials" className="av-testimonials-root">
       <style>{`
-        /* ═══════════════════════════════════════════════
-           SECTION CONTAINER & ATMOSPHERE
-           ═══════════════════════════════════════════════ */
-        .nz-3d-testi-section {
+        .av-testimonials-root {
           position: relative;
-          background: #F5F3EF;
-          padding: 6.5rem 1.5rem 5.5rem;
+          background: #F4F6F9;
+          padding: 6.5rem 1.5rem;
+          color: #0A192F;
           overflow: hidden;
-          font-family: var(--font-body);
+          font-family: var(--font-body, 'Inter', sans-serif);
         }
 
-        /* Architectural Blueprint grid lines in background */
-        .nz-bg-blueprint {
+        /* Ambient Dynamic Noise & Mesh Gradients */
+        .av-bg-gradient-1 {
           position: absolute;
-          inset: 0;
-          background-image: 
-            linear-gradient(to right, rgba(10, 46, 92, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(10, 46, 92, 0.04) 1px, transparent 1px);
-          background-size: 64px 64px;
-          pointer-events: none;
-          z-index: 0;
-        }
-
-        .nz-bg-glow-orb {
-          position: absolute;
+          width: 650px;
+          height: 650px;
           border-radius: 50%;
-          filter: blur(120px);
+          background: radial-gradient(circle, rgba(0, 168, 150, 0.12) 0%, transparent 70%);
+          top: -150px;
+          right: -100px;
+          filter: blur(80px);
           pointer-events: none;
-          z-index: 0;
         }
-        .nz-glow-1 {
+
+        .av-bg-gradient-2 {
+          position: absolute;
           width: 550px;
           height: 550px;
-          background: radial-gradient(circle, rgba(0, 168, 150, 0.18) 0%, transparent 70%);
-          top: -120px;
-          left: -80px;
-        }
-        .nz-glow-2 {
-          width: 600px;
-          height: 600px;
-          background: radial-gradient(circle, rgba(10, 46, 92, 0.12) 0%, transparent 70%);
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(10, 46, 92, 0.1) 0%, transparent 70%);
           bottom: -150px;
-          right: -100px;
+          left: -100px;
+          filter: blur(90px);
+          pointer-events: none;
         }
 
-        .nz-main-layout {
+        .av-container {
           max-width: 1240px;
           margin: 0 auto;
           position: relative;
           z-index: 2;
-          display: grid;
-          grid-template-columns: 1fr 1.15fr;
-          gap: 4.5rem;
-          align-items: center;
         }
 
-        /* ═══════════════════════════════════════════════
-           LEFT SIDE: EDITORIAL NARRATIVE & CONTROLS
-           ═══════════════════════════════════════════════ */
-        .nz-narrative-col {
+        /* Section Header with Live Studio Indicator */
+        .av-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-bottom: 3.5rem;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+        }
+
+        .av-header-left {
           display: flex;
           flex-direction: column;
+          gap: 0.6rem;
         }
 
-        .nz-tagline-badge {
+        .av-live-badge {
           display: inline-flex;
           align-items: center;
-          gap: 10px;
-          margin-bottom: 1.2rem;
-        }
-
-        .nz-badge-indicator {
-          width: 24px;
-          height: 2.5px;
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
-          border-radius: 2px;
-        }
-
-        .nz-badge-text {
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-family: var(--font-display);
-        }
-
-        .nz-editorial-h2 {
-          font-size: clamp(2.4rem, 4.2vw, 3.8rem);
-          font-weight: 900;
-          color: #0B0C10;
-          font-family: var(--font-display);
-          line-height: 1.08;
-          letter-spacing: -0.04em;
-          margin: 0 0 1.4rem 0;
-        }
-
-        .nz-editorial-gradient {
-          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .nz-editorial-desc {
-          font-size: 1.02rem;
-          line-height: 1.7;
-          color: #4A5568;
-          margin: 0 0 2.2rem 0;
-          max-width: 480px;
-        }
-
-        /* Swipe Instruction Badge */
-        .nz-gesture-hint {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 0.65rem 1.2rem;
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(10, 46, 92, 0.08);
+          gap: 8px;
+          background: #FFFFFF;
+          border: 1px solid rgba(0, 168, 150, 0.25);
+          padding: 0.35rem 0.85rem;
           border-radius: 999px;
-          margin-bottom: 2.5rem;
+          box-shadow: 0 4px 15px rgba(0, 168, 150, 0.08);
           width: fit-content;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
         }
 
-        .nz-gesture-hand-icon {
-          width: 24px;
-          height: 24px;
+        .av-pulse-dot {
+          width: 8px;
+          height: 8px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #0A2E5C, #00A896);
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.75rem;
-          animation: handWiggle 2s ease-in-out infinite;
+          background: #00A896;
+          box-shadow: 0 0 10px #00A896;
+          animation: avPulse 1.6s infinite ease-in-out;
         }
 
-        @keyframes handWiggle {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          50% { transform: translateX(4px) rotate(8deg); }
+        @keyframes avPulse {
+          0% { transform: scale(0.9); opacity: 0.6; }
+          50% { transform: scale(1.3); opacity: 1; }
+          100% { transform: scale(0.9); opacity: 0.6; }
         }
 
-        .nz-gesture-text {
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: #1A202C;
-          letter-spacing: 0.02em;
+        .av-live-text {
+          font-size: 0.72rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-family: var(--font-display, sans-serif);
         }
 
-        /* Client Deck Queue Indicator */
-        .nz-deck-queue {
-          display: flex;
-          align-items: center;
-          gap: 1.4rem;
+        .av-title {
+          font-size: clamp(2.3rem, 4.5vw, 3.6rem);
+          font-weight: 900;
+          font-family: var(--font-display, sans-serif);
+          color: #0A192F;
+          letter-spacing: -0.03em;
+          line-height: 1.1;
+          margin: 0;
         }
 
-        .nz-action-arrows {
-          display: flex;
-          gap: 10px;
-        }
-
-        .nz-btn-round {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          background: #FFFFFF;
-          border: 1.5px solid rgba(10, 46, 92, 0.1);
-          color: #0A2E5C;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          font-size: 1.25rem;
-          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 4px 12px rgba(10, 46, 92, 0.05);
-        }
-
-        .nz-btn-round:hover {
+        .av-title-gradient {
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
-          color: #FFFFFF;
-          border-color: transparent;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 168, 150, 0.3);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
-        .nz-deck-counter {
-          font-family: var(--font-display);
-          font-size: 0.85rem;
-          color: #718096;
-          font-weight: 700;
+        .av-header-desc {
+          font-size: 0.95rem;
+          color: #5A6E85;
+          max-width: 420px;
+          line-height: 1.55;
+          margin: 0;
         }
 
-        .nz-deck-counter strong {
-          color: #0A2E5C;
-          font-size: 1.15rem;
+        /* ══════════════════════════════════════════════════════════
+           MAIN AUDIO-VISUAL STAGE
+           ══════════════════════════════════════════════════════════ */
+        .av-stage {
+          display: grid;
+          grid-template-columns: 1.35fr 1fr;
+          gap: 2rem;
+          align-items: stretch;
+          margin-bottom: 3.5rem;
         }
 
-        /* ═══════════════════════════════════════════════
-           RIGHT SIDE: 3D TINDER PHYSICAL CARD DECK
-           ═══════════════════════════════════════════════ */
-        .nz-deck-viewport {
-          position: relative;
-          width: 100%;
-          height: 520px;
-          perspective: 1200px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        /* Background Layer 3 (Deepest) */
-        .nz-card-depth-3 {
-          position: absolute;
-          width: 100%;
-          max-width: 470px;
-          height: 430px;
-          background: #EAE6DF;
-          border-radius: 32px;
-          border: 1px solid rgba(10, 46, 92, 0.06);
-          transform: translateY(34px) scale(0.88);
-          opacity: 0.45;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        /* Background Layer 2 (Middle) */
-        .nz-card-depth-2 {
-          position: absolute;
-          width: 100%;
-          max-width: 490px;
-          height: 450px;
-          background: #FBF9F5;
+        /* The Soundstage / Active Voice Hero Card */
+        .av-hero-deck {
+          background: #FFFFFF;
           border-radius: 32px;
           border: 1px solid rgba(10, 46, 92, 0.08);
-          transform: translateY(18px) scale(0.94);
-          opacity: 0.75;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
-          z-index: 2;
+          box-shadow: 
+            0 25px 65px -15px rgba(10, 46, 92, 0.08),
+            0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+          padding: 3rem 2.8rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .av-deck-glow {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 320px;
+          height: 320px;
+          background: radial-gradient(circle, rgba(0, 229, 255, 0.08) 0%, transparent 70%);
+          border-radius: 50%;
           pointer-events: none;
         }
 
-        /* Top Active Draggable Card (Physics Surface) */
-        .nz-card-active-top {
-          position: absolute;
-          width: 100%;
-          max-width: 510px;
-          background: #FFFFFF;
-          border-radius: 32px;
-          border: 1.5px solid rgba(10, 46, 92, 0.08);
-          padding: 2.4rem 2.4rem 2rem 2.4rem;
-          z-index: 5;
-          cursor: grab;
-          user-select: none;
-          touch-action: none;
-          box-shadow: 
-            0 25px 60px -10px rgba(10, 46, 92, 0.12),
-            0 0 1px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 1);
-          transform-origin: 50% 100%;
-          will-change: transform;
-        }
-
-        .nz-card-active-top:active {
-          cursor: grabbing;
-        }
-
-        /* Verified Security Ribbon */
-        .nz-card-header-bar {
+        /* Deck Header: Category badge & Audio status */
+        .av-deck-top {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 1.4rem;
+          margin-bottom: 2rem;
         }
 
-        .nz-industry-pill {
-          font-size: 0.65rem;
+        .av-badge {
+          font-size: 0.72rem;
           font-weight: 800;
-          letter-spacing: 0.14em;
           text-transform: uppercase;
-          padding: 0.35rem 0.85rem;
+          letter-spacing: 0.12em;
+          padding: 0.4rem 0.95rem;
           border-radius: 999px;
           background: rgba(0, 168, 150, 0.08);
           color: #00A896;
           border: 1px solid rgba(0, 168, 150, 0.2);
         }
 
-        .nz-verified-badge {
+        .av-meta-project {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #8C9BAE;
           display: flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.68rem;
-          font-weight: 700;
-          color: #0A2E5C;
-          letter-spacing: 0.05em;
         }
 
-        .nz-check-icon {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          background: #00A896;
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.6rem;
-          font-weight: 900;
+        /* Interactive Master Quote */
+        .av-quote-body {
+          position: relative;
+          z-index: 2;
+          margin-bottom: 2rem;
         }
 
-        /* 5 Golden Stars */
-        .nz-card-stars-row {
-          display: flex;
-          gap: 3px;
-          margin-bottom: 1.2rem;
+        .av-quote-mark {
+          font-size: 5.5rem;
+          line-height: 0.7;
+          font-family: Georgia, serif;
+          color: rgba(10, 46, 92, 0.08);
+          margin-bottom: -1.2rem;
+          display: block;
+          user-select: none;
         }
 
-        .nz-card-stars-row span {
-          color: #FFB800;
-          font-size: 1rem;
-          filter: drop-shadow(0 0 4px rgba(255, 184, 0, 0.3));
+        .av-quote-text {
+          font-size: clamp(1.2rem, 2vw, 1.55rem);
+          line-height: 1.6;
+          color: #0E1E38;
+          font-weight: 600;
+          letter-spacing: -0.015em;
+          margin: 0;
         }
 
-        /* Editorial Client Quote */
-        .nz-card-quote-content {
-          font-size: 1.05rem;
-          line-height: 1.72;
-          color: #1A202C;
-          font-weight: 500;
-          margin: 0 0 1.8rem 0;
-          letter-spacing: -0.01em;
-        }
-
-        /* Audio Voice Note Simulator Pill */
-        .nz-audio-voice-pill {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 0.65rem 1rem;
-          background: #F7FAFC;
-          border: 1px solid #E2E8F0;
-          border-radius: 16px;
-          margin-bottom: 1.8rem;
-          cursor: pointer;
-          transition: background 0.2s ease, border-color 0.2s ease;
-        }
-
-        .nz-audio-voice-pill:hover {
-          background: #EDF2F7;
-          border-color: #CBD5E0;
-        }
-
-        .nz-play-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #0A2E5C, #00A896);
-          color: #fff;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.75rem;
-          cursor: pointer;
-          flex-shrink: 0;
-          box-shadow: 0 3px 8px rgba(0, 168, 150, 0.3);
-        }
-
-        .nz-wave-bars-container {
-          display: flex;
-          align-items: center;
-          gap: 3px;
-          flex-grow: 1;
-          height: 32px;
-        }
-
-        .nz-wave-bar {
-          width: 3px;
-          background: #00A896;
-          border-radius: 2px;
-          transition: height 0.12s ease;
-        }
-
-        .nz-audio-duration-tag {
-          font-size: 0.72rem;
-          font-weight: 700;
-          color: #718096;
-          font-family: var(--font-display);
-        }
-
-        /* Real Performance Impact Stats inside Card */
-        .nz-card-metrics-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          margin-bottom: 1.8rem;
-          padding-top: 1.2rem;
-          border-top: 1px dashed rgba(10, 46, 92, 0.1);
-        }
-
-        .nz-card-metric-cell {
+        .av-takeaway-box {
+          margin-top: 1.2rem;
+          padding: 0.75rem 1.1rem;
           background: #F8FAFC;
-          border: 1px solid rgba(10, 46, 92, 0.05);
-          border-radius: 14px;
-          padding: 0.75rem 1rem;
-        }
-
-        .nz-cell-val {
-          font-size: 1.35rem;
-          font-weight: 900;
-          font-family: var(--font-display);
-          background: linear-gradient(135deg, #0A2E5C, #00A896);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          line-height: 1;
-        }
-
-        .nz-cell-label {
-          font-size: 0.68rem;
+          border-left: 3px solid #00A896;
+          border-radius: 0 12px 12px 0;
+          font-size: 0.85rem;
+          color: #0A2E5C;
           font-weight: 700;
-          color: #718096;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          margin-top: 4px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
-        /* Author Metadata Footer */
-        .nz-card-author-footer {
+        /* Dynamic Interactive Waveform Player Bar */
+        .av-player-strip {
+          background: #F8FAFC;
+          border-radius: 24px;
+          border: 1px solid rgba(10, 46, 92, 0.06);
+          padding: 1.25rem 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 1.2rem;
+          position: relative;
+          z-index: 2;
+        }
+
+        .av-play-btn {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          border: none;
+          color: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 8px 20px rgba(0, 168, 150, 0.3);
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+          flex-shrink: 0;
+        }
+
+        .av-play-btn:hover {
+          transform: scale(1.06);
+          box-shadow: 0 12px 25px rgba(0, 168, 150, 0.45);
+        }
+
+        .av-waveform-container {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          height: 48px;
+          overflow: hidden;
+          cursor: pointer;
+          position: relative;
+        }
+
+        .av-waveform-bar {
+          flex: 1;
+          background: #D9E2EC;
+          border-radius: 4px;
+          transition: height 0.2s ease, background 0.3s ease;
+          min-height: 8px;
+        }
+
+        .av-waveform-bar.active {
+          background: linear-gradient(180deg, #00A896 0%, #0A2E5C 100%);
+        }
+
+        .av-waveform-bar.playing {
+          animation: avWavePulse 1.2s infinite ease-in-out alternate;
+        }
+
+        @keyframes avWavePulse {
+          0% { transform: scaleY(0.7); }
+          100% { transform: scaleY(1.2); }
+        }
+
+        .av-duration-badge {
+          font-size: 0.78rem;
+          font-family: var(--font-display, sans-serif);
+          font-weight: 700;
+          color: #486581;
+          background: #FFFFFF;
+          padding: 0.35rem 0.65rem;
+          border-radius: 8px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+          white-space: nowrap;
+        }
+
+        /* ══════════════════════════════════════════════════════════
+           RIGHT SIDE: EPISODE / CLIENT PLAYLIST SELECTOR
+           ══════════════════════════════════════════════════════════ */
+        .av-playlist {
+          display: flex;
+          flex-direction: column;
+          gap: 0.9rem;
+        }
+
+        .av-track-item {
+          background: #FFFFFF;
+          border-radius: 20px;
+          padding: 1.25rem 1.4rem;
+          border: 1.5px solid rgba(10, 46, 92, 0.06);
+          cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          position: relative;
         }
 
-        .nz-author-profile {
+        .av-track-item:hover {
+          border-color: rgba(0, 168, 150, 0.3);
+          transform: translateX(4px);
+          box-shadow: 0 8px 24px rgba(10, 46, 92, 0.06);
+        }
+
+        .av-track-item.selected {
+          border-color: #00A896;
+          background: #FFFFFF;
+          box-shadow: 
+            0 12px 30px rgba(0, 168, 150, 0.12),
+            0 0 0 1px #00A896;
+          transform: translateX(6px);
+        }
+
+        .av-track-left {
           display: flex;
           align-items: center;
           gap: 14px;
         }
 
-        .nz-avatar-square {
-          width: 48px;
-          height: 48px;
+        .av-avatar {
+          width: 46px;
+          height: 46px;
           border-radius: 14px;
-          color: #fff;
-          font-weight: 800;
-          font-family: var(--font-display);
-          font-size: 1.1rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 6px 16px rgba(10, 46, 92, 0.15);
+          font-size: 1.1rem;
+          font-weight: 900;
+          color: #FFFFFF;
+          font-family: var(--font-display, sans-serif);
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          box-shadow: 0 4px 12px rgba(10, 46, 92, 0.15);
+          flex-shrink: 0;
         }
 
-        .nz-author-text {
+        .av-track-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .av-track-name {
+          font-size: 0.98rem;
+          font-weight: 800;
+          color: #0E1E38;
+          font-family: var(--font-display, sans-serif);
+        }
+
+        .av-track-org {
+          font-size: 0.76rem;
+          color: #627D98;
+          font-weight: 600;
+        }
+
+        .av-track-right {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .av-miniwaves {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          height: 20px;
+        }
+
+        .av-miniwave-bar {
+          width: 3px;
+          background: #00A896;
+          border-radius: 2px;
+          animation: avMiniWave 0.8s infinite alternate ease-in-out;
+        }
+
+        @keyframes avMiniWave {
+          0% { height: 4px; }
+          100% { height: 18px; }
+        }
+
+        .av-listen-pill {
+          font-size: 0.72rem;
+          font-weight: 800;
+          color: #0A2E5C;
+          background: #F0F4F8;
+          padding: 0.35rem 0.65rem;
+          border-radius: 6px;
+          transition: all 0.25s ease;
+        }
+
+        .av-track-item.selected .av-listen-pill {
+          background: #00A896;
+          color: #FFFFFF;
+        }
+
+        /* ══════════════════════════════════════════════════════════
+           BOTTOM CREDIBILITY & GOOGLE REVIEWS STRIP
+           ══════════════════════════════════════════════════════════ */
+        .av-trust-strip {
+          background: #FFFFFF;
+          border-radius: 24px;
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          padding: 1.6rem 2.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+          box-shadow: 0 10px 30px rgba(10, 46, 92, 0.04);
+        }
+
+        .av-stat-cluster {
+          display: flex;
+          align-items: center;
+          gap: 2.8rem;
+          flex-wrap: wrap;
+        }
+
+        .av-stat-block {
           display: flex;
           flex-direction: column;
         }
 
-        .nz-author-title-name {
-          font-size: 1rem;
-          font-weight: 800;
-          color: #0B0C10;
-          font-family: var(--font-display);
-        }
-
-        .nz-author-subtitle {
-          font-size: 0.76rem;
-          color: #718096;
-          font-weight: 500;
-        }
-
-        .nz-author-company-highlight {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        /* Swipe visual stamp badges */
-        .nz-swipe-stamp {
-          position: absolute;
-          top: 30px;
-          padding: 0.4rem 1rem;
-          border-radius: 10px;
+        .av-stat-number {
+          font-size: 1.6rem;
           font-weight: 900;
-          font-size: 1.1rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          pointer-events: none;
-          z-index: 10;
-          opacity: 0;
-          transform: rotate(-12deg);
+          color: #0A2E5C;
+          font-family: var(--font-display, sans-serif);
+          line-height: 1;
         }
 
-        /* ═══════════════════════════════════════════════
-           RESPONSIVE TWEAKS FOR MOBILE & TABLET
-           ═══════════════════════════════════════════════ */
+        .av-stat-number span {
+          color: #00A896;
+        }
+
+        .av-stat-subtitle {
+          font-size: 0.74rem;
+          color: #627D98;
+          font-weight: 600;
+          margin-top: 4px;
+        }
+
+        .av-action-group {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .av-google-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #F8FAFC;
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          border-radius: 999px;
+          padding: 0.55rem 1.1rem;
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #334E68;
+        }
+
+        .av-google-chip strong {
+          color: #0A2E5C;
+        }
+
+        .av-google-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          color: #FFFFFF !important;
+          font-size: 0.84rem;
+          font-weight: 700;
+          padding: 0.65rem 1.4rem;
+          border-radius: 999px;
+          text-decoration: none;
+          box-shadow: 0 6px 18px rgba(0, 168, 150, 0.25);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .av-google-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(0, 168, 150, 0.4);
+        }
+
+        /* ══════════════════════════════════════════════════════════
+           RESPONSIVE DESIGN (Zero Horizontal Overflow)
+           ══════════════════════════════════════════════════════════ */
         @media (max-width: 1024px) {
-          .nz-main-layout {
+          .av-stage {
             grid-template-columns: 1fr;
-            gap: 3.5rem;
           }
-          .nz-deck-viewport {
-            height: 480px;
-          }
-          .nz-narrative-col {
-            text-align: center;
-            align-items: center;
-          }
-          .nz-editorial-desc {
-            max-width: 100%;
+          .av-hero-deck {
+            padding: 2.4rem 2rem;
           }
         }
 
-        @media (max-width: 600px) {
-          .nz-3d-testi-section {
-            padding: 4.5rem 1rem 3.5rem;
+        @media (max-width: 768px) {
+          .av-testimonials-root {
+            padding: 4.5rem 1rem;
           }
-          .nz-deck-viewport {
-            height: 520px;
+          .av-header {
+            margin-bottom: 2.2rem;
           }
-          .nz-card-active-top {
-            padding: 1.8rem 1.4rem 1.6rem 1.4rem;
+          .av-hero-deck {
+            padding: 2rem 1.4rem;
             border-radius: 24px;
           }
-          .nz-card-quote-content {
+          .av-quote-text {
+            font-size: 1.15rem;
+          }
+          .av-player-strip {
+            padding: 1rem 1.1rem;
+            gap: 0.8rem;
+          }
+          .av-play-btn {
+            width: 44px;
+            height: 44px;
+          }
+          .av-trust-strip {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1.5rem 1.4rem;
+          }
+          .av-stat-cluster {
+            gap: 1.8rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .av-track-item {
+            padding: 1rem 1rem;
+          }
+          .av-avatar {
+            width: 40px;
+            height: 40px;
             font-size: 0.95rem;
-            line-height: 1.6;
           }
-          .nz-editorial-h2 {
-            font-size: 2.1rem;
+          .av-track-name {
+            font-size: 0.9rem;
           }
-          .nz-card-depth-2, .nz-card-depth-3 {
-            border-radius: 24px;
+          .av-duration-badge {
+            display: none;
           }
         }
       `}</style>
 
-      {/* Ambient background meshes */}
-      <div className="nz-bg-blueprint" />
-      <div className="nz-bg-glow-orb nz-glow-1" />
-      <div className="nz-bg-glow-orb nz-glow-2" />
+      {/* Atmospheric Brand Glows */}
+      <div className="av-bg-gradient-1" />
+      <div className="av-bg-gradient-2" />
 
-      <div className="nz-main-layout">
-        {/* ── LEFT: EDITORIAL STORY & SWIPE CONTROLS ── */}
-        <div className="nz-narrative-col">
-          <div className="nz-tagline-badge">
-            <span className="nz-badge-indicator" />
-            <span className="nz-badge-text">Client Testimonials</span>
+      <div className="av-container">
+        {/* Header */}
+        <div className="av-header">
+          <div className="av-header-left">
+            <div className="av-live-badge">
+              <span className="av-pulse-dot" />
+              <span className="av-live-text">Voice of Our Clients</span>
+            </div>
+            <h2 className="av-title">
+              What Founders & Brands <span className="av-title-gradient">Say About Us</span>
+            </h2>
           </div>
-
-          <h2 className="nz-editorial-h2">
-            Engineered For Impact. <br />
-            <span className="nz-editorial-gradient">Proven By Leaders.</span>
-          </h2>
-
-          <p className="nz-editorial-desc">
-            We don't collect standard reviews. We build long-term partnerships with founders, marketing chiefs, and enterprises who demand measurable superiority.
+          <p className="av-header-desc">
+            Explore authentic audio-story takeaways from visionary founders who scaled their revenue and international presence with Nuzarox.
           </p>
+        </div>
 
-          <div className="nz-gesture-hint">
-            <div className="nz-gesture-hand-icon">✋</div>
-            <span className="nz-gesture-text">Drag or Swipe cards to explore reviews</span>
+        {/* Audio-Visual Stage */}
+        <div className="av-stage">
+          {/* Active Audio-Story Soundstage Hero Card */}
+          <div className="av-hero-deck">
+            <div className="av-deck-glow" />
+
+            <div>
+              <div className="av-deck-top">
+                <span className="av-badge">{activeStory.badge}</span>
+                <span className="av-meta-project">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  {activeStory.duration} Case Study
+                </span>
+              </div>
+
+              <div ref={quoteRef} className="av-quote-body">
+                <span className="av-quote-mark">“</span>
+                <p className="av-quote-text">{activeStory.quote}</p>
+                
+                <div className="av-takeaway-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00A896" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>{activeStory.keyTakeaway}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Audio Waveform Player Strip */}
+            <div className="av-player-strip">
+              <button 
+                className="av-play-btn" 
+                onClick={togglePlay}
+                aria-label={isPlaying ? 'Pause client story audio' : 'Play client story audio'}
+              >
+                {isPlaying ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: 3 }}>
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                )}
+              </button>
+
+              <div className="av-waveform-container" onClick={togglePlay}>
+                {activeStory.audioPeak.map((peak, idx) => {
+                  const barProgress = (idx / activeStory.audioPeak.length) * 100;
+                  const isActive = barProgress <= playbackProgress;
+                  return (
+                    <div
+                      key={idx}
+                      className={`av-waveform-bar ${isActive ? 'active' : ''} ${isPlaying && isActive ? 'playing' : ''}`}
+                      style={{
+                        height: `${Math.max(15, peak * 0.42)}px`,
+                        animationDelay: `${idx * 0.05}s`
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              <span className="av-duration-badge">
+                {isPlaying ? `${Math.round((playbackProgress / 100) * 38)}s` : activeStory.duration}
+              </span>
+            </div>
           </div>
 
-          {/* Interactive Arrow Controls */}
-          <div className="nz-deck-queue">
-            <div className="nz-action-arrows">
-              <button 
-                className="nz-btn-round" 
-                onClick={() => triggerSwipe('left')}
-                aria-label="Previous client testimonial"
-              >
-                ‹
-              </button>
-              <button 
-                className="nz-btn-round" 
-                onClick={() => triggerSwipe('right')}
-                aria-label="Next client testimonial"
-              >
-                ›
-              </button>
-            </div>
+          {/* Episode / Client Story Playlist */}
+          <div className="av-playlist">
+            {stories.map((item, idx) => {
+              const isSelected = idx === activeIdx;
+              return (
+                <div
+                  key={item.id}
+                  className={`av-track-item ${isSelected ? 'selected' : ''}`}
+                  onClick={() => handleSelectStory(idx)}
+                >
+                  <div className="av-track-left">
+                    <div className="av-avatar">{item.avatarChar}</div>
+                    <div className="av-track-info">
+                      <span className="av-track-name">{item.client}</span>
+                      <span className="av-track-org">{item.role} · {item.org}</span>
+                    </div>
+                  </div>
 
-            <div className="nz-deck-counter">
-              <strong>0{clients.findIndex(c => c.id === activeCard.id) + 1}</strong> / 0{clients.length} Curated Partners
-            </div>
+                  <div className="av-track-right">
+                    {isSelected && isPlaying ? (
+                      <div className="av-miniwaves">
+                        <span className="av-miniwave-bar" style={{ animationDelay: '0s' }} />
+                        <span className="av-miniwave-bar" style={{ animationDelay: '0.2s' }} />
+                        <span className="av-miniwave-bar" style={{ animationDelay: '0.4s' }} />
+                      </div>
+                    ) : (
+                      <span className="av-listen-pill">
+                        {isSelected ? 'Active' : item.duration}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* ── RIGHT: 3D TINDER PHYSICAL CARD DECK ── */}
-        <div className="nz-deck-viewport">
-          {/* Depth Layer 3 */}
-          <div className="nz-card-depth-3" />
-
-          {/* Depth Layer 2 */}
-          <div className="nz-card-depth-2">
-            <div style={{ padding: '2.5rem', opacity: 0.3 }}>
-              <div style={{ height: '14px', width: '35%', background: '#94A3B8', borderRadius: '4px', marginBottom: '16px' }} />
-              <div style={{ height: '18px', width: '85%', background: '#CBD5E1', borderRadius: '4px', marginBottom: '10px' }} />
-              <div style={{ height: '18px', width: '70%', background: '#CBD5E1', borderRadius: '4px' }} />
+        {/* Credibility & Verified Google Review Strip */}
+        <div className="av-trust-strip">
+          <div className="av-stat-cluster">
+            <div className="av-stat-block">
+              <span className="av-stat-number">50<span>+</span></span>
+              <span className="av-stat-subtitle">Projects Engineered</span>
+            </div>
+            <div className="av-stat-block">
+              <span className="av-stat-number">100<span>%</span></span>
+              <span className="av-stat-subtitle">Client Success Rate</span>
+            </div>
+            <div className="av-stat-block">
+              <span className="av-stat-number">4.9<span>★</span></span>
+              <span className="av-stat-subtitle">Overall Client Rating</span>
             </div>
           </div>
 
-          {/* Active Top Card (Drag-enabled with spring physics) */}
-          <div
-            ref={cardRef}
-            className="nz-card-active-top"
-            onMouseDown={onPointerDown}
-            onMouseMove={onPointerMove}
-            onMouseUp={onPointerUp}
-            onTouchStart={onPointerDown}
-            onTouchMove={onPointerMove}
-            onTouchEnd={onPointerUp}
-          >
-            {/* Header: Industry tag + Verified Badge */}
-            <div className="nz-card-header-bar">
-              <span className="nz-industry-pill">{activeCard.tag}</span>
-              <div className="nz-verified-badge">
-                <span className="nz-check-icon">✓</span>
-                <span>{activeCard.verifiedId}</span>
-              </div>
+          <div className="av-action-group">
+            <div className="av-google-chip">
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Verified <strong>4.9/5.0</strong> on Google</span>
             </div>
 
-            {/* 5 Golden Stars */}
-            <div className="nz-card-stars-row">
-              {Array.from({ length: 5 }, (_, i) => <span key={i}>★</span>)}
-            </div>
-
-            {/* Testimonial Quote */}
-            <p className="nz-card-quote-content">
-              "{activeCard.quote}"
-            </p>
-
-            {/* Interactive Audio Voice Note Simulation */}
-            <div 
-              className="nz-audio-voice-pill" 
-              onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-              title="Click to play client audio review"
+            <a
+              href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="av-google-cta"
             >
-              <button className="nz-play-btn" aria-label="Play audio snippet">
-                {isAudioPlaying ? '❚❚' : '▶'}
-              </button>
-              <div className="nz-wave-bars-container">
-                {waveHeights.map((h, i) => (
-                  <div key={i} className="nz-wave-bar" style={{ height: `${h}px` }} />
-                ))}
-              </div>
-              <span className="nz-audio-duration-tag">
-                {isAudioPlaying ? '0:14 / 0:28' : 'Voice Memo (0:28)'}
-              </span>
-            </div>
-
-            {/* Direct Performance Impact Stats */}
-            <div className="nz-card-metrics-row">
-              {activeCard.stats.map((st, i) => (
-                <div key={i} className="nz-card-metric-cell">
-                  <div className="nz-cell-val">{st.val}</div>
-                  <div className="nz-cell-label">{st.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Author details */}
-            <div className="nz-card-author-footer">
-              <div className="nz-author-profile">
-                <div className="nz-avatar-square" style={{ background: activeCard.avatarBg }}>
-                  {activeCard.name.charAt(0)}
-                </div>
-                <div className="nz-author-text">
-                  <span className="nz-author-title-name">{activeCard.name}</span>
-                  <span className="nz-author-subtitle">{activeCard.role}</span>
-                  <span className="nz-author-company-highlight">{activeCard.company} · {activeCard.location}</span>
-                </div>
-              </div>
-            </div>
+              <span>Write a Review</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
           </div>
         </div>
       </div>
