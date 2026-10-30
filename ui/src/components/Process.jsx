@@ -267,7 +267,7 @@ const Process = () => {
 
       {/* ── HEADER (Tight Padding, High-Impact 3D Kinetic Entrance) ── */}
       <div ref={headerRef} className="proc-header-container">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '0.6rem', overflow: 'hidden' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '0.5rem', overflow: 'hidden' }}>
           <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
           <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.22em', color: '#00A896', textTransform: 'uppercase' }}>
             INDUSTRIES WE SERVE
@@ -276,7 +276,7 @@ const Process = () => {
         </div>
         
         <h2 style={{ 
-          fontSize: 'clamp(2.4rem, 4.5vw, 4.2rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
+          fontSize: 'clamp(2.2rem, 4vw, 3.6rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
           color: '#11131A', letterSpacing: '-0.035em', margin: '0 auto 0.6rem auto', lineHeight: 1.1,
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px',
           maxWidth: '1100px'
@@ -306,7 +306,7 @@ const Process = () => {
           lineHeight: 1.6,
           color: '#475569',
           maxWidth: '750px',
-          margin: '0 auto 1rem auto',
+          margin: '0 auto 0.8rem auto',
           fontWeight: 450
         }}>
           We partner with businesses across diverse industries to create innovative digital experiences, scalable solutions and meaningful business outcomes.
@@ -321,7 +321,7 @@ const Process = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '11px 26px',
+              padding: '9px 22px',
               borderRadius: '999px',
               background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
               color: '#FFFFFF',
@@ -490,7 +490,7 @@ const Process = () => {
           background: transparent;
           position: relative;
           font-family: var(--font-body);
-          padding: 1.5rem 5% 2.5rem;
+          padding: 1rem 5% 1.5rem; /* Tight, proportional section padding */
           overflow: hidden;
         }
 
@@ -499,7 +499,7 @@ const Process = () => {
           z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding: 0 2rem 1.2rem;
+          padding: 0 2rem 1rem; /* Clean tight gap above accordion */
           text-align: center;
         }
 
@@ -536,7 +536,7 @@ const Process = () => {
           transition: flex 0.55s cubic-bezier(0.25, 1, 0.5, 1);
           overflow: hidden;
           cursor: pointer;
-          padding: 1.8rem 1.2rem;
+          padding: 1.6rem 1.2rem;
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
@@ -549,7 +549,7 @@ const Process = () => {
         .proc-strip.active {
           flex: 7;
           cursor: default;
-          padding: 2.2rem 2.5rem;
+          padding: 2rem 2.5rem;
           background: #FFFFFF;
         }
 
@@ -609,12 +609,13 @@ const Process = () => {
 
         .strip-image-side {
           flex: 1;
-          border-radius: 20px;
+          border-radius: 16px;
           overflow: hidden;
           position: relative;
-          min-height: 100%;
+          min-height: 300px;
+          max-height: 100%;
           align-self: stretch;
-          box-shadow: 0 16px 40px rgba(10, 46, 92, 0.12);
+          box-shadow: 0 12px 32px rgba(10, 46, 92, 0.10);
           border: 1px solid rgba(10, 46, 92, 0.08);
           background: #F8FAFC;
         }
@@ -628,18 +629,18 @@ const Process = () => {
         }
 
         .strip-title {
-          font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+          font-size: clamp(1.4rem, 2vw, 1.9rem);
           font-weight: 900;
           font-family: var(--font-display);
           color: #0B0C10;
           letter-spacing: -0.02em;
           line-height: 1.15;
-          margin: 0 0 0.7rem 0;
+          margin: 0 0 0.6rem 0;
         }
 
         .strip-desc {
-          font-size: 0.95rem;
-          line-height: 1.7;
+          font-size: 0.88rem;
+          line-height: 1.6;
           color: #475569;
           margin: 0;
           font-weight: 450;
@@ -691,7 +692,7 @@ const Process = () => {
           justify-content: center;
           pointer-events: none;
           transition: opacity 0.25s ease;
-          padding-top: 1.5rem;
+          padding-top: 2rem;
         }
 
         .proc-strip.active .strip-rotated {
@@ -719,7 +720,7 @@ const Process = () => {
 
         @media (max-width: 900px) {
           .process-section {
-            padding: 1.2rem 1rem 2rem !important;
+            padding: 1rem 1rem 1.5rem !important;
           }
 
           .proc-header-container {
