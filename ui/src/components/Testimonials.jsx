@@ -1,34 +1,91 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const clientReviews = [
+  {
+    id: 'gagner-1',
+    client: 'Gagner Sports',
+    category: 'E-Commerce / 3D WebGL',
+    quote: 'Nuzarox completely reimagined how athletes and clubs order bespoke gear. The interactive 3D customizer combined with ultra-fast Shopify headless architecture pushed our European market conversion through the roof. Their engineering precision, zero-friction checkout, and round-the-clock technical excellence made our international digital expansion an extraordinary success. World-class engineering from start to finish.',
+    highlightWord: 'interactive 3D customizer',
+    person: 'Balaji',
+    role: 'Founder & CEO, Gagner Sports · Paris & Online',
+    avatar: 'B',
+    avatarBg: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
+    statNum: '+120%',
+    statLabel: 'Conversion Growth'
+  },
+  {
+    id: 'gagner-2',
+    client: 'Gagner Sports',
+    category: 'Growth & Marketing',
+    quote: 'Their technical depth and aesthetic taste are genuinely unmatched. Our digital customer engagement and European partner inquiries grew by over eighty-six percent in 90 days. Every micro-interaction feels intentional, fluid, and designed to inspire buyer trust on every single screen.',
+    highlightWord: 'genuinely unmatched',
+    person: 'Siva',
+    role: 'Marketing Director, Gagner Sports',
+    avatar: 'S',
+    avatarBg: 'linear-gradient(135deg, #00A896 0%, #00E5FF 100%)',
+    statNum: '+86%',
+    statLabel: 'Partner Inquiries'
+  },
+  {
+    id: 'ke19',
+    client: 'KE19 Studio',
+    category: 'Digital Identity & Motion',
+    quote: 'The kinetic motion physics, reactive GLSL shaders, and fluid page transitions engineered by Nuzarox created an international interactive benchmark that loads in under 0.8 seconds globally. An unmatched fusion of art and high-speed code.',
+    highlightWord: 'reactive GLSL shaders',
+    person: 'Keerthieswaran',
+    role: 'Lead Architect, KE19 Studio · Chennai',
+    avatar: 'K',
+    avatarBg: 'linear-gradient(135deg, #0A2E5C 0%, #38BDF8 100%)',
+    statNum: '0.8s',
+    statLabel: 'Global Page Load'
+  },
+  {
+    id: 'aura',
+    client: 'Aura Luxury Residence',
+    category: 'Virtual 3D Architecture',
+    quote: 'Selling luxury architecture online requires extreme visual poise. Nuzarox created a 3D virtual walkthrough platform so intuitive that high-net-worth buyers booked during initial tours with complete confidence.',
+    highlightWord: 'extreme visual poise',
+    person: 'Lokesh',
+    role: 'Tech & Operations, Aura Residence',
+    avatar: 'L',
+    avatarBg: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
+    statNum: '+200%',
+    statLabel: 'Private Bookings'
+  }
+];
+
 const Testimonials = () => {
   const sectionRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const featuredContentRef = useRef(null);
 
+  // Auto-cycle through reviews for the Flagship Bento Card
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.bento-card',
-        { opacity: 0, y: 35 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    }, sectionRef);
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % clientReviews.length);
+    }, 7500);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
-    return () => ctx.revert();
-  }, []);
+  // Smooth fade transition on index change
+  useEffect(() => {
+    if (featuredContentRef.current) {
+      gsap.fromTo(
+        featuredContentRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }
+      );
+    }
+  }, [activeIdx]);
+
+  const activeReview = clientReviews[activeIdx];
 
   return (
     <section ref={sectionRef} id="testimonials" className="bento-testimonials-section">
@@ -44,7 +101,6 @@ const Testimonials = () => {
           box-sizing: border-box;
         }
 
-        /* Ambient subtle radial glow meshes */
         .bento-ambient-glow {
           position: absolute;
           border-radius: 50%;
@@ -77,7 +133,6 @@ const Testimonials = () => {
           margin: 0 auto;
         }
 
-        /* Section Header */
         .bento-header {
           display: flex;
           align-items: flex-end;
@@ -133,7 +188,6 @@ const Testimonials = () => {
           -webkit-text-fill-color: transparent;
         }
 
-        /* Bento Grid Core Layout */
         .bento-grid {
           display: grid;
           grid-template-columns: repeat(12, 1fr);
@@ -141,7 +195,6 @@ const Testimonials = () => {
           gap: 1.5rem;
         }
 
-        /* Generic Bento Card */
         .bento-card {
           position: relative;
           background: rgba(255, 255, 255, 0.88);
@@ -167,19 +220,19 @@ const Testimonials = () => {
             0 0 0 1px rgba(0, 168, 150, 0.1);
         }
 
-        /* Card 1: Featured Flagship (Gagner Sports) - 7 cols */
+        /* Card 1: Flagship Featured Auto-Rotating Card (7 cols) */
         .bento-featured {
           grid-column: span 7;
           grid-row: span 2;
           background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.9) 100%);
-          border: 1px solid rgba(0, 168, 150, 0.2);
+          border: 1px solid rgba(0, 168, 150, 0.22);
         }
 
         .bento-watermark-quote {
           position: absolute;
           top: 15px;
           right: 25px;
-          font-size: 7rem;
+          font-size: 7.5rem;
           font-family: Georgia, serif;
           font-weight: 700;
           color: rgba(10, 46, 92, 0.05);
@@ -212,6 +265,27 @@ const Testimonials = () => {
           font-family: var(--font-display);
         }
 
+        .bento-auto-controls {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .bento-cycle-pill {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(10, 46, 92, 0.2);
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .bento-cycle-pill.active {
+          width: 22px;
+          border-radius: 999px;
+          background: linear-gradient(90deg, #0A2E5C, #00A896);
+        }
+
         .bento-stars-gold {
           color: #FFB800;
           font-size: 1rem;
@@ -219,9 +293,9 @@ const Testimonials = () => {
         }
 
         .bento-featured-quote {
-          font-size: clamp(1.2rem, 1.8vw, 1.45rem);
-          line-height: 1.65;
-          font-weight: 600;
+          font-size: clamp(1.15rem, 1.7vw, 1.38rem);
+          line-height: 1.75;
+          font-weight: 500;
           color: #1E293B;
           margin: 0 0 2rem 0;
           position: relative;
@@ -257,7 +331,6 @@ const Testimonials = () => {
           width: 52px;
           height: 52px;
           border-radius: 16px;
-          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -306,7 +379,7 @@ const Testimonials = () => {
           margin-top: 3px;
         }
 
-        /* Card 2: Google Verified Review Card - 5 cols */
+        /* Card 2: Google Verified Review Card (5 cols) */
         .bento-google-card {
           grid-column: span 5;
           grid-row: span 1;
@@ -373,7 +446,7 @@ const Testimonials = () => {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          padding: 10px 20px;
+          padding: 11px 22px;
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           color: #FFFFFF !important;
           border-radius: 999px;
@@ -389,28 +462,28 @@ const Testimonials = () => {
           box-shadow: 0 8px 25px rgba(0, 168, 150, 0.4);
         }
 
-        /* Card 3: KE19 Studio - 5 cols */
+        /* Card 3: KE19 Studio (5 cols) */
         .bento-card-ke19 {
           grid-column: span 5;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 4: Aura Luxury Residence - 4 cols */
+        /* Card 4: Aura Luxury Residence (4 cols) */
         .bento-card-aura {
           grid-column: span 4;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 5: Siva (Marketing Director) - 4 cols */
+        /* Card 5: Siva (Marketing Director) (4 cols) */
         .bento-card-siva {
           grid-column: span 4;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 6: Ruthra (Brand Strategy) - 4 cols */
+        /* Card 6: Ruthra (Brand Strategy) (4 cols) */
         .bento-card-ruthra {
           grid-column: span 4;
           grid-row: span 1;
@@ -509,12 +582,12 @@ const Testimonials = () => {
         }
       `}</style>
 
-      {/* Ambient glowing radial orbs */}
+      {/* Ambient background glows */}
       <div className="bento-ambient-glow bento-glow-1" />
       <div className="bento-ambient-glow bento-glow-2" />
 
       <div className="bento-container">
-        {/* Section Header */}
+        {/* Header */}
         <div className="bento-header">
           <div className="bento-header-left">
             <div className="bento-tag-row">
@@ -527,40 +600,56 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* Bento Grid Review Wall */}
+        {/* Bento Grid */}
         <div className="bento-grid">
-          {/* Card 1: Flagship Featured (Gagner Sports - Balaji) */}
-          <div className="bento-card bento-featured">
+          {/* Card 1: Flagship Featured (Auto-cycling across reviews on hover pause) */}
+          <div 
+            className="bento-card bento-featured"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
             <span className="bento-watermark-quote">“</span>
 
-            <div>
+            <div ref={featuredContentRef}>
               <div className="bento-featured-top">
-                <span className="bento-client-pill">⚡ E-Commerce / 3D WebGL</span>
-                <span className="bento-stars-gold">★★★★★</span>
+                <span className="bento-client-pill">⚡ {activeReview.category}</span>
+                <div className="bento-auto-controls">
+                  {clientReviews.map((_, idx) => (
+                    <span
+                      key={idx}
+                      className={`bento-cycle-pill ${idx === activeIdx ? 'active' : ''}`}
+                      onClick={() => setActiveIdx(idx)}
+                      title={`Review ${idx + 1}`}
+                    />
+                  ))}
+                  <span className="bento-stars-gold" style={{ marginLeft: '8px' }}>★★★★★</span>
+                </div>
               </div>
 
               <p className="bento-featured-quote">
-                “Nuzarox completely reimagined how athletes and clubs order bespoke gear. The <mark>interactive 3D customizer</mark> combined with ultra-fast Shopify headless architecture pushed our European market conversion through the roof. World-class engineering.”
+                “{activeReview.quote}”
               </p>
             </div>
 
             <div className="bento-featured-footer">
               <div className="bento-author-profile">
-                <div className="bento-avatar-lg">B</div>
+                <div className="bento-avatar-lg" style={{ background: activeReview.avatarBg }}>
+                  {activeReview.avatar}
+                </div>
                 <div>
-                  <div className="bento-author-info-title">Balaji</div>
-                  <div className="bento-author-info-sub">Founder & CEO, Gagner Sports · Paris & Online</div>
+                  <div className="bento-author-info-title">{activeReview.person}</div>
+                  <div className="bento-author-info-sub">{activeReview.role}</div>
                 </div>
               </div>
 
               <div className="bento-stat-chip">
-                <div className="bento-stat-num">+120%</div>
-                <div className="bento-stat-desc">Conversion Growth</div>
+                <div className="bento-stat-num">{activeReview.statNum}</div>
+                <div className="bento-stat-desc">{activeReview.statLabel}</div>
               </div>
             </div>
           </div>
 
-          {/* Card 2: Official Google Verified Score Card */}
+          {/* Card 2: Official Google Verified Score Card with working search/review link */}
           <div className="bento-card bento-google-card">
             <div className="bento-google-inner">
               <div className="bento-google-top">
@@ -585,12 +674,12 @@ const Testimonials = () => {
               </div>
 
               <a
-                href="https://search.google.com/local/writereview?placeid=ChIJ-3eN1XpUUrkR4aWfR6Y9nZ0"
+                href="https://www.google.com/search?q=NUZAROX+Technology+Chennai+reviews"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bento-write-btn"
               >
-                <span>★ Leave a Review on Google</span>
+                <span>★ View & Write Review on Google</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                   <polyline points="15 3 21 3 21 9"/>
@@ -600,7 +689,7 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Card 3: KE19 Studio (Keerthieswaran) */}
+          {/* Card 3: KE19 Studio */}
           <div className="bento-card bento-card-ke19">
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
@@ -621,7 +710,7 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Card 4: Aura Luxury Residence (Lokesh) */}
+          {/* Card 4: Aura Luxury Residence */}
           <div className="bento-card bento-card-aura">
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>

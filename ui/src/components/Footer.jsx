@@ -34,7 +34,6 @@ const Footer = () => {
     const render = () => {
       if (!isVisible) { animationFrameId = requestAnimationFrame(render); return; }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Use source-over for light theme waves to avoid darkening them
       ctx.globalCompositeOperation = 'source-over';
 
       time += 0.015;
@@ -109,27 +108,29 @@ const Footer = () => {
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Services</h4>
             <ul style={{ padding: 0, margin: 0, textAlign: 'center' }}>
-              <li><a href="#services" style={{ color: '#475569' }}>Web Development</a></li>
-              <li><a href="#services" style={{ color: '#475569' }}>Mobile Apps</a></li>
-              <li><a href="#services" style={{ color: '#475569' }}>Digital Marketing</a></li>
-              <li><a href="#services" style={{ color: '#475569' }}>Brand & Logo Design</a></li>
-              <li><a href="#services" style={{ color: '#475569' }}>UI/UX Design</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>Web Development</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>Mobile Apps</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>Digital Marketing</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>Brand & Logo Design</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>UI/UX Design</a></li>
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Company — Aligned perfectly with Header Navigation */}
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Company</h4>
             <ul style={{ padding: 0, margin: 0, textAlign: 'center' }}>
-              <li><a href="#about" style={{ color: '#475569' }}>About Us</a></li>
-              <li><a href="#portfolio" style={{ color: '#475569' }}>Our Work</a></li>
-              <li><a href="#process" style={{ color: '#475569' }}>Process</a></li>
-              <li><a href="#testimonials" style={{ color: '#475569' }}>Testimonials</a></li>
-              <li><a href="#contact" style={{ color: '#475569' }}>Contact</a></li>
+              <li><a href="/#about" style={{ color: '#475569' }}>About</a></li>
+              <li><a href="/#services" style={{ color: '#475569' }}>Services</a></li>
+              <li><a href="/#portfolio" style={{ color: '#475569' }}>Portfolio</a></li>
+              <li><a href="/#process" style={{ color: '#475569' }}>Process</a></li>
+              <li><a href="/#testimonials" style={{ color: '#475569' }}>Clients</a></li>
+              <li><a href="/careers" style={{ color: '#475569' }}>Careers</a></li>
+              <li><a href="/#contact" style={{ color: '#475569' }}>Contact</a></li>
             </ul>
           </div>
 
-          {/* Follow Us (Replaces Contact) */}
+          {/* Follow Us */}
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h4 className="footer-unique-heading" style={{ textAlign: 'center' }}>Follow Us</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '0.8rem', justifyContent: 'center', alignItems: 'center' }}>
