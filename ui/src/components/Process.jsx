@@ -150,16 +150,16 @@ const Process = () => {
   const headerRef = useRef(null);
   const mobilePinnedRef = useRef(null);
 
-  // Header Reveal Animation
+  // High-Impact Kinetic Header Entrance Animation with GSAP
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const headerWords = headerRef.current?.querySelectorAll('.proc-hdr-word');
+      const headerWords = headerRef.current?.querySelectorAll('.proc-hdr-char');
       const headerLines = headerRef.current?.querySelectorAll('.proc-hdr-line');
       const headerLabel = headerRef.current?.querySelector('.proc-hdr-label');
       const headerSubtext = headerRef.current?.querySelector('.proc-hdr-subtext');
       const headerBtn = headerRef.current?.querySelector('.proc-hdr-cta');
 
-      if (headerWords && headerLines && headerLabel) {
+      if (headerLines && headerLabel) {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: headerRef.current,
@@ -173,28 +173,28 @@ const Process = () => {
           { scaleX: 1, duration: 0.6, ease: "power3.inOut" }
         )
         .fromTo(headerLabel,
-          { opacity: 0, y: -15 },
-          { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.7)" },
+          { opacity: 0, y: -20, letterSpacing: '0.05em', filter: 'blur(8px)' },
+          { opacity: 1, y: 0, letterSpacing: '0.22em', filter: 'blur(0px)', duration: 0.5, ease: "back.out(1.8)" },
           "-=0.3"
         )
         .fromTo(headerWords,
-          { opacity: 0, y: 35, rotateX: -25 },
-          { opacity: 1, y: 0, rotateX: 0, duration: 0.6, stagger: 0.05, ease: "back.out(1.8)" },
-          "-=0.2"
+          { opacity: 0, y: 40, rotateX: -40, scale: 0.7, filter: 'blur(10px)' },
+          { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', duration: 0.6, stagger: 0.025, ease: "back.out(2.0)" },
+          "-=0.25"
         );
 
         if (headerSubtext) {
           tl.fromTo(headerSubtext,
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-            "-=0.25"
+            "-=0.2"
           );
         }
 
         if (headerBtn) {
           tl.fromTo(headerBtn,
-            { opacity: 0, scale: 0.9 },
-            { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" },
+            { opacity: 0, scale: 0.85, y: 15 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.2)" },
             "-=0.2"
           );
         }
@@ -223,7 +223,7 @@ const Process = () => {
       });
 
       const mm = gsap.matchMedia();
-      mm.add("(max-width: 768px)", () => {
+      mm.add("(max-width: 900px)", () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: container,
@@ -253,40 +253,60 @@ const Process = () => {
     return () => ctx.revert();
   }, []);
 
+  const titleWords = [
+    { text: "Technology", isAccent: false },
+    { text: "That", isAccent: false },
+    { text: "Transforms", isAccent: true },
+    { text: "Every", isAccent: false },
+    { text: "Industry.", isAccent: false }
+  ];
+
   return (
     <section ref={containerRef} id="process" className="process-section">
       <VectorWavesBackground />
 
-      {/* ── HEADER ── */}
+      {/* ── HEADER (Tight Padding, High-Impact 3D Kinetic Entrance) ── */}
       <div ref={headerRef} className="proc-header-container">
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1.2rem', overflow: 'hidden' }}>
-          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '1rem', overflow: 'hidden' }}>
+          <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(90deg, #0A2E5C, #00A896)', transformOrigin: 'left' }} />
           <span className="proc-hdr-label" style={{ fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.22em', color: '#00A896', textTransform: 'uppercase' }}>
             INDUSTRIES WE SERVE
           </span>
-          <span className="proc-hdr-line" style={{ width: '40px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)', transformOrigin: 'right' }} />
+          <span className="proc-hdr-line" style={{ width: '35px', height: '2px', background: 'linear-gradient(270deg, #0A2E5C, #00A896)', transformOrigin: 'right' }} />
         </div>
         
         <h2 style={{ 
-          fontSize: 'clamp(2.4rem, 4.5vw, 4.5rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
-          color: '#11131A', letterSpacing: '-0.03em', margin: '0 auto 1.2rem auto', lineHeight: 1.12,
+          fontSize: 'clamp(2.4rem, 4.5vw, 4.2rem)', fontWeight: 900, fontFamily: 'var(--font-display)', 
+          color: '#11131A', letterSpacing: '-0.035em', margin: '0 auto 1rem auto', lineHeight: 1.1,
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0.3em', perspective: '1000px',
           maxWidth: '1100px'
         }}>
-          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Technology</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>That</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Transforms</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Every</span>
-          <span className="proc-hdr-word" style={{ display: 'inline-block' }}>Industry.</span>
+          {titleWords.map((wordObj, wIdx) => (
+            <div key={wIdx} className="proc-word-wrap" style={{ display: 'inline-flex', transformStyle: 'preserve-3d' }}>
+              {wordObj.text.split('').map((char, cIdx) => (
+                <span
+                  key={cIdx}
+                  className={`proc-hdr-char ${wordObj.isAccent ? 'proc-accent-char' : ''}`}
+                  style={{
+                    display: 'inline-block',
+                    transformStyle: 'preserve-3d',
+                    willChange: 'transform, opacity, filter'
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </div>
+          ))}
         </h2>
 
         {/* Subtitle Paragraph */}
         <p className="proc-hdr-subtext" style={{
-          fontSize: 'clamp(1rem, 1.2vw, 1.15rem)',
-          lineHeight: 1.65,
+          fontSize: 'clamp(0.95rem, 1.15vw, 1.1rem)',
+          lineHeight: 1.6,
           color: '#475569',
-          maxWidth: '780px',
-          margin: '0 auto 2rem auto',
+          maxWidth: '750px',
+          margin: '0 auto 1.6rem auto',
           fontWeight: 450
         }}>
           We partner with businesses across diverse industries to create innovative digital experiences, scalable solutions and meaningful business outcomes.
@@ -301,29 +321,29 @@ const Process = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '12px 28px',
+              padding: '11px 26px',
               borderRadius: '999px',
               background: 'linear-gradient(135deg, #0A2E5C 0%, #00A896 100%)',
               color: '#FFFFFF',
               fontWeight: 800,
-              fontSize: '0.9rem',
+              fontSize: '0.88rem',
               textDecoration: 'none',
               fontFamily: 'var(--font-display)',
-              letterSpacing: '0.04em',
-              boxShadow: '0 8px 25px rgba(0, 168, 150, 0.35)',
+              letterSpacing: '0.03em',
+              boxShadow: '0 8px 24px rgba(0, 168, 150, 0.35)',
               transition: 'transform 0.25s ease, box-shadow 0.25s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 12px 32px rgba(0, 168, 150, 0.5)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 168, 150, 0.5)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 168, 150, 0.35)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 168, 150, 0.35)';
             }}
           >
             <span>Discuss Your Industry Project</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="7" y1="17" x2="17" y2="7"></line>
               <polyline points="7 7 17 7 17 17"></polyline>
             </svg>
@@ -331,7 +351,7 @@ const Process = () => {
         </div>
       </div>
 
-      {/* SPINNING ORBITS */}
+      {/* SPINNING ORBITS & ACCORDION (TIGHT GAP) */}
       <div style={{ position: 'relative' }}>
         <SpinningTechOrbitsBackground />
 
@@ -470,7 +490,7 @@ const Process = () => {
           background: transparent;
           position: relative;
           font-family: var(--font-body);
-          padding: 6rem 5% 6rem;
+          padding: 2.5rem 5% 4rem; /* Tight, proportional section padding */
           overflow: hidden;
         }
 
@@ -479,12 +499,18 @@ const Process = () => {
           z-index: 10;
           max-width: 1300px;
           margin: 0 auto;
-          padding: 2rem 5% 4rem;
+          padding: 0 2rem 2.2rem; /* Clean tight gap above accordion */
           text-align: center;
         }
 
-        .proc-hdr-word {
+        .proc-hdr-char {
           display: inline-block;
+        }
+
+        .proc-accent-char {
+          background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
         /* ═══════════════════════════════════════
@@ -692,7 +718,7 @@ const Process = () => {
 
         @media (max-width: 900px) {
           .process-section {
-            padding: 2.5rem 1rem 3rem !important;
+            padding: 2rem 1rem 2.5rem !important;
           }
 
           .proc-header-container {
