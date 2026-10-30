@@ -10,7 +10,6 @@ const clientReviews = [
     client: 'Gagner Sports',
     category: 'E-Commerce / 3D WebGL',
     quote: 'Nuzarox completely reimagined how athletes and clubs order bespoke gear. The interactive 3D customizer combined with ultra-fast Shopify headless architecture pushed our European market conversion through the roof. Their engineering precision, zero-friction checkout, and round-the-clock technical excellence made our international digital expansion an extraordinary success. World-class engineering from start to finish.',
-    highlightWord: 'interactive 3D customizer',
     person: 'Balaji',
     role: 'Founder & CEO, Gagner Sports · Paris & Online',
     avatar: 'B',
@@ -23,7 +22,6 @@ const clientReviews = [
     client: 'Gagner Sports',
     category: 'Growth & Marketing',
     quote: 'Their technical depth and aesthetic taste are genuinely unmatched. Our digital customer engagement and European partner inquiries grew by over eighty-six percent in 90 days. Every micro-interaction feels intentional, fluid, and designed to inspire buyer trust on every single screen.',
-    highlightWord: 'genuinely unmatched',
     person: 'Siva',
     role: 'Marketing Director, Gagner Sports',
     avatar: 'S',
@@ -36,7 +34,6 @@ const clientReviews = [
     client: 'KE19 Studio',
     category: 'Digital Identity & Motion',
     quote: 'The kinetic motion physics, reactive GLSL shaders, and fluid page transitions engineered by Nuzarox created an international interactive benchmark that loads in under 0.8 seconds globally. An unmatched fusion of art and high-speed code.',
-    highlightWord: 'reactive GLSL shaders',
     person: 'Keerthieswaran',
     role: 'Lead Architect, KE19 Studio · Chennai',
     avatar: 'K',
@@ -49,7 +46,6 @@ const clientReviews = [
     client: 'Aura Luxury Residence',
     category: 'Virtual 3D Architecture',
     quote: 'Selling luxury architecture online requires extreme visual poise. Nuzarox created a 3D virtual walkthrough platform so intuitive that high-net-worth buyers booked during initial tours with complete confidence.',
-    highlightWord: 'extreme visual poise',
     person: 'Lokesh',
     role: 'Tech & Operations, Aura Residence',
     avatar: 'L',
@@ -61,9 +57,50 @@ const clientReviews = [
 
 const Testimonials = () => {
   const sectionRef = useRef(null);
+  const headerRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const featuredContentRef = useRef(null);
+
+  // GSAP 3D Kinetic Text Reveal Animation for Section Header
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const entranceTl = gsap.timeline({ paused: true });
+
+      entranceTl
+        .fromTo('.testi-hdr-line',
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.5, ease: 'power3.inOut' }
+        )
+        .fromTo('.testi-hdr-label',
+          { x: -35, opacity: 0, letterSpacing: '0.05em', filter: 'blur(8px)' },
+          { x: 0, opacity: 1, letterSpacing: '0.22em', filter: 'blur(0px)', duration: 0.45, ease: 'back.out(1.7)' },
+          '-=0.25'
+        )
+        .fromTo('.testi-hdr-char',
+          { x: -35, opacity: 0, scale: 0.6, rotateY: -35, filter: 'blur(8px)' },
+          { x: 0, opacity: 1, scale: 1, rotateY: 0, filter: 'blur(0px)', duration: 0.55, stagger: 0.035, ease: 'back.out(2.0)' },
+          '-=0.2'
+        )
+        .fromTo('.bento-card',
+          { opacity: 0, y: 35 },
+          { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: 'power3.out' },
+          '-=0.3'
+        );
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 82%',
+        once: true,
+        onEnter: () => entranceTl.play()
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   // Auto-cycle through reviews for the Flagship Bento Card
   useEffect(() => {
@@ -86,6 +123,17 @@ const Testimonials = () => {
   }, [activeIdx]);
 
   const activeReview = clientReviews[activeIdx];
+
+  // Animated words breakdown for Header Title
+  const titleWords = [
+    { text: "What", isAccent: false },
+    { text: "Founders", isAccent: false },
+    { text: "&", isAccent: false },
+    { text: "Brands", isAccent: false },
+    { text: "Say", isAccent: true },
+    { text: "About", isAccent: true },
+    { text: "Us", isAccent: true }
+  ];
 
   return (
     <section ref={sectionRef} id="testimonials" className="bento-testimonials-section">
@@ -133,56 +181,67 @@ const Testimonials = () => {
           margin: 0 auto;
         }
 
-        .bento-header {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
+        /* 3D Kinetic Section Header */
+        .testi-section-header {
           margin-bottom: 3.5rem;
-          flex-wrap: wrap;
-          gap: 1.5rem;
+          perspective: 800px;
         }
 
-        .bento-header-left {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .bento-tag-row {
+        .testi-hdr-meta {
+          font-size: 0.85rem;
+          font-weight: 800;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          margin-bottom: 6px;
           display: flex;
           align-items: center;
           gap: 10px;
         }
 
-        .bento-tag-line {
+        .testi-hdr-line {
           width: 24px;
           height: 2.5px;
           background: linear-gradient(90deg, #0A2E5C, #00A896);
           border-radius: 2px;
+          transform-origin: left center;
+          display: inline-block;
         }
 
-        .bento-tag-text {
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          background: linear-gradient(90deg, #0A2E5C, #00A896);
+        .testi-hdr-label {
+          background: linear-gradient(90deg, #0A2E5C 0%, #00A896 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          display: inline-block;
           font-family: var(--font-display);
         }
 
-        .bento-main-title {
-          font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+        .testi-hdr-h2 {
+          font-size: clamp(2.4rem, 4.5vw, 4rem);
           font-weight: 900;
-          line-height: 1.1;
-          color: #0B0C10;
           font-family: var(--font-display);
-          letter-spacing: -0.03em;
+          color: #0A0A10;
+          letter-spacing: -0.035em;
           margin: 0;
+          line-height: 1.08;
+          display: flex;
+          gap: 0.3em;
+          flex-wrap: wrap;
+          overflow: hidden;
         }
 
-        .bento-main-title span {
+        .testi-word-wrap {
+          display: inline-flex;
+          transform-style: preserve-3d;
+        }
+
+        .testi-hdr-char {
+          position: relative;
+          display: inline-block;
+          transform-style: preserve-3d;
+          will-change: transform, opacity, filter;
+        }
+
+        .testi-accent-char {
           background: linear-gradient(135deg, #0A2E5C 0%, #00A896 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -220,7 +279,6 @@ const Testimonials = () => {
             0 0 0 1px rgba(0, 168, 150, 0.1);
         }
 
-        /* Card 1: Flagship Featured Auto-Rotating Card (7 cols) */
         .bento-featured {
           grid-column: span 7;
           grid-row: span 2;
@@ -303,12 +361,6 @@ const Testimonials = () => {
           letter-spacing: -0.01em;
         }
 
-        .bento-featured-quote mark {
-          background: transparent;
-          color: #00A896;
-          font-weight: 800;
-        }
-
         .bento-featured-footer {
           display: flex;
           align-items: flex-end;
@@ -379,7 +431,6 @@ const Testimonials = () => {
           margin-top: 3px;
         }
 
-        /* Card 2: Google Verified Review Card (5 cols) */
         .bento-google-card {
           grid-column: span 5;
           grid-row: span 1;
@@ -462,28 +513,24 @@ const Testimonials = () => {
           box-shadow: 0 8px 25px rgba(0, 168, 150, 0.4);
         }
 
-        /* Card 3: KE19 Studio (5 cols) */
         .bento-card-ke19 {
           grid-column: span 5;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 4: Aura Luxury Residence (4 cols) */
         .bento-card-aura {
           grid-column: span 4;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 5: Siva (Marketing Director) (4 cols) */
         .bento-card-siva {
           grid-column: span 4;
           grid-row: span 1;
           background: rgba(255, 255, 255, 0.92);
         }
 
-        /* Card 6: Ruthra (Brand Strategy) (4 cols) */
         .bento-card-ruthra {
           grid-column: span 4;
           grid-row: span 1;
@@ -532,7 +579,6 @@ const Testimonials = () => {
           color: #64748B;
         }
 
-        /* Responsive Breakpoints */
         @media (max-width: 1080px) {
           .bento-featured {
             grid-column: span 12;
@@ -582,22 +628,32 @@ const Testimonials = () => {
         }
       `}</style>
 
-      {/* Ambient background glows */}
+      {/* Ambient glowing radial orbs */}
       <div className="bento-ambient-glow bento-glow-1" />
       <div className="bento-ambient-glow bento-glow-2" />
 
       <div className="bento-container">
-        {/* Header */}
-        <div className="bento-header">
-          <div className="bento-header-left">
-            <div className="bento-tag-row">
-              <span className="bento-tag-line" />
-              <span className="bento-tag-text">Verified Client Reviews</span>
-            </div>
-            <h2 className="bento-main-title">
-              What Founders & Brands <span>Say About Us</span>
-            </h2>
+        {/* Section Header with 3D Kinetic Entrance Animation */}
+        <div ref={headerRef} className="testi-section-header">
+          <div className="testi-hdr-meta">
+            <span className="testi-hdr-line" />
+            <span className="testi-hdr-label">Verified Client Reviews</span>
           </div>
+
+          <h2 className="testi-hdr-h2">
+            {titleWords.map((wordObj, wIdx) => (
+              <div key={wIdx} className="testi-word-wrap">
+                {wordObj.text.split('').map((char, cIdx) => (
+                  <span
+                    key={cIdx}
+                    className={`testi-hdr-char ${wordObj.isAccent ? 'testi-accent-char' : ''}`}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </h2>
         </div>
 
         {/* Bento Grid */}
@@ -649,7 +705,7 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Card 2: Official Google Verified Score Card with working search/review link */}
+          {/* Card 2: Official Google Verified Score Card */}
           <div className="bento-card bento-google-card">
             <div className="bento-google-inner">
               <div className="bento-google-top">
