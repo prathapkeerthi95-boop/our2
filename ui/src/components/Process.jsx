@@ -8,35 +8,35 @@ const industries = [
   {
     num: '01',
     title: 'HEALTHCARE',
-    desc: 'Empowering hospitals, clinical networks, and healthtech innovators with HIPAA-compliant patient portals, automated appointment engines, telemedicine ecosystems, and secure real-time diagnostic workflows.',
+    desc: 'Empowering hospitals, clinical networks, and healthtech innovators with HIPAA-compliant patient portals, automated appointment engines, telemedicine ecosystems, and secure real-time diagnostic workflows. We engineer frictionless EHR/EMR integrations, AI-assisted triage modules, and high-availability clinical architectures that elevate patient care while guaranteeing data security.',
     tagline: 'Precision Care · HIPAA Compliant · Zero-Latency Telehealth',
     image: '/industry-healthcare.png'
   },
   {
     num: '02',
     title: 'SPORTS &\nENTERTAINMENT',
-    desc: 'Engineering interactive 3D merchandise customizers, high-traffic streaming architectures, fan-engagement platforms, and digital ticketing hubs that turn supporters into lifelong brand advocates.',
+    desc: 'Engineering interactive 3D merchandise customizers, high-traffic streaming architectures, fan-engagement platforms, and digital ticketing hubs that turn supporters into lifelong brand advocates. Our headless commerce setups and interactive experiences easily handle million-fan traffic surges during live matchdays and global drop releases with zero latency.',
     tagline: 'Headless 3D Customizers · High-Traffic Scalability · Fan Portals',
     image: '/industry-sports.png'
   },
   {
     num: '03',
     title: 'IT SERVICES &\nCONSULTING',
-    desc: 'Building intelligent cloud infrastructure, enterprise SaaS applications, microservices architecture, and automated devops pipelines that accelerate operational velocity and slash engineering overhead.',
+    desc: 'Building intelligent cloud infrastructure, enterprise SaaS applications, microservices architecture, and automated devops pipelines that accelerate operational velocity and slash engineering overhead. We partner with technology leaders to modernize legacy ecosystems, establish continuous delivery pipelines, and architect high-performance scalable web systems.',
     tagline: 'Cloud Infrastructure · Enterprise SaaS · Microservices Velocity',
     image: '/industry-it-services.png'
   },
   {
     num: '04',
     title: 'BANKING &\nFINANCES',
-    desc: 'Architecting ultra-secure fintech platforms, multi-currency payment gateways, automated AML/KYC compliance tools, and high-performance financial dashboards engineered with bank-grade encryption.',
+    desc: 'Architecting ultra-secure fintech platforms, multi-currency payment gateways, automated AML/KYC compliance tools, and high-performance financial dashboards engineered with bank-grade encryption. We design fault-tolerant financial architectures that guarantee real-time transaction processing, sub-second settlement analytics, and strict PCI-DSS compliance.',
     tagline: 'Bank-Grade Security · Fast Multi-Currency Pay · Fintech Portals',
     image: '/industry-banking.png'
   },
   {
     num: '05',
     title: 'EDUCATION &\nE-LEARNING',
-    desc: 'Creating interactive LMS platforms, gamified curriculum portals, real-time virtual classroom dashboards, and responsive multi-device learning environments designed for peak student retention.',
+    desc: 'Creating interactive LMS platforms, gamified curriculum portals, real-time virtual classroom dashboards, and responsive multi-device learning environments designed for peak student retention. From automated grading pipelines and live video cohorts to AI-driven adaptive study paths, we transform traditional educational delivery into engaging digital learning journeys.',
     tagline: 'Interactive LMS · Gamified Learning · Real-Time Progress Engine',
     image: '/industry-education.png'
   },
@@ -522,9 +522,9 @@ const Process = () => {
         }
 
         .strip-text-side {
-          flex: 0.95;
-          min-width: 360px;
-          max-width: 440px;
+          flex: 1.3;
+          min-width: 380px;
+          max-width: 500px;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -617,11 +617,11 @@ const Process = () => {
           box-shadow: 0 10px 28px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── EXPANSIVE LANDSCAPE IMAGE CANVAS (NO VERTICAL CROPPING) ── */
+        /* ── COMPACT IMAGE CANVAS ── */
         .strip-image-side {
-          flex: 1.4;
+          flex: 0.85;
           height: 100%;
-          min-height: 360px;
+          min-height: 300px;
           border-radius: 20px;
           overflow: hidden;
           position: relative;
