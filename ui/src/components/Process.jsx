@@ -133,6 +133,7 @@ const Process = () => {
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const mobilePinnedRef = useRef(null);
+  const accordionRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -154,6 +155,34 @@ const Process = () => {
           }
         }
       );
+
+      // Unique Stagger Entrance for the 5 Accordion Cards from RIGHT to LEFT
+      if (accordionRef.current) {
+        const strips = accordionRef.current.querySelectorAll('.proc-strip');
+        gsap.fromTo(
+          strips,
+          {
+            opacity: 0,
+            x: 80,
+            scale: 0.94,
+            filter: 'blur(8px)'
+          },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.75,
+            stagger: 0.12,
+            ease: 'back.out(1.4)',
+            scrollTrigger: {
+              trigger: accordionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      }
 
       // Mobile pinned cards GSAP scroll animation
       const container = mobilePinnedRef.current;
@@ -234,7 +263,7 @@ const Process = () => {
         <SpinningTechOrbitsBackground />
 
         {/* ── BUZZWORTHY ACCORDION (DESKTOP VIEW) ── */}
-        <div className="proc-accordion">
+        <div ref={accordionRef} className="proc-accordion">
           {industries.map((ind, i) => (
             <div
               key={i}
@@ -272,7 +301,9 @@ const Process = () => {
                 </div>
 
                 <div className="strip-image-side">
-                  <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
+                  <div className="strip-image-wrapper">
+                    <img src={ind.image} alt={ind.title.replace('\n', ' ')} className="strip-img" />
+                  </div>
                 </div>
               </div>
 
@@ -337,6 +368,24 @@ const Process = () => {
       </div>
 
       <style>{`
+        /* ═══════════════════════════════════════
+           BACKGROUND SPINNING ORBIT KEYFRAMES
+           ═══════════════════════════════════════ */
+        @keyframes spinCW {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes spinCCW {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
+        }
+        .spin-cw-slow { animation: spinCW 55s linear infinite; }
+        .spin-ccw-slow { animation: spinCCW 55s linear infinite; }
+        .spin-cw-med { animation: spinCW 32s linear infinite; }
+        .spin-ccw-med { animation: spinCCW 32s linear infinite; }
+        .spin-cw-fast { animation: spinCW 18s linear infinite; }
+        .spin-ccw-fast { animation: spinCCW 18s linear infinite; }
+
         .process-section {
           background: transparent;
           position: relative;
@@ -380,6 +429,8 @@ const Process = () => {
           background: #FFFFFF;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
           border: 1px solid rgba(0, 0, 0, 0.06);
+          position: relative;
+          z-index: 5;
         }
 
         .proc-strip {
@@ -440,7 +491,7 @@ const Process = () => {
           flex: 1;
           display: flex;
           gap: 2.5rem;
-          align-items: stretch;
+          align-items: center;
         }
 
         .proc-strip.active .strip-expanded-content {
@@ -450,7 +501,7 @@ const Process = () => {
         }
 
         .strip-text-side {
-          flex: 1;
+          flex: 1.1;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -511,19 +562,42 @@ const Process = () => {
           box-shadow: 0 8px 24px rgba(0, 168, 150, 0.4);
         }
 
-        /* ── EXACT PREVIOUS IMAGE CONTAINER SIZING & PROPORTIONS ── */
+        /* ── PERFECT 16:10 / 4:3 CARD IMAGE FIT (NO ZOOM CROP) ── */
         .strip-image-side {
-          flex: 1;
-          border-radius: 16px;
+          flex: 0.95;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          max-height: 380px;
+        }
+
+        .strip-image-wrapper {
+          width: 100%;
+          height: 100%;
+          max-height: 360px;
+          border-radius: 18px;
           overflow: hidden;
           position: relative;
+          background: #F8FAFC;
+          border: 1px solid rgba(10, 46, 92, 0.08);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .strip-img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
+          object-position: center;
           display: block;
+          transition: transform 0.4s ease;
+        }
+
+        .proc-strip.active:hover .strip-img {
+          transform: scale(1.02);
         }
 
         /* Rotated Title (Collapsed Strips) */
@@ -671,7 +745,7 @@ const Process = () => {
           .proc-mobile-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
           }
 
