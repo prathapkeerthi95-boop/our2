@@ -158,7 +158,7 @@ const Process = () => {
 
       const mm = gsap.matchMedia();
 
-      // ── DESKTOP (>= 769px): Card Entrance + Pinned Scroll Card Sequencer from Right ──
+      // ── DESKTOP (>= 769px): Card Entrance from Right ──
       mm.add("(min-width: 769px)", () => {
         if (accordionRef.current) {
           const strips = accordionRef.current.querySelectorAll('.proc-strip');
@@ -185,26 +185,6 @@ const Process = () => {
               }
             }
           );
-        }
-
-        // Pinned scroll scrubber: scrolling through section dynamically opens each card from the right
-        if (sectionRef.current) {
-          ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: 'top top+=40px',
-            end: () => `+=${industries.length * 60}%`,
-            pin: true,
-            scrub: 0.4,
-            refreshPriority: 2,
-            invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              const idx = Math.min(
-                Math.floor(self.progress * industries.length),
-                industries.length - 1
-              );
-              setActiveIndex(idx);
-            }
-          });
         }
       });
 
